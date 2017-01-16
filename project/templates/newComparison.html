@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>New Comparison</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="../static/css/style.default.css" rel="stylesheet" id="theme-stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- Style for selector -->
+  <link rel="stylesheet" href="../static/css/select.css">
+
+<!-- Custom stylesheet - for your changes -->
+  <link href="../static/css/custom.css" rel="stylesheet">
+    
+</head>
+<body>
+
+        <header>
+
+
+            <!-- *** NAVBAR ***
+    _________________________________________________________ -->
+
+            <div class="navbar-affixed-top" data-spy="affix" data-offset-top="200">
+
+                <div class="navbar navbar-default yamm" role="navigation" id="navbar">
+
+                    <div class="navbar-header">
+
+                        <a class="navbar-brand home" href="/">
+                            <img src="../static/img/logo.png" alt="Universal logo" class="hidden-xs hidden-sm">
+                            <img src="../static/img/logo-small.png" alt="Universal logo" class="visible-xs visible-sm"><span class="sr-only">Comparator - go to homepage</span>
+                        </a>
+                        <p class="navbar-text" style="font-size: 1.5em; font-weight: bold;">My Comparison</p>
+                        <button type="button" class="btn btn-default navbar-btn" aria-label="Delete" style="margin-top: 18px">
+                          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                        
+                        <div class="navbar-buttons">
+                            <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse" data-target="#navigation">
+                                <span class="sr-only">Toggle navigation</span>
+                                <i class="fa fa-align-justify"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!--/.navbar-header -->
+
+                    <div class="navbar-collapse collapse" id="navigation">
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a href="#" data-toggle="modal" data-target="#login-modal"><span class="hidden-xs text-uppercase">Login</span></a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!--/.nav-collapse -->
+
+
+                </div>
+                <!-- /#navbar -->
+
+            </div>
+
+            <!-- *** NAVBAR END *** -->
+
+        </header>
+
+        <!-- *** LOGIN MODAL ***
+_________________________________________________________ -->
+
+        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="Login">Login</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="#" method="post">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="email_modal" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="password_modal" placeholder="Password">
+                            </div>
+
+                            <p class="text-center">
+                                <button class="btn btn-template-main"><i class="fa fa-sign-in"></i> Login</button>
+                            </p>
+
+                        </form>
+
+                        <p class="text-center text-muted"><a href="#">Not registered yet?</a></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="toolbar-container" style="
+        background: #ddd;
+        padding: 3px 0px;
+        border-top: thin solid #ccc;
+                                          ">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group" role="group" aria-label="Save group">
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Zoom group">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Zoom
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">100%</a></li>
+                      <li><a href="#">75%</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Views group">
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon glyphicon-th-large" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon glyphicon-tasks" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Text/Edit group">
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-text-color" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-text-background" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-text-size" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-bold" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-italic" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-align-center
+" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-align-right" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="btn-group pull-right" role="group" aria-label="Share/Export group">
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                  <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+                    Share
+                </button>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="glyphicon glyphicon-export" aria-hidden="true"> </span>
+                        Export
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Excel</a></li>
+                      <li><a href="#">PDF</a></li>
+                      <li><a href="#">PNG</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- TEMPORARY BACKGROUND IMAGE -->
+<div>
+	<img src="../static/img/MockTemplate.png" style="height: 100%; width: 100%">
+</div>
+
+        <!-- *** Select Template Modal ***
+_________________________________________________________ -->
+<div id="selectTemplateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" aria-hidden="true" data-backdrop="static">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="gridModalLabel">Select a Template to Begin</h4>
+			</div>
+			<div class="modal-body" style="height:350px; overflow-y: scroll">
+				<div class="cc-selector">
+					<div class="panel-group accordion" id="chooseTemplate">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseNew">New Template</a></h4>
+                </div>
+              <div id="collapseNew" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row">
+                          <div class="col-sm-6">
+                              <img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+                            </div>
+                            <div class="col-sm-6">
+                              <p>Create a custom template and specify your fields</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+						<div class="panel panel-default">
+						    <div class="panel-heading">
+						    	<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseBanks">Banks</a></h4>
+						    </div>
+							<div id="collapseBanks" class="panel-collapse collapse">
+						        <div class="panel-body">
+						            <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Annual Fees</li>
+						                		<li>ATM Availability</li>
+						                		<li>Rewards Program</li>
+						                	</ul>
+						                </div>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseBikes">Bikes</a></h4>
+			                </div>
+			                <div id="collapseBikes" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Mileage</li>
+						                		<li>Load Capacity</li>
+						                		<li>Vehicle Weight</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseBooks">Books</a></h4>
+			                </div>
+			                <div id="collapseBooks" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Author</li>
+						                		<li>Genre</li>
+						                		<li>Number of Pages</li>
+						                		<li>Available as an Audiobook</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseCameras">Cameras</a></h4>
+			                </div>
+			                <div id="collapseCameras" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Autofocus Points</li>
+						                		<li>Battery Life</li>
+						                		<li>Digital Zoom</li>
+						                		<li>Color</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+									<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseCars">Cars</a></h4>
+			                </div>
+			                <div id="collapseCars" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Engine</li>
+						                		<li>Power (horsepower)</li>
+						                		<li>Seats</li>
+						                		<li>Bluetooth Capable</li>
+						                		<li>Integrated GPS</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseColleges">Colleges</a></h4>
+			                </div>
+			                <div id="collapseColleges" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Average GPA</li>
+						                		<li>Tuition</li>
+						                		<li>Extracurriculars</li>
+						                		<li>Social Scene</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseConsoles">Consoles</a></h4>
+			                </div>
+			                <div id="collapseConsoles" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Internet Capability</li>
+						                		<li>RAM</li>
+						                		<li>Ports</li>
+						                		<li>Graphics</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseCreditCards">Credit Cards</a></h4>
+			                </div>
+			                <div id="collapseCreditCards" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Rewards Program</li>
+						                		<li>Annual Charges</li>
+						                		<li>Interest Rate</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseInstruments">Instruments</a></h4>
+			                </div>
+			                <div id="collapseInstruments" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Cost</li>
+						                		<li>Age</li>
+						                		<li>Material</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseLaptops">Laptops</a></h4>
+			                </div>
+			                <div id="collapseLaptops" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Battery Life</li>
+						                		<li>Screen Size</li>
+						                		<li>Graphics</li>
+						                		<li>CPU</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseRestaurants">Restaurants</a></h4>
+			                </div>
+			                <div id="collapseRestaurants" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Cuisine</li>
+						                		<li>Average Cost</li>
+						                		<li>Drinks</li>
+						                		<li>Distance</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseSmartphones">Smartphones</a></h4>
+			                </div>
+			                <div id="collapseSmartphones" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Storage</li>
+						                		<li>Battery Life</li>
+						                		<li>Camera</li>
+						                		<li>Size</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default" id="chooseTemplate">
+							<div class="panel-heading">
+								<h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseWashingMachines">Washing Machines</a></h4>
+			                </div>
+			                <div id="collapseWashingMachines" class="panel-collapse collapse">
+			                    <div class="panel-body">
+			                        <div class="row">
+						            	<div class="col-sm-6">
+						                	<img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+						                </div>
+						                <div class="col-sm-6">
+						                	<p>Specifications include:</p>
+						                	<ul>
+						                		<li>Style</li>
+						                		<li>Total Capacity</li>
+						                		<li>Washer Control Features</li>
+						                		<li>Wash/Rinse Temperatures</li>
+						                	</ul>
+						                </div>
+						            </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+	            <button type="submit" class="btn btn-template-primary" data-dismiss="modal">Start Comparing</button>
+	            <button type="button" onclick="location.href='/'" class="btn btn-template-main">Return to Homepage</button>
+	        </div>
+	    </div>
+	</div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+$('#selectTemplateModal').modal('show');
+</script>
