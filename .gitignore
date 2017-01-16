@@ -1,0 +1,11 @@
+*.DS_Store
+*.pyc
+.git
+
+env
+venv
+
+node_modules/
+npm-debug.log
+project/static/bower_components/
+.module-cache

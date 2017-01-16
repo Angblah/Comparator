@@ -1,0 +1,21 @@
+{
+  "name": "thecomparator",
+  "description": "",
+  "main": "",
+  "authors": [
+    "BYTE ME"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "react": "^15.4.2"
+  }
+}
