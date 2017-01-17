@@ -9,8 +9,13 @@ def index():
 
 
 @app.route('/newComparison')
-def hello():
+def newComparison():
     return render_template('newComparison.html')
+
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
 
 
 if __name__ == '__main__':

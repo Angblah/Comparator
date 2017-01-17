@@ -155,17 +155,6 @@ _________________________________________________________ -->
                 <div class="row">
 
 
-                    <div class="col-sm-7">
-                        <div class="homepage owl-carousel">
-                            <div class="item">
-                                <img class="img-responsive" src="../static/img/image1.png" alt="">
-                            </div>
-                            <div class="item">
-                                <img class="img-responsive" src="../static/img/image2.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="col-sm-5">
                         <div class="heading text-left">
                             <h3>Sign up!</h3>
@@ -183,8 +172,18 @@ _________________________________________________________ -->
                             <div class="form-group">
                                 <input type="password" class="form-control" id="passwordConfirm-login" placeholder="Confirm Password">
                             </div>
+                            <div class="form-group">
+                                <select id="securityQuestionSelection-login">
+                                    <option>What is your mother's maiden name?</option>
+                                    <option>What is the color of your first car?</option>
+                                    <option>What is the name of your first pet?</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="securityQuestion-login" placeholder="Security Question">
+                            </div>
                             <div class="text-left">
-                                <button type="submit" onclick="location.href='register'" class="btn btn-template-main"><i class="fa fa-user-md"></i> Register</button>
+                                <button type="submit" onclick="location.href='/register'" class="btn btn-template-main"><i class="fa fa-user-md"></i> Register</button>
                             </div>
                         </form>
                         <hr>
