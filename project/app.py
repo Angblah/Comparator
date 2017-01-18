@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://postgres:byteme@localhost/the-comparator"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://lnzcnupimmpfyc:9bc06b432fef526c4cfc3844633637a6fcd1214bce2bd885b156f3a2cf099542@ec2-23-21-46-94.compute-1.amazonaws.com:5432/d26clo9dh5i9sp"
+#"postgres://postgres:byteme@localhost/the-comparator"
 app.debug = True
 db = SQLAlchemy(app)
 db.create_all()
