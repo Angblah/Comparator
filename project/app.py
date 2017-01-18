@@ -1,11 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
-from flask.ext.heroku import Heroku
-
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://wkwgmorgzmgqal:7006e7788fd04d1bf0a59d8dee3484fb6543b6acb3eba5fa5cdcad7129f53ca5@ec2-54-243-185-99.compute-1.amazonaws.com:5432/d8e0903afn75gv"
-heroku = Heroku(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://postgres:byteme@localhost/the-comparator"
 app.debug = True
 db = SQLAlchemy(app)
 
