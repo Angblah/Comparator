@@ -1,1 +1,1 @@
-web: sh run.sh
+web: python project/app.py runserver 0.0.0.0:5000
