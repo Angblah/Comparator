@@ -7,7 +7,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://postgres:byteme@localhost/th
 #"postgres://postgres:byteme@localhost/the-comparator"
 app.debug = True
 db = SQLAlchemy(app)
-db.create_all()
 
 from models import *
 
