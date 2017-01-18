@@ -1,1 +1,1 @@
-web: python /project/app.py
+web: sh run.sh
