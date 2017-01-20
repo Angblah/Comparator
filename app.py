@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 print 1
 
@@ -16,11 +17,11 @@ from models import *
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+	return render_template('home.html')
 
 @app.route('/newComparison')
 def newComparison():
-    return render_template('newComparison.html')
+	return render_template('newComparison.html')
 
 @app.route('/register')
 def register():
@@ -39,11 +40,8 @@ print 3
 
 if __name__ == '__main__':
 	print 4
-
-    app.run(debug=True)
-    print 5
-    port = int(os.environ.get('PORT', 5000))
-    print 6
-    print port
-    app.run(host='0.0.0.0', port=port)
-    print 7
+	print 5
+	port = int(os.environ.get('PORT', 5000))
+	print 6
+	print port
+	app.run(host='0.0.0.0', port=port, debug=True)
