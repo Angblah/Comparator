@@ -3,12 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://lnzcnupimmpfyc:9bc06b432fef526c4cfc3844633637a6fcd1214bce2bd885b156f3a2cf099542@ec2-23-21-46-94.compute-1.amazonaws.com:5432/d26clo9dh5i9sp"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://inpbjnlkzqdkhf:d0a646187c72013be9247400d3abe35c4f3f0360ce657260758c455c9c147cf3@ec2-54-163-234-20.compute-1.amazonaws.com:5432/dfu8hu14lo03hn"
 #"postgres://postgres:byteme@localhost/the-comparator"
 app.debug = True
 db = SQLAlchemy(app)
 
-from models import *
+#from models import *
 
 @app.route('/')
 def index():
