@@ -8,8 +8,6 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
-print 1
-
 class AttributeValue(db.Model):
     __tablename__ = 'attribute_value'
 
@@ -105,7 +103,6 @@ class UserTemplateAttribute(db.Model):
     user_template = relationship(u'UserTemplate')
 
 class Account(db.Model):
-    print 2
     __tablename__ = 'account'
 
     id = db.Column(Integer, db.Sequence('account_id_seq', start=1), primary_key=True)
@@ -114,11 +111,9 @@ class Account(db.Model):
     password = db.Column(String(255), nullable=False)
 
     def __init__(self, email, username, password):
-        print 3
         self.email = email
         self.username = username
         self.password = password
 
     def __repr__(self):
-        print 4
         return '<Account %r>' % self.username
