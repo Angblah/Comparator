@@ -30,6 +30,15 @@ def add_user():
 	db.session.commit()
 	return redirect(url_for('index'))
 
+@app.route('/login', methods=['POST'])
+def login():
+	loginEmail = request.form['email']
+	loginPassword = request.form['password']
+	user = Account.query.filter_by(email='loginEmail').first()
+	if user.password == loginPassword:
+		#Login successful
+		return redirect(url_for('profile'))
+
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 5000))
 	print (port)
