@@ -8,7 +8,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://inpbjnlkzqdkhf:d0a646187c720
 app.debug = True
 db = SQLAlchemy(app)
 
-#from models import *
+from models import *
 
 @app.route('/')
 def index():
