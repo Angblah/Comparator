@@ -108,7 +108,7 @@ class Account(db.Model):
     print 2
     __tablename__ = 'account'
 
-    id = db.Column(Integer, primary_key=True)
+    id = db.Column(Integer, db.Sequence('account_id_seq', start=69), primary_key=True)
     email = db.Column(String(255), nullable=False, unique=True)
     username = db.Column(String(255), nullable=False, unique=True)
     password = db.Column(String(255), nullable=False)
