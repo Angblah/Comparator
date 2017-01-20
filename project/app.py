@@ -19,6 +19,10 @@ def index():
 def newComparison():
 	return render_template('newComparison.html')
 
+@app.route('/profile')
+def register():
+	return render_template('profileHomePage.html')
+
 
 
 @app.route('/add_user', methods=['POST'])
