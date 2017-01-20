@@ -22,7 +22,7 @@ class AttributeValue(db.Model):
 class Comparison(db.Model):
     __tablename__ = 'comparison'
 
-    id = db.Column(Integer, db.Sequence('comparison_id_seq', start=1), primary_key=True)
+    id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
     last_position = db.Column(Integer, nullable=False, server_default=text("'-1'::integer"))
     account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
@@ -33,7 +33,7 @@ class Comparison(db.Model):
 class ComparisonAttribute(db.Model):
     __tablename__ = 'comparison_attribute'
 
-    id = db.Column(Integer, db.Sequence('comparison_attribute_id_seq', start=1), primary_key=True,)
+    id = db.Column(Integer, primary_key=True,)
     name = db.Column(String(255), nullable=False)
     type_id = db.Column(SmallInteger, nullable=False)
     comparison_id = db.Column(ForeignKey(u'comparison.id', ondelete=u'CASCADE'), nullable=False)
@@ -48,7 +48,7 @@ class ComparisonItem(db.Model):
         UniqueConstraint('comparison_id', 'position'),
     )
 
-    id = db.Column(Integer, db.Sequence('comparison_item_id_seq', start=1), primary_key=True)
+    id = db.Column(Integer, primary_key=True)
     position = db.Column(Integer, nullable=False)
     comparison_id = db.Column(ForeignKey(u'comparison.id', ondelete=u'CASCADE'), nullable=False)
 
@@ -65,14 +65,14 @@ class DataType(db.Model):
 class Template(db.Model):
     __tablename__ = 'template'
 
-    id = db.Column(Integer, db.Sequence('template_id_seq', start=1), primary_key=True)
+    id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
 
 
 class TemplateAttribute(db.Model):
     __tablename__ = 'template_attribute'
 
-    id = db.Column(Integer, db.Sequence('template_attribute_id_seq', start=1), primary_key=True)
+    id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
     type_id = db.Column(SmallInteger, nullable=False)
     template_id = db.Column(ForeignKey(u'template.id', ondelete=u'CASCADE'), nullable=False)
@@ -84,7 +84,7 @@ class TemplateAttribute(db.Model):
 class UserTemplate(db.Model):
     __tablename__ = 'user_template'
 
-    id = db.Column(Integer, db.Sequence('user_template_id_seq', start=1), primary_key=True)
+    id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
     account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
 
@@ -94,7 +94,7 @@ class UserTemplate(db.Model):
 class UserTemplateAttribute(db.Model):
     __tablename__ = 'user_template_attribute'
 
-    id = db.Column(Integer, db.Sequence('user_template_attribute_id_seq', start=1), primary_key=True)
+    id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
     type_id = db.Column(SmallInteger, nullable=False)
     user_template_id = db.Column(ForeignKey(u'user_template.id', ondelete=u'CASCADE'), nullable=False)
@@ -105,7 +105,7 @@ class UserTemplateAttribute(db.Model):
 class Account(db.Model):
     __tablename__ = 'account'
 
-    id = db.Column(Integer, db.Sequence('account_id_seq', start=1), primary_key=True)
+    id = db.Column(Integer, primary_key=True)
     email = db.Column(String(255), nullable=False, unique=True)
     username = db.Column(String(255), nullable=False, unique=True)
     password = db.Column(String(255), nullable=False)
