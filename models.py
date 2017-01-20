@@ -8,8 +8,11 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
+print 1
+
 
 class Account(db.Model):
+    print 2
     __tablename__ = 'account'
 
     id = db.Column(Integer, primary_key=True, server_default=text("nextval('account_id_seq'::regclass)"))
@@ -18,11 +21,13 @@ class Account(db.Model):
     password = db.Column(String(255), nullable=False)
 
     def __init__(self, email, username, password):
+        print 3
         self.email = email
         self.username = username
         self.password = password
 
     def __repr__(self):
+        print 4
         return '<Account %r>' % self.username
 
 
