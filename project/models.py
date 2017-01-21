@@ -45,7 +45,7 @@ class ComparisonAttribute(db.Model):
 class ComparisonItem(db.Model):
     __tablename__ = 'comparison_item'
     __table_args__ = (
-        UniqueConstraint('comparison_id', 'position'),
+        UniqueConstraint('comparison_id', 'position', deferrable=True),
     )
 
     id = db.Column(Integer, primary_key=True)
