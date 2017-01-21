@@ -297,7 +297,7 @@ def initialize_db_values():
 
 def register_user(email, username, password):
     query = text("""select register_user(:email, :username, :password)""")
-    # TODO: look into just setting engine's execution_options to0 always autocommit (might not be best practice though)
+    # TODO: look into just setting engine's execution_options to always autocommit (might not be best practice though)
     # TODO: check for duplicate email/username before registration instead of just through constraint
     db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password)
 
