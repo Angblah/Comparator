@@ -24,7 +24,6 @@ def register():
 	return render_template('profileHomePage.html')
 
 
-
 @app.route('/add_user', methods=['POST'])
 def add_user():
 	#Create the object we want to add
