@@ -1,6 +1,7 @@
 from app import db
 from sqlalchemy import text
-
+import sqlalchemy
+# TODO: look into sessions and rollback
 # initializes db stored functions and adds some values
 def initialize_db_structure():
     db.drop_all()
@@ -217,9 +218,14 @@ def initialize_db_structure():
 
     create or replace function validate_login(_username varchar, _password varchar) returns boolean as
     $$
+        declare _passhash varchar;
         begin
-            perform * from account where username = _username and password = crypt(_password, password);
-            return found;
+            select password from account where username = _username into _passhash;
+            if found then
+                return _passhash = crypt(_password, _passhash);
+            else
+                return found;
+            end if;
 
         end;
     $$ language plpgsql;
@@ -295,10 +301,23 @@ def initialize_db_values():
     """)
     db.engine.execute(query.execution_options(autocommit=True))
 
+# TODO: consider checking for valid email structure
+# returns 1 for valid registration parameters, 2 for invalid email, 3 for invalid username
+def validate_registration(email, username):
+    # TODO: see if better way to complete function as unique constraints checked upon insert anyway (conditional on error message?)
+    from sqlalchemy import select
+    from models import Account
+    if db.engine.execute((select([Account.id]).where(Account.email == email))).rowcount > 0:
+        # DUPLICATE EMAIL
+        return 2
+    elif db.engine.execute((select([Account.id]).where(Account.username == username))).rowcount > 0:
+        # DUPLICATE USERNAME
+        return 3
+    return 1
+
 def register_user(email, username, password):
     query = text("""select register_user(:email, :username, :password)""")
     # TODO: look into just setting engine's execution_options to always autocommit (might not be best practice though)
-    # TODO: check for duplicate email/username before registration instead of just through constraint
     db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password)
 
 # returns true if login credentials valid, false otherwise
@@ -311,3 +330,5 @@ def validate_login(username, password):
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
+
+
