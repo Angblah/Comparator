@@ -88,15 +88,19 @@
                                 <li class="dropdown">
                                     <a href="#">FAQ</a>
                                 </li>
-                                <li class="dropdown" >
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Username<b class="caret"></b></a>
+                                <li class="dropdown">
+                                  <a><img src="../static/img/user.png" class="img-responsive hidden-xs" style="width:30px; height: 30px"></a>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Username<b class="caret"></b>
+                                    </a>
                                     <ul class="dropdown-menu">
                                         <li>
                                             <div class="yamm-content">
                                                 <div class="container" style="width:350px">
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            <img src="../static/img/user.png" class="img-responsive hidden-xs" alt="">
+                                                            <img src="../static/img/user.png" class="img-responsive hidden-xs">
                                                         </div>
                                                         <div class="col-sm-3" style="width:150px">
                                                             <h5>User Options</h5>
@@ -139,21 +143,27 @@
         <!-- *** HOMEPAGE CAROUSEL ***
 _________________________________________________________ -->
 
+        <body>
+            <div class="home-carousel" style="height: 100px">
+                <br>
+                <h1 align="center">Username's Dashboard</h1>
+            </div>
+        </body>
+
         <div class="home-carousel">
 
-            <div class="dark-mask"></div>
-
-            <header>
-              <h2>Centered Heading</h2>
-            </header>
+            <div class="dark-mask"></div>          
 
             <div class="container">
-            <h2 align="center" style="color:black">Centered Heading</h2>
                 <div class="row">
                     <div class="container">
-
+                        <br>
+                        <br>
                         <div class="col-sm-7">
-                            <div id="row">
+                            <div class="heading text-left">
+                                <h3>Recent Comparisons</h3>
+                            </div>
+                            <div id="row">                              
                                 <div class="tile"></div>
                                 <div class="tile"></div>
                                 <div class="tile">Hover Me</div>
@@ -164,9 +174,10 @@ _________________________________________________________ -->
 
                         <div class="col-sm-5">
                             <div class="heading text-left">
-                                <h3>Make a Comparison!</h3>
+                                <h3>Or Make a New Comparison!</h3>
                             </div>
                             <div class="text-left">
+                            <br>
                                     <button type="submit" class="btn btn-template-main btn-lg" onclick="location.href='newComparison'">Start Comparing</button>
                             </div>
                             <br>
