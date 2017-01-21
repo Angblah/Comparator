@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 import os
@@ -12,18 +12,31 @@ app.test_request_context().push()
 db = SQLAlchemy(app)
 
 from models import *
+from database_utils import validate_login
 
 @app.route('/')
 def index():
-	return render_template('home.html')
+	if not session.get('logged_in'):
+		#If not currently logged in, show the home screen
+		return render_template('home.html')
+	else:
+		#If logged in, show workspace
+		return render_template('profileHomePage.html')
 
 @app.route('/newComparison')
 def newComparison():
-	return render_template('newComparison.html')
+	if not session.get('logged_in'):
+		return redirect(url_for('index'))
+	else:
+		return render_template('newComparison.html')
 
 @app.route('/profile')
 def register():
-	return render_template('profileHomePage.html')
+	if not session.get('logged_in'):
+		#If you're not logged in, you shouldn't be able to access this page
+		return redirect(url_for('index'))
+	else:
+		return render_template('profileHomePage.html', username = request.args.get('username'))
 
 @app.route('/add_user', methods=['POST'])
 def add_user():
@@ -36,17 +49,22 @@ def add_user():
 
 @app.route('/login', methods=['POST'])
 def login():
-	loginEmail = request.form['email']
+	loginUsername = request.form['username']
 	loginPassword = request.form['password']
-	try:
-		user = Account.query.filter_by(email=loginEmail).one()
-		if user.password == loginPassword:
-			#Login successful
-			return redirect(url_for('register'))
-	except NoResultFound:
-		print ("Login unsuccessful")
+	if validate_login(loginUsername, loginPassword):
+		#Login successful
+		session['logged_in'] = True
+		return redirect(url_for('register', username = loginUsername))
+	else:
+		#Login unsuccessful
 		return redirect(url_for('index'))
+
+@app.route("/logout")
+def logout():
+	session['logged_in'] = False
+	return render_template('home.html')
 
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 5000))
+	app.secret_key = os.urandom(12)
 	app.run(host='0.0.0.0', port=port, debug=True)
