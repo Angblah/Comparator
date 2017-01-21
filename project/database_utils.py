@@ -2,10 +2,13 @@ from app import db
 from sqlalchemy import text
 
 # initializes db stored functions and adds some values
-def initialize_db():
+def initialize_db_structure():
     db.drop_all()
     db.create_all()
     sql = """
+    CREATE EXTENSION tablefunc;
+    CREATE EXTENSION pgcrypto;
+
     create or replace function add_comparison_item (table_comparison_id int, table_position int) returns void
     as $$
       begin
@@ -213,10 +216,69 @@ def initialize_db():
         end;
     $$ language plpgsql;
 
-    select populate_database()
+    create or replace function populate_database_test_values() returns void
+    as $$
+    declare _comparison_id int;
+    declare item_0 int;
+    declare item_1 int;
+    declare item_2 int;
+
+    begin
+
+        insert into account (email, username, password) values ('a@a.com', 'admin', 'password');
+        insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
+
+        -- TODO: have all add items return id of inserted item
+
+        perform add_comparison_item_back(_comparison_id);
+        perform add_comparison_item_back(_comparison_id);
+        perform add_comparison_item(_comparison_id, 0);
+        perform add_comparison_item(_comparison_id, 1);
+        perform delete_comparison_item(_comparison_id, 2);
+
+        perform add_attribute(_comparison_id, 'name', 0::smallint);
+        perform add_attribute(_comparison_id, 'size', 0::smallint);
+        perform add_attribute(_comparison_id, 'color', 0::smallint);
+        perform add_attribute(_comparison_id, 'number', 1::smallint);
+
+        select id from comparison_item where position = 0 into item_0;
+        select id from comparison_item where position = 0 into item_1;
+        select id from comparison_item where position = 0 into item_2;
+
+
+        perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 2');
+        perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'large');
+        perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'red');
+        perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-1.32');
+
+        perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 3');
+        perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'small');
+        perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'blue');
+        perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '3');
+
+        perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 4');
+        perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'medium');
+        perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'green');
+        perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-8.221');
+
+        perform add_comparison_item(1, 2);
+        perform add_comparison_item_back(1);
+
+        -- TODO: create a few templates
+    end;
+$$ language plpgsql;
+
 
     """
     db.engine.execute(sql)
 
+def initialize_db_values():
+    query = """
+        select populate_database();
+        select populate_database_test_values();
+        """
+    db.engine.execute(query)
+
 if __name__ == 'main':
-    initialize_db()
+    initialize_db_structure()
+    initialize_db_values()
