@@ -5,9 +5,9 @@ from sqlalchemy import text
 def initialize_db_structure():
     db.drop_all()
     db.create_all()
-    sql = """
-    CREATE EXTENSION tablefunc;
-    CREATE EXTENSION pgcrypto;
+    query = text("""
+    CREATE EXTENSION IF NOT EXISTS tablefunc;
+    CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
     create or replace function add_comparison_item (table_comparison_id int, table_position int) returns void
     as $$
@@ -120,8 +120,8 @@ def initialize_db_structure():
         -- generate categories for xtab param and col definition list
         EXECUTE format(
          $$SELECT string_agg(quote_literal(x.cat), '), (')
-                , string_agg(quote_ident  (x.cat), %%L)
-           FROM  (SELECT DISTINCT %%I::text AS cat FROM %%s ORDER BY 1) x$$
+                , string_agg(quote_ident  (x.cat), %L)
+           FROM  (SELECT DISTINCT %I::text AS cat FROM %s ORDER BY 1) x$$
          , ' ' || _type || ', ', _cat, _tbl)
         INTO  _cat_list, _col_list;
     
@@ -131,12 +131,12 @@ def initialize_db_structure():
           'DROP VIEW IF EXISTS xtab_view;
            CREATE TEMP VIEW xtab_view AS SELECT * FROM crosstab(
            $q$
-               SELECT %%I, %%I, %%s
-               FROM   %%I
+               SELECT %I, %I, %s
+               FROM   %I
                order by 1, 2
            $q$
-         , $c$VALUES (%%5$s)$c$
-           ) ct(%%1$I text, %%6$s %%7$s)'
+         , $c$VALUES (%5$s)$c$
+           ) ct(%1$I text, %6$s %7$s)'
         , _row, _cat, _expr  -- expr must be an aggregate expression!
         , _tbl, _cat_list, _col_list, _type
         );
@@ -158,7 +158,7 @@ def initialize_db_structure():
         -- generate categories for xtab param and col definition list
         EXECUTE format(
          $$SELECT string_agg(quote_literal(x.cat), '), (')
-                , string_agg(quote_ident  (x.cat), %%L)
+                , string_agg(quote_ident  (x.cat), %L)
            FROM  (SELECT generate_series::text AS cat FROM generate_series(0, (SELECT last_position FROM Comparison where id = 1))) x$$
          , ' ' || 'varchar(255)' || ', ')
         INTO  _cat_list, _col_list;
@@ -173,8 +173,8 @@ def initialize_db_structure():
                FROM   comparison_table_stacked
                order by id
            $q$
-         , $c$VALUES (%%1$s)$c$
-           ) ct(id int, name text, %%2$s varchar(255))'
+         , $c$VALUES (%1$s)$c$
+           ) ct(id int, name text, %2$s varchar(255))'
         , _cat_list, _col_list
         );
     
@@ -198,8 +198,8 @@ def initialize_db_structure():
         execute format('create or replace temp view sort_view as select comparison_item.id as _item_id from comparison_attribute
             inner join comparison_item on comparison_attribute.comparison_id = comparison_item.comparison_id
             left join attribute_value on attribute_value.item_id = comparison_item.id and attribute_value.attribute_id = comparison_attribute.id
-            where comparison_attribute.comparison_id = %%s and comparison_attribute.id = %%s
-            order by val::%%s', _comparison_id, _attribute_id, _type);
+            where comparison_attribute.comparison_id = %s and comparison_attribute.id = %s
+            order by val::%s', _comparison_id, _attribute_id, _type);
     
         update comparison_item set position = row_number - 1
         from (select row_number() over (), * from sort_view) as t
@@ -218,67 +218,76 @@ def initialize_db_structure():
 
     create or replace function populate_database_test_values() returns void
     as $$
-    declare _comparison_id int;
-    declare item_0 int;
-    declare item_1 int;
-    declare item_2 int;
+        declare _comparison_id int;
+        declare item_0 int;
+        declare item_1 int;
+        declare item_2 int;
 
-    begin
+        begin
 
-        insert into account (email, username, password) values ('a@a.com', 'admin', 'password');
-        insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
+            insert into account (email, username, password) values ('a@a.com', 'admin', 'password');
+            insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
-        -- TODO: have all add items return id of inserted item
+            -- TODO: have all add items return id of inserted item
 
-        perform add_comparison_item_back(_comparison_id);
-        perform add_comparison_item_back(_comparison_id);
-        perform add_comparison_item(_comparison_id, 0);
-        perform add_comparison_item(_comparison_id, 1);
-        perform delete_comparison_item(_comparison_id, 2);
+            perform add_comparison_item_back(_comparison_id);
+            perform add_comparison_item_back(_comparison_id);
+            perform add_comparison_item(_comparison_id, 0);
+            perform add_comparison_item(_comparison_id, 1);
+            perform delete_comparison_item(_comparison_id, 2);
 
-        perform add_attribute(_comparison_id, 'name', 0::smallint);
-        perform add_attribute(_comparison_id, 'size', 0::smallint);
-        perform add_attribute(_comparison_id, 'color', 0::smallint);
-        perform add_attribute(_comparison_id, 'number', 1::smallint);
+            perform add_attribute(_comparison_id, 'name', 0::smallint);
+            perform add_attribute(_comparison_id, 'size', 0::smallint);
+            perform add_attribute(_comparison_id, 'color', 0::smallint);
+            perform add_attribute(_comparison_id, 'number', 1::smallint);
 
-        select id from comparison_item where position = 0 into item_0;
-        select id from comparison_item where position = 0 into item_1;
-        select id from comparison_item where position = 0 into item_2;
-
-
-        perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 2');
-        perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'large');
-        perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'red');
-        perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-1.32');
-
-        perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 3');
-        perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'small');
-        perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'blue');
-        perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '3');
-
-        perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 4');
-        perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'medium');
-        perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'green');
-        perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-8.221');
-
-        perform add_comparison_item(1, 2);
-        perform add_comparison_item_back(1);
-
-        -- TODO: create a few templates
-    end;
-$$ language plpgsql;
+            select id from comparison_item where position = 0 into item_0;
+            select id from comparison_item where position = 1 into item_1;
+            select id from comparison_item where position = 2 into item_2;
 
 
-    """
-    db.engine.execute(sql)
+            perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 2');
+            perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'large');
+            perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'red');
+            perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-1.32');
+
+            perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 3');
+            perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'small');
+            perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'blue');
+            perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '3');
+
+            perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 4');
+            perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'medium');
+            perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'green');
+            perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-8.221');
+
+            perform add_comparison_item(_comparison_id, 2);
+            perform add_comparison_item_back(_comparison_id);
+
+            -- TODO: create a few templates
+        end;
+    $$ language plpgsql;
+
+
+    """)
+    db.engine.execute(query.execution_options(autocommit=True))
 
 def initialize_db_values():
-    query = """
+    query = text("""
         select populate_database();
         select populate_database_test_values();
-        """
-    db.engine.execute(query)
+    """)
+    db.engine.execute(query.execution_options(autocommit=True))
 
-if __name__ == 'main':
+def register_user(email, username, password):
+    query = text("""
+        insert into account (email, username, password) values (:email, :username,
+        crypt(:password, gen_salt('bf', 8)));
+    """)
+
+    db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password)
+
+if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
+    register_user('test', 'test', 'test')
