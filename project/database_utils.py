@@ -207,7 +207,23 @@ def initialize_db_structure():
     
     end;
     $$ language plpgsql;
-    
+
+    create or replace function register_user(_email varchar, _username varchar, _password varchar) returns void as
+    $$
+        begin
+            insert into account (email, username, password) values (_email, _username, crypt(_password, gen_salt('bf', 8)));
+        end;
+    $$ language plpgsql;
+
+    create or replace function validate_login(_username varchar, _password varchar) returns boolean as
+    $$
+        begin
+            perform * from account where username = _username and password = crypt(_password, password);
+            return found;
+
+        end;
+    $$ language plpgsql;
+
     
     create or replace function populate_database() returns void as
     $$
@@ -225,7 +241,7 @@ def initialize_db_structure():
 
         begin
 
-            insert into account (email, username, password) values ('a@a.com', 'admin', 'password');
+            perform register_user('a@a.com', 'admin', 'password');
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
             -- TODO: have all add items return id of inserted item
@@ -280,14 +296,18 @@ def initialize_db_values():
     db.engine.execute(query.execution_options(autocommit=True))
 
 def register_user(email, username, password):
-    query = text("""
-        insert into account (email, username, password) values (:email, :username,
-        crypt(:password, gen_salt('bf', 8)));
-    """)
-
+    query = text("""select register_user(:email, :username, :password)""")
+    # TODO: look into just setting engine's execution_options to0 always autocommit (might not be best practice though)
+    # TODO: check for duplicate email/username before registration instead of just through constraint
     db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password)
+
+# returns true if login credentials valid, false otherwise
+def validate_login(username, password):
+    query = text("""select validate_login(:username, :password)""")
+    result = db.engine.execute(query.execution_options(autocommit=True), username=username, password=password)
+    for row in result:
+        return row[0]
 
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
-    register_user('test', 'test', 'test')
