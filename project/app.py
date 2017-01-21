@@ -25,10 +25,6 @@ def newComparison():
 def register():
 	return render_template('profileHomePage.html')
 
-<<<<<<< HEAD
-=======
-
->>>>>>> ae5597ba39ae2a25a7b585cd16aa84652ef0f8c5
 @app.route('/add_user', methods=['POST'])
 def add_user():
 	#Create the object we want to add
