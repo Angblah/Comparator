@@ -1,9 +1,11 @@
 from app import db
-from sqlalchemy import text
+from sqlalchemy import text, select
+from models import *
 import sqlalchemy
 # TODO: look into sessions and rollback
 # initializes db stored functions and adds some values
 def initialize_db_structure():
+
     db.drop_all()
     db.create_all()
     query = text("""
@@ -155,15 +157,15 @@ def initialize_db_structure():
            _col_list text;
         BEGIN
         execute create_comparison_table_stacked(table_comparison_id);
-    
+
         -- generate categories for xtab param and col definition list
         EXECUTE format(
          $$SELECT string_agg(quote_literal(x.cat), '), (')
                 , string_agg(quote_ident  (x.cat), %L)
-           FROM  (SELECT generate_series::text AS cat FROM generate_series(0, (SELECT last_position FROM Comparison where id = 1))) x$$
-         , ' ' || 'varchar(255)' || ', ')
+           FROM  (SELECT generate_series::text AS cat FROM generate_series(0, (SELECT last_position FROM comparison where id = %s))) x$$
+         , ' ' || 'varchar(255)' || ', ', table_comparison_id)
         INTO  _cat_list, _col_list;
-    
+
         -- generate query string
         RETURN format(
           -- DROP VIEW used instead of CREATE OR REPLACE as column names may change between function calls
@@ -178,7 +180,7 @@ def initialize_db_structure():
            ) ct(id int, name text, %2$s varchar(255))'
         , _cat_list, _col_list
         );
-    
+
         END
         $func$ LANGUAGE plpgsql;
     
@@ -305,8 +307,7 @@ def initialize_db_values():
 # returns 1 for valid registration parameters, 2 for invalid email, 3 for invalid username
 def validate_registration(email, username):
     # TODO: see if better way to complete function as unique constraints checked upon insert anyway (conditional on error message?)
-    from sqlalchemy import select
-    from models import Account
+
     if db.engine.execute((select([Account.id]).where(Account.email == email))).rowcount > 0:
         # DUPLICATE EMAIL
         return 2
@@ -327,8 +328,29 @@ def validate_login(username, password):
     for row in result:
         return row[0]
 
+# returns horizontal view of comparison table with specified id
+# attribute id's and names are the left columns of each row, and all other columns represent an item in the comparison
+# column headers are 'id' and 'name', and each item position, from left to right
+def get_comparison_horizontal(comparison_id):
+    query = text("""
+    do $$ begin
+        execute create_comparison_table_horizontal(:id);
+    end $$;
+    select * from comparison_table_horizontal;
+    """)
+    return db.engine.execute(query, id=comparison_id)
+
+# returns generator over all comparison ids of specified user
+def get_user_comparison_ids(user_id):
+    result = db.engine.execute((select([Comparison.id]).where(Comparison.account_id == user_id)))
+    for row in result:
+        yield row[0]
+
+# TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
+
+
 
 
