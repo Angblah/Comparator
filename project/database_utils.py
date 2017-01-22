@@ -1,6 +1,5 @@
 from app import db
 from sqlalchemy import text, select
-from models import *
 import sqlalchemy
 # TODO: look into sessions and rollback
 # initializes db stored functions and adds some values
@@ -306,6 +305,8 @@ def initialize_db_values():
 # TODO: consider checking for valid email structure
 # returns 1 for valid registration parameters, 2 for invalid email, 3 for invalid username
 def validate_registration(email, username):
+    from models import Account
+
     # TODO: see if better way to complete function as unique constraints checked upon insert anyway (conditional on error message?)
 
     if db.engine.execute((select([Account.id]).where(Account.email == email))).rowcount > 0:
@@ -342,6 +343,8 @@ def get_comparison_horizontal(comparison_id):
 
 # returns generator over all comparison ids of specified user
 def get_user_comparison_ids(user_id):
+    from models import Comparison
+
     result = db.engine.execute((select([Comparison.id]).where(Comparison.account_id == user_id)))
     for row in result:
         yield row[0]
@@ -350,7 +353,6 @@ def get_user_comparison_ids(user_id):
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
-
 
 
 
