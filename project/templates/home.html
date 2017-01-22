@@ -172,20 +172,53 @@ _________________________________________________________ -->
                         </div>
                         <form action="/add_user" method="post">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="email" name="email" required placeholder="Email">
+                                <input type="email" class="form-control" id="email" name="email" required placeholder="Email">
+                                {% with errors = get_flashed_messages(category_filter=["email_error"]) %}
+                                    {% if errors %}
+                                        {%- for msg in errors %}
+                                            {{ msg }}
+                                        {% endfor -%}
+                                    {% endif %}
+                                {% endwith %}
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="username" name="username" required placeholder="Username">
+                                {% with errors = get_flashed_messages(category_filter=["username_error"]) %}
+                                    {% if errors %}
+                                        {%- for msg in errors %}
+                                            {{ msg }}
+                                        {% endfor -%}
+                                    {% endif %}
+                                {% endwith %}
                             </div>
                             <div class="form-group">
                                 <input type="password" class="form-control" id="password" name="password" required placeholder="Password">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="passwordConfirm-login" required placeholder="Confirm Password">
+                                <input type="password" class="form-control" id="password_confirm_register" name="password_confirm_register" required placeholder="Confirm Password">
+                                {% with errors = get_flashed_messages(category_filter=["password_error"]) %}
+                                    {% if errors %}
+                                        {%- for msg in errors %}
+                                            {{ msg }}
+                                        {% endfor -%}
+                                    {% endif %}
+                                {% endwith %}
                             </div>
                             <div class="text-left">
                                 <button type="submit" class="btn btn-template-main"><i class="fa fa-user-md"></i> Register</button>
                             </div>
+
+                            {% with messages = get_flashed_messages(category_filter=["registration_success"]) %}
+                                {% if messages %}
+                                    <script>
+                                        var messages = {{ messages | safe }};
+                                        for (var i = 0; i < messages.length; i++) {
+                                          alert(messages[i]);
+                                        }
+                                    </script>
+                                {% endif %}
+                            {% endwith %}
+
                         </form>
                         <hr>
                         <div class="heading text-left">
@@ -210,7 +243,7 @@ _________________________________________________________ -->
             <div class="container">
                 <div class="col-md-12">
                     <p class="pull-left">&copy; 2016. The Comparator / Byte Me</p>
-                    <p class="pull-right">Template by <a href="https://bootstrapious.com/free-templates">Bootstrapious</a> 
+                    <p class="pull-right">Template by <a href="https://bootstrapious.com/free-templates">Bootstrapious</a>
                          <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
                     </p>
 
@@ -240,7 +273,7 @@ _________________________________________________________ -->
     <script src="../static/js/jquery.parallax-1.1.3.js"></script>
     <script src="../static/js/front.js"></script>
 
-    
+
 
     <!-- owl carousel -->
     <script src="../static/js/owl.carousel.min.js"></script>

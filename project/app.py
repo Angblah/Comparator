@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 import os
@@ -48,19 +48,19 @@ def register():
 def add_user():
     # Create the object we want to add
     # user = Account(request.form['email'], request.form['username'], request.form['password'])
-    input = (request.form['email'], request.form['username'], request.form['password'])
-    temp = validate_registration(input[0], input[1])
-    if temp == 1:
-        # TODO: Display registration confirmation
-        register_user(input[0], input[1], input[2])
-        a = 1
-    elif temp == 2:
-        # TODO: display duplicate email
-
-        a = 1
-    elif temp == 3:
-        # TODO: display duplicate username
-        a = 1
+    input = (request.form['email'], request.form['username'], request.form['password'], request.form['password_confirm_register'])
+    # TODO: prettier form validation
+    if input[2] != input[3]:
+        flash('Passwords must match.', 'password_error')
+    else:
+        temp = validate_registration(input[0], input[1])
+        if temp == 1:
+            register_user(input[0], input[1], input[2])
+            flash('You have successfully registered!', 'registration_success')
+        elif temp == 2:
+            flash('This email is already attached to an account.', 'email_error')
+        elif temp == 3:
+            flash('This username is taken. Please try another.', 'username_error')
     return redirect(url_for('index'))
 
 
