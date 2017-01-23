@@ -38,6 +38,11 @@ def newComparison():
 def profile_page():
     return render_template('profileHomePage.html', username=request.args.get('username'))
 
+@app.route('/myProfile')
+@login_required
+def myProfile_page():
+    return render_template('myProfile.html', username=request.args.get('username'))
+
 @app.route('/forgotPassword')
 def forgotPassword():
     return render_template('forgotPassword.html')
