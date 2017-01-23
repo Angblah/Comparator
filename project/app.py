@@ -36,7 +36,7 @@ def newComparison():
 # TODO: rename register and add_user functions to reduce confusion
 @app.route('/profile')
 @login_required
-def register():
+def profile_page():
     return render_template('profileHomePage.html', username=request.args.get('username'))
 
 
@@ -52,7 +52,7 @@ def add_user():
         temp = validate_registration(input[0], input[1])
         if temp == 1:
             register_user(input[0], input[1], input[2])
-            flash('You have successfully registered!', 'registration_success')
+            return login_helper(input[1], input[2])
         elif temp == 2:
             flash('This email is already attached to an account.', 'email_error')
         elif temp == 3:
@@ -64,14 +64,14 @@ def add_user():
 def login():
     loginUsername = request.form['username']
     loginPassword = request.form['password']
+    return login_helper(loginUsername, loginPassword)
+
+def login_helper(loginUsername, loginPassword):
     if validate_login(loginUsername, loginPassword):
         # Login successful
-        user = Account.query.filter_by(username = loginUsername).one()
-        print (user)
-        print (user.username)
-        print (user.email)
+        user = Account.query.filter_by(username=loginUsername).one()
         login_user(user, remember=True)
-        return redirect(url_for('register', username=loginUsername))
+        return redirect(url_for('profile_page', username=loginUsername))
     else:
         # Login unsuccessful
         return redirect(url_for('index'))
