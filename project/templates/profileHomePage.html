@@ -93,17 +93,17 @@
                                   <a><img src="../static/img/user.png" class="img-responsive hidden-xs" style="width:30px; height: 30px"></a>
                                 </li>
                                 <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ username }}<b class="caret"></b>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.username }}<b class="caret"></b>
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
                                             <div class="yamm-content">
-                                                <div class="container" style="width:350px">
+                                                <div class="container" style="width:35em">
                                                     <div class="row">
                                                         <div class="col-sm-6">
                                                             <img src="../static/img/user.png" class="img-responsive hidden-xs">
                                                         </div>
-                                                        <div class="col-sm-3" style="width:150px">
+                                                        <div class="col-sm-3" style="width:15em">
                                                             <h5>User Options</h5>
                                                             <ul>
                                                                 <li><a href="home">My Profile</a>
@@ -145,13 +145,13 @@
 _________________________________________________________ -->
 
         <body>
-            <div class="home-carousel" style="height: 100px">
+            <div class="home-carousel" style="height: 10em">
                 <br>
-                <h1 align="center">Username's Dashboard</h1>
+                <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
             </div>
         </body>
 
-        <div class="home-carousel">
+        <div class="home-carousel" style="height: 20em">
 
             <div class="dark-mask"></div>          
 
@@ -185,18 +185,116 @@ _________________________________________________________ -->
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="tabs">
-                        <ul>
-                          <li>Hello</li>
-                          <li>Hi There</li>
-                        </ul>
-                            
-                    </div>  
-                      <!-- /.tabs -->
-                </div>
+                
             </div>
         </div>
+
+        <body>
+            <div class="home-carousel" align="center">
+                <div class="container" align="center" style="width: 60em">
+                <!-- <ul class="nav nav-tabs" align="center">
+                  <li class="active" style="background-color: white"><a data-toggle="tab" href="#home">Home</a></li>
+                  <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+                  <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+                </ul>
+
+                <div class="tab-content" style="background-color: white">
+                    <div id="home" class="tab-pane fade in active">
+                        <h3>HOME</h3>
+                        <p>Some content.</p>
+                    </div>
+                    <div id="menu1" class="tab-pane fade">
+                        <h3>Menu 1</h3>
+                        <p>Some content in menu 1.</p>
+                    </div>
+                    <div id="menu2" class="tab-pane fade">
+                        <h3>Menu 2</h3>
+                        <p>Some content in menu 2.</p>
+                    </div>
+                    </div> -->
+                    <style>
+                    body {font-family: "Lato", sans-serif;}
+
+                    ul.tab {
+                        list-style-type: none;
+                        margin: 0;
+                        padding: 0;
+                        overflow: hidden;
+                        /*border: 1px solid #ccc;*/
+                        /*background-color: #f1f1f1;*/
+                    }
+
+                    /* Float the list items side by side */
+                    ul.tab li {float: left;}
+
+                    /* Style the links inside the list items */
+                    ul.tab li a {
+                        display: inline-block;
+                        color: white;
+                        text-align: center;
+                        padding: 14px 16px;
+                        text-decoration: none;
+                        transition: 0.3s;
+                        font-size: 17px;
+                    }
+
+                    /* Change background color of links on hover */
+                    ul.tab li a:hover {
+                        background-color: #ccc;
+                    }
+
+                    /* Create an active/current tablink class */
+                    ul.tab li a:focus, .active {
+                        background-color: #f1f1f1;
+                        color: #38a7bb;
+                    }
+
+                    /* Style the tab content */
+                    .tabcontent {
+                        display: none;
+                        padding: 6px 12px;
+                        /*border: 1px solid #ccc;*/
+                        border-top: none;
+                    }
+                    </style>
+                    <body>
+
+                    <ul class="tab" style="">
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Comparisons')" id="defaultOpen">My Comparisons</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Templates')">My Templates</a></li>
+                    </ul>
+
+                    <div id="Comparisons" class="tabcontent">
+                      <h3>Comparisons</h3>
+                      <p>Your Comparisons Will Live Here</p>
+                    </div>
+
+                    <div id="Templates" class="tabcontent">
+                      <h3>Templates</h3>
+                      <p>Your Templates Will Live Here</p>
+                    </div>
+
+                    <script>
+                    function openTab(evt, tab) {
+                        var i, tabcontent, tablinks;
+                        tabcontent = document.getElementsByClassName("tabcontent");
+                        for (i = 0; i < tabcontent.length; i++) {
+                            tabcontent[i].style.display = "none";
+                        }
+                        tablinks = document.getElementsByClassName("tablinks");
+                        for (i = 0; i < tablinks.length; i++) {
+                            tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        }
+                        document.getElementById(tab).style.display = "block";
+                        evt.currentTarget.className += " active";
+                    }
+
+                    // Get the element with id="defaultOpen" and click on it
+                    document.getElementById("defaultOpen").click();
+                    </script>
+                </div>
+            </div>
+        </body>
 
         <!-- *** HOMEPAGE CAROUSEL END *** -->
 
@@ -206,7 +304,7 @@ _________________________________________________________ -->
         <div id="copyright">
             <div class="container">
                 <div class="col-md-12">
-                    <p class="pull-left">&copy; 2016. The Comparator / Byte Me</p>
+                    <p class="pull-left">&copy; 2017. The Comparator / Byte Me</p>
                     <p class="pull-right">Template by <a href="https://bootstrapious.com/free-templates">Bootstrapious</a> 
                          <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
                     </p>

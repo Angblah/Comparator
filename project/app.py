@@ -24,11 +24,10 @@ def index():
 
 @login_manager.user_loader
 def load_user(user_id):
-    #Given user_id, return the associated User boject
+    #Given user_id, return the associated User object
     return Account.query.filter_by(username = user_id).one()
 
 @app.route('/newComparison')
-@login_required
 def newComparison():
     return render_template('newComparison.html')
 
@@ -36,8 +35,12 @@ def newComparison():
 # TODO: rename register and add_user functions to reduce confusion
 @app.route('/profile')
 @login_required
-def register():
+def profile_page():
     return render_template('profileHomePage.html', username=request.args.get('username'))
+
+@app.route('/forgotPassword')
+def forgotPassword():
+    return render_template('forgotPassword.html')
 
 
 @app.route('/add_user', methods=['POST'])
@@ -52,7 +55,7 @@ def add_user():
         temp = validate_registration(input[0], input[1])
         if temp == 1:
             register_user(input[0], input[1], input[2])
-            flash('You have successfully registered!', 'registration_success')
+            return login_helper(input[1], input[2])
         elif temp == 2:
             flash('This email is already attached to an account.', 'email_error')
         elif temp == 3:
@@ -64,25 +67,46 @@ def add_user():
 def login():
     loginUsername = request.form['username']
     loginPassword = request.form['password']
+    return login_helper(loginUsername, loginPassword)
+
+def login_helper(loginUsername, loginPassword):
     if validate_login(loginUsername, loginPassword):
         # Login successful
         user = Account.query.filter_by(username = loginUsername).one()
-        print (user)
-        print (user.username)
-        print (user.email)
         login_user(user, remember=True)
-        return redirect(url_for('register', username=loginUsername))
+        return redirect(url_for('profile_page'))
     else:
         # Login unsuccessful
-        return redirect(url_for('index'))
+        # TODO:: Handle informing the user of invalid credentials
+        return ('', 204)
 
-
-@app.route("/logout")
+@app.route('/logout')
 @login_required
 def logout():
-    user = current_user
     logout_user()
     return render_template('home.html')
+
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    emailOrUsername = request.form['emailOrUsername']
+    #Search the username column first
+    try:
+        user = Account.query.filter_by(username = emailOrUsername).one()
+    except NoResultFound:
+        #Search the email column
+        try:
+            user = Account.query.filter_by(email=emailOrUsername).one()
+        except NoResultFound:
+            #User not found, inform guest user
+            print ("Not found")
+            #TODO:: How to show the user invalid message
+            return ('', 204)
+
+    #User is populated at this point, grab email to send email to
+    print ("Username or email found! Mail will be sent")
+    #user.email
+    #TODO:: Implement sending mail to user
+    return ('', 204)
 
 
 if __name__ == '__main__':
