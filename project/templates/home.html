@@ -171,9 +171,9 @@ _________________________________________________________ -->
                         <div class="heading text-left">
                             <h3>Sign up!</h3>
                         </div>
-                        <form action="/add_user" method="post" id="register">
+                        <form action="/add_user" method="post">
                             <div class="form-group">
-                                <input type="email" class="form-control" id="email_register" name="email" required placeholder="Email">
+                                <input type="email" class="form-control" id="email" name="email" required placeholder="Email">
                                 {% with errors = get_flashed_messages(category_filter=["email_error"]) %}
                                     {% if errors %}
                                         {%- for msg in errors %}
@@ -183,7 +183,7 @@ _________________________________________________________ -->
                                 {% endwith %}
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="username_register" name="username" required placeholder="Username">
+                                <input type="text" class="form-control" id="username" name="username" required placeholder="Username">
                                 {% with errors = get_flashed_messages(category_filter=["username_error"]) %}
                                     {% if errors %}
                                         {%- for msg in errors %}
@@ -193,10 +193,17 @@ _________________________________________________________ -->
                                 {% endwith %}
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="password_register" name="password" required placeholder="Password">
+                                <input type="password" class="form-control" id="password" name="password" required placeholder="Password">
                             </div>
                             <div class="form-group">
                                 <input type="password" class="form-control" id="password_confirm_register" name="password_confirm_register" required placeholder="Confirm Password">
+                                {% with errors = get_flashed_messages(category_filter=["password_error"]) %}
+                                    {% if errors %}
+                                        {%- for msg in errors %}
+                                            {{ msg }}
+                                        {% endfor -%}
+                                    {% endif %}
+                                {% endwith %}
                             </div>
                             <div class="text-left">
                                 <button type="submit" class="btn btn-template-main"><i class="fa fa-user-md"></i> Register</button>
@@ -267,22 +274,7 @@ _________________________________________________________ -->
     <script src="../static/js/jquery.parallax-1.1.3.js"></script>
     <script src="../static/js/front.js"></script>
 
-    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.min.js"></script>
-    <script>
 
-        $( "#register" ).validate({
-          rules: {
-            password_confirm_register: {
-              equalTo: "#password_register"
-            }
-          },
-          messages: {
-            password_confirm_register: "Passwords must match",
-          }
-        });
-    </script>
 
     <!-- owl carousel -->
     <script src="../static/js/owl.carousel.min.js"></script>
