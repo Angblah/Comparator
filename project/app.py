@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
-from flask_login import LoginManager, login_required, login_user, logout_user
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 import os
 
 app = Flask(__name__)
@@ -25,7 +25,7 @@ def index():
 @login_manager.user_loader
 def load_user(user_id):
     #Given user_id, return the associated User boject
-    return Account.query.filter_by(username = user_id)
+    return Account.query.filter_by(username = user_id).one()
 
 @app.route('/newComparison')
 @login_required
@@ -66,7 +66,10 @@ def login():
     loginPassword = request.form['password']
     if validate_login(loginUsername, loginPassword):
         # Login successful
-        user = Account.query.filter_by(username = loginUsername).all()
+        user = Account.query.filter_by(username = loginUsername).one()
+        print (user)
+        print (user.username)
+        print (user.email)
         login_user(user, remember=True)
         return redirect(url_for('register', username=loginUsername))
     else:
