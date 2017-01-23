@@ -24,11 +24,10 @@ def index():
 
 @login_manager.user_loader
 def load_user(user_id):
-    #Given user_id, return the associated User boject
+    #Given user_id, return the associated User object
     return Account.query.filter_by(username = user_id).one()
 
 @app.route('/newComparison')
-@login_required
 def newComparison():
     return render_template('newComparison.html')
 
@@ -37,7 +36,11 @@ def newComparison():
 @app.route('/profile')
 @login_required
 def register():
-    return render_template('profileHomePage.html', username=request.args.get('username'))
+    return render_template('profileHomePage.html')
+
+@app.route('/forgotPassword')
+def forgotPassword():
+    return render_template('forgotPassword.html')
 
 
 @app.route('/add_user', methods=['POST'])
@@ -64,25 +67,44 @@ def add_user():
 def login():
     loginUsername = request.form['username']
     loginPassword = request.form['password']
+    # TODO:: Handle live form checking on the HTML side, are the fields empty?
     if validate_login(loginUsername, loginPassword):
         # Login successful
         user = Account.query.filter_by(username = loginUsername).one()
-        print (user)
-        print (user.username)
-        print (user.email)
         login_user(user, remember=True)
-        return redirect(url_for('register', username=loginUsername))
+        return redirect(url_for('register'))
     else:
         # Login unsuccessful
-        return redirect(url_for('index'))
+        # TODO:: Handle informing the user of invalid credentials
+        return ('', 204)
 
-
-@app.route("/logout")
+@app.route('/logout')
 @login_required
 def logout():
-    user = current_user
     logout_user()
     return render_template('home.html')
+
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    emailOrUsername = request.form['emailOrUsername']
+    #Search the username column first
+    try:
+        user = Account.query.filter_by(username = emailOrUsername).one()
+    except NoResultFound:
+        #Search the email column
+        try:
+            user = Account.query.filter_by(email=emailOrUsername).one()
+        except NoResultFound:
+            #User not found, inform guest user
+            print ("Not found")
+            #TODO:: How to show the user invalid message
+            return ('', 204)
+
+    #User is populated at this point, grab email to send email to
+    print ("Username or email found! Mail will be sent")
+    #user.email
+    #TODO:: Implement sending mail to user
+    return ('', 204)
 
 
 if __name__ == '__main__':
