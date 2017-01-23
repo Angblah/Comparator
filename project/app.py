@@ -1,16 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
+from flask_login import LoginManager, login_required, login_user, logout_user
 import os
 
 app = Flask(__name__)
 # TODO: fetch credentials instead of using string as credentials can change under some circumstances (see https://devcenter.heroku.com/articles/connecting-to-heroku-postgres-databases-from-outside-of-heroku)
 app.config[
     'SQLALCHEMY_DATABASE_URI'] = "postgres://inpbjnlkzqdkhf:d0a646187c72013be9247400d3abe35c4f3f0360ce657260758c455c9c147cf3@ec2-54-163-234-20.compute-1.amazonaws.com:5432/dfu8hu14lo03hn"
-# "postgres://postgres:byteme@localhost/the-comparator"
 app.debug = True
 app.test_request_context().push()
 db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 from models import *
 from database_utils import validate_login, validate_registration, register_user
@@ -18,30 +20,24 @@ from database_utils import validate_login, validate_registration, register_user
 
 @app.route('/')
 def index():
-    if not session.get('logged_in'):
-        # If not currently logged in, show the home screen
-        return render_template('home.html')
-    else:
-        # If logged in, show workspace
-        return render_template('profileHomePage.html')
+    return render_template('home.html')
 
+@login_manager.user_loader
+def load_user(user_id):
+    #Given user_id, return the associated User boject
+    return Account.query.filter_by(username = user_id)
 
 @app.route('/newComparison')
+@login_required
 def newComparison():
-    if not session.get('logged_in'):
-        return redirect(url_for('index'))
-    else:
-        return render_template('newComparison.html')
+    return render_template('newComparison.html')
 
 
 # TODO: rename register and add_user functions to reduce confusion
 @app.route('/profile')
+@login_required
 def register():
-    if not session.get('logged_in'):
-        # If you're not logged in, you shouldn't be able to access this page
-        return redirect(url_for('index'))
-    else:
-        return render_template('profileHomePage.html', username=request.args.get('username'))
+    return render_template('profileHomePage.html', username=request.args.get('username'))
 
 
 @app.route('/add_user', methods=['POST'])
@@ -70,7 +66,8 @@ def login():
     loginPassword = request.form['password']
     if validate_login(loginUsername, loginPassword):
         # Login successful
-        session['logged_in'] = True
+        user = Account.query.filter_by(username = loginUsername).all()
+        login_user(user, remember=True)
         return redirect(url_for('register', username=loginUsername))
     else:
         # Login unsuccessful
@@ -78,8 +75,10 @@ def login():
 
 
 @app.route("/logout")
+@login_required
 def logout():
-    session['logged_in'] = False
+    user = current_user
+    logout_user()
     return render_template('home.html')
 
 

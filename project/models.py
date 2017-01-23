@@ -3,6 +3,7 @@ from app import db
 from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String, UniqueConstraint, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from flask.ext.login import UserMixin
 
 
 Base = declarative_base()
@@ -102,7 +103,7 @@ class UserTemplateAttribute(db.Model):
 
     user_template = relationship(u'UserTemplate')
 
-class Account(db.Model):
+class Account(db.Model, UserMixin):
     __tablename__ = 'account'
 
     id = db.Column(Integer, primary_key=True)
@@ -114,6 +115,22 @@ class Account(db.Model):
         self.email = email
         self.username = username
         self.password = password
+
+    def is_active(self):
+        #True, all users are active
+        return True
+
+    def get_id(self):
+        #Return the username to satisfy Flask-Login's requirements
+        return self.username
+
+    def is_authenticated(self):
+        #TODO: Are we having user authentication?
+        return True
+
+    def is_anonymous(self):
+        #Guest users won't have accounts, so this will always be false
+        return False
 
     def __repr__(self):
         return '<Account %r>' % self.username
