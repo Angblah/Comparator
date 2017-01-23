@@ -260,28 +260,22 @@ _________________________________________________________ -->
                     <body>
 
                     <ul class="tab" style="">
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">London</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'Paris')">Paris</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Comparisons')" id="defaultOpen">My Comparisons</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Templates')">My Templates</a></li>
                     </ul>
 
-                    <div id="London" class="tabcontent">
-                      <h3>London</h3>
-                      <p>London is the capital city of England.</p>
+                    <div id="Comparisons" class="tabcontent">
+                      <h3>Comparisons</h3>
+                      <p>Your Comparisons Will Live Here</p>
                     </div>
 
-                    <div id="Paris" class="tabcontent">
-                      <h3>Paris</h3>
-                      <p>Paris is the capital of France.</p>
-                    </div>
-
-                    <div id="Tokyo" class="tabcontent">
-                      <h3>Tokyo</h3>
-                      <p>Tokyo is the capital of Japan.</p>
+                    <div id="Templates" class="tabcontent">
+                      <h3>Templates</h3>
+                      <p>Your Templates Will Live Here</p>
                     </div>
 
                     <script>
-                    function openCity(evt, cityName) {
+                    function openTab(evt, tab) {
                         var i, tabcontent, tablinks;
                         tabcontent = document.getElementsByClassName("tabcontent");
                         for (i = 0; i < tabcontent.length; i++) {
@@ -291,7 +285,7 @@ _________________________________________________________ -->
                         for (i = 0; i < tablinks.length; i++) {
                             tablinks[i].className = tablinks[i].className.replace(" active", "");
                         }
-                        document.getElementById(cityName).style.display = "block";
+                        document.getElementById(tab).style.display = "block";
                         evt.currentTarget.className += " active";
                     }
 
