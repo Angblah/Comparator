@@ -99,11 +99,21 @@ def initialize_db_structure():
             declare _comparison_id int;
         begin
             insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
-            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from template_attribute where id = _template_id;
-    
+            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from user_template_attribute where id = _template_id;
+
         end;
     $$ language plpgsql;
-    
+
+
+    create or replace function create_comparison_from_template (_account_id int, _template_id int, _comparison_name varchar) returns void
+        as $$
+            declare _comparison_id int;
+        begin
+            insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
+            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from template_attribute where id = _template_id;
+
+        end;
+    $$ language plpgsql;
     
     
     /*
@@ -249,6 +259,7 @@ def initialize_db_structure():
         begin
 
             perform register_user('a@a.com', 'admin', 'password');
+            perform register_user('b@b.com', 'a', 'a');
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
             -- TODO: have all add items return id of inserted item
@@ -329,6 +340,14 @@ def validate_login(username, password):
     for row in result:
         return row[0]
 
+def get_user_template_ids(user_id):
+    from models import UserTemplate
+    return db.engine.execute((select([UserTemplate.id]).where(UserTemplate.id == user_id)))
+
+def get_template_ids():
+    from models import Template
+    return db.engine.execute((select([Template.id])))
+
 # returns horizontal view of comparison table with specified id
 # attribute id's and names are the left columns of each row, and all other columns represent an item in the comparison
 # column headers are 'id' and 'name', and each item position, from left to right
@@ -353,6 +372,4 @@ def get_user_comparison_ids(user_id):
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
-
-
 
