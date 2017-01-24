@@ -20,12 +20,30 @@ def initialize_db_structure():
           update comparison set last_position = last_position + 1 where id = table_comparison_id;
       end;
     $$ language plpgsql;
-    
-    create or replace function add_comparison_item_back (table_comparison_id int) returns void
+
+    -- adds one item to back of specified comparison table
+    create or replace function add_comparison_item_back (_comparison_id int) returns void
         as $$
         begin
-            with temp as (update comparison set last_position = last_position + 1 where id = table_comparison_id returning last_position)
-                insert into comparison_item (position, comparison_id) values ((select last_position from temp), table_comparison_id);
+            perform add_comparison_item_back(_comparison_id, 1);
+        end;
+    $$ language plpgsql;
+
+    -- adds specified number of items to comparison table
+    create or replace function add_comparison_item_back (_comparison_id int, _num_items int) returns void
+        as $$
+        -- NOTE: sequence is not used as item position may start from 0
+        declare _position int;
+        begin
+            select last_position from comparison where id = _comparison_id into _position;
+
+            for i in 1.._num_items loop
+                _position = _position + 1;
+                insert into comparison_item (position, comparison_id) values (_position, _comparison_id);
+            end loop;
+
+            update comparison set last_position = last_position + _num_items where id = _comparison_id;
+
         end;
     $$ language plpgsql;
     
@@ -38,20 +56,19 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
     
-    --TODO: convert so it returns a table
-    create or replace function create_comparison_table_stacked (table_comparison_id int) returns void
+    create or replace function comparison_table_stacked (table_comparison_id int) returns table("id" int, "position" int, "name" varchar, val varchar)
         as $$
         begin
-            drop view if exists comparison_table_stacked;
-            create temp view comparison_table_stacked as
-                select comparison_attribute.id, comparison_item.position, comparison_attribute.name, attribute_value.val
+            return query select comparison_attribute.id, comparison_item.position, comparison_attribute.name, attribute_value.val
             from comparison
                 inner join comparison_attribute on comparison.id = comparison_attribute.comparison_id
                 inner join comparison_item on comparison.id = comparison_item.comparison_id
                 left join attribute_value on comparison_item.id = attribute_value.item_id and comparison_attribute.id = attribute_value.attribute_id
+                where comparison.id = table_comparison_id
                 order by position, attribute_id;
         end;
     $$ language plpgsql;
+
     
     
     create or replace function add_attribute (table_comparison_id int, attribute_name varchar(255), attribute_type_id smallint) returns void
@@ -93,25 +110,25 @@ def initialize_db_structure():
             insert into user_template_attribute (name, type_id, user_template_id, weight) select name, type_id, _user_template_id, weight from comparison_attribute where comparison_id = _comparison_id;
         end;
     $$ language plpgsql;
-    
-    create or replace function create_comparison_from_user_template (_account_id int, _template_id int, _comparison_name varchar) returns void
+
+    create or replace function create_comparison_from_user_template (_account_id int, _template_id int, _comparison_name varchar) returns int
         as $$
             declare _comparison_id int;
         begin
             insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
             insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from user_template_attribute where id = _template_id;
-
+            return _comparison_id;
         end;
     $$ language plpgsql;
 
 
-    create or replace function create_comparison_from_template (_account_id int, _template_id int, _comparison_name varchar) returns void
+    create or replace function create_comparison_from_template (_account_id int, _template_id int, _comparison_name varchar) returns int
         as $$
             declare _comparison_id int;
         begin
             insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
             insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from template_attribute where id = _template_id;
-
+            return _comparison_id;
         end;
     $$ language plpgsql;
     
@@ -165,7 +182,6 @@ def initialize_db_structure():
            _cat_list text;
            _col_list text;
         BEGIN
-        execute create_comparison_table_stacked(table_comparison_id);
 
         -- generate categories for xtab param and col definition list
         EXECUTE format(
@@ -182,14 +198,13 @@ def initialize_db_structure():
            CREATE TEMP VIEW comparison_table_horizontal AS SELECT * FROM crosstab(
            $q$
                SELECT id, name, position, val
-               FROM   comparison_table_stacked
+               FROM   (select * from comparison_table_stacked(%3$s)) as t1
                order by id
            $q$
          , $c$VALUES (%1$s)$c$
            ) ct(id int, name text, %2$s varchar(255))'
-        , _cat_list, _col_list
+        , _cat_list, _col_list, table_comparison_id
         );
-
         END
         $func$ LANGUAGE plpgsql;
     
@@ -250,16 +265,20 @@ def initialize_db_structure():
     $$ language plpgsql;
 
     create or replace function populate_database_test_values() returns void
-    as $$
+        as $$
+        declare _account_id int;
         declare _comparison_id int;
         declare item_0 int;
         declare item_1 int;
         declare item_2 int;
 
+        declare comp_1 int;
+        declare comp_2 int;
+        declare comp_3 int;
+
         begin
 
-            perform register_user('a@a.com', 'admin', 'password');
-            perform register_user('b@b.com', 'a', 'a');
+            insert into account (email, username, password) values ('a@a.com', 'admin', 'password') returning id into _account_id;
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
             -- TODO: have all add items return id of inserted item
@@ -297,6 +316,22 @@ def initialize_db_structure():
 
             perform add_comparison_item(_comparison_id, 2);
             perform add_comparison_item_back(_comparison_id);
+
+
+            perform save_comparison_as_template(_comparison_id, 'balls template 1');
+            perform save_comparison_as_template(_comparison_id, 'balls template 2');
+            perform save_comparison_as_template(_comparison_id, 'balls template 3');
+
+            -- TODO: fix create_comparison_stacked as table has values for comp_1, comp_2, and comp_3
+            select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 2') into comp_1;
+            select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 3') into comp_2;
+            select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 4') into comp_3;
+
+            perform add_comparison_item_back(comp_1, 3);
+            perform add_comparison_item_back(comp_2, 4);
+            perform add_comparison_item_back(comp_3, 5);
+
+            -- TODO: combine initialize and create comparison
 
             -- TODO: create a few templates
         end;
