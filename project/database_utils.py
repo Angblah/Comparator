@@ -116,7 +116,7 @@ def initialize_db_structure():
             declare _comparison_id int;
         begin
             insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
-            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from user_template_attribute where id = _template_id;
+            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from user_template_attribute where user_template_id = _template_id;
             return _comparison_id;
         end;
     $$ language plpgsql;
@@ -127,7 +127,7 @@ def initialize_db_structure():
             declare _comparison_id int;
         begin
             insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
-            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from template_attribute where id = _template_id;
+            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from template_attribute where template_id = _template_id;
             return _comparison_id;
         end;
     $$ language plpgsql;
