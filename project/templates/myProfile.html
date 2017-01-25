@@ -147,24 +147,57 @@ _________________________________________________________ -->
             <div class="home-carousel">
                 <br>
                 <h1 align="center">{{ current_user.username }}'s Profile</h1>
-                <div align="center" class="row">
-                    <a href="#" data-toggle="modal" data-target="#newImage-modal">
-                        <img src="../static/img/user.png" class="img-responsive hidden-xs" style="background-color: white">
-                    </a>
-                    <hr>
-                    <script type="text/javascript">
-                        var changeU = false
-                        function toggle()
-                            changeU = !changeU;
-                    </script>
-                    <button onclick="toggle()">Change Username</button>
-                    <div hidden="{{changeU}}">
-                        HEllo
+                <br>
+            </div>
+        </body>
+
+        <section>
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-3" style="height: 100em">
+                        <!-- *** MENU ***
+ _________________________________________________________ -->
+
+                        <div class="panel panel-default sidebar-menu with-icons">
+
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Categories</h3>
+                            </div>
+
+                            <div class="panel-body">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="#changeImage">Profile Picture</a>
+                                    </li>
+                                    <li><a href="#changeUsername">Username</a>
+                                    </li>
+                                    <li><a href="template-content-boxes.html">E-mail Address</a>
+                                    </li>
+                                    <li><a href="template-blocks.html">Password</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- *** END MENU ***
+ _________________________________________________________ -->
+                    </div>
+                    <div class="col-md-9" id="changeImage" align="center">
+                    <br>
+                        <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal" data-target="#newImage-modal">
+                            <img src="../static/img/user.png" class="img-responsive hidden-xs" style="background-color: white; border-radius: 100%">
+                            <br>
+                            <p style="font-style: italic">Change image</p>
+                        </button>
+                    </div>
+                    <br>
+                    <div class="col-md-3" id="changeUsername">
+                        <form>
+                            <input type="text" name="newUsername" class="form-control" id="newUsername" placeholder="Enter New Username">>
+                        </form>
                     </div>
                 </div>
             </div>
-
-        </body>
+        </section>
 
         
 
