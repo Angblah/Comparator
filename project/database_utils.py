@@ -56,10 +56,10 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
     
-    create or replace function comparison_table_stacked (table_comparison_id int) returns table("id" int, "position" int, "name" varchar, val varchar)
+    create or replace function comparison_table_stacked (table_comparison_id int) returns table(type_id smallint, "id" int, "position" int, "name" varchar, val varchar)
         as $$
         begin
-            return query select comparison_attribute.id, comparison_item.position, comparison_attribute.name, attribute_value.val
+            return query select comparison_attribute.type_id, comparison_attribute.id, comparison_item.position, comparison_attribute.name, attribute_value.val
             from comparison
                 inner join comparison_attribute on comparison.id = comparison_attribute.comparison_id
                 inner join comparison_item on comparison.id = comparison_item.comparison_id
@@ -175,6 +175,7 @@ def initialize_db_structure():
     
     /*
         Adapted from xtab function above, specifically for creating comparison table view, comparison_table_horizontal, for specified table_comparison_id
+        WARNING: Table must have at least 1 item or this function will throw an error
     */
     CREATE OR REPLACE FUNCTION create_comparison_table_horizontal(table_comparison_id int) RETURNS text AS
         $func$
@@ -197,12 +198,12 @@ def initialize_db_structure():
           'DROP VIEW IF EXISTS comparison_table_horizontal;
            CREATE TEMP VIEW comparison_table_horizontal AS SELECT * FROM crosstab(
            $q$
-               SELECT id, name, position, val
+               SELECT id, type_id, name, position, val
                FROM   (select * from comparison_table_stacked(%3$s)) as t1
                order by id
            $q$
          , $c$VALUES (%1$s)$c$
-           ) ct(id int, name text, %2$s varchar(255))'
+           ) ct(id int, type_id smallint, name text, %2$s varchar(255))'
         , _cat_list, _col_list, table_comparison_id
         );
         END
@@ -278,7 +279,11 @@ def initialize_db_structure():
 
         begin
 
-            insert into account (email, username, password) values ('a@a.com', 'admin', 'password') returning id into _account_id;
+            perform register_user('a@a.com', 'admin', 'password');
+            perform register_user('b@b.com', 'a', 'a');
+            -- TODO more permanent fix (have register return id)
+            _account_id = 1;
+
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
             -- TODO: have all add items return id of inserted item
@@ -334,6 +339,7 @@ def initialize_db_structure():
             -- TODO: combine initialize and create comparison
 
             -- TODO: create a few templates
+
         end;
     $$ language plpgsql;
 
@@ -348,7 +354,6 @@ def initialize_db_values():
     """)
     db.engine.execute(query.execution_options(autocommit=True))
 
-# TODO: consider checking for valid email structure
 # returns 1 for valid registration parameters, 2 for invalid email, 3 for invalid username
 def validate_registration(email, username):
     from models import Account
@@ -365,7 +370,6 @@ def validate_registration(email, username):
 
 def register_user(email, username, password):
     query = text("""select register_user(:email, :username, :password)""")
-    # TODO: look into just setting engine's execution_options to always autocommit (might not be best practice though)
     db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password)
 
 # returns true if login credentials valid, false otherwise
