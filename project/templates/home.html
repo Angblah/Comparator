@@ -27,6 +27,9 @@
     <!-- Custom stylesheet - for your changes -->
     <link href="../static/css/custom.css" rel="stylesheet">
 
+    <!-- AJAX -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
     <!-- Responsivity for older IE -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -47,6 +50,27 @@
 
     <link href="../static/css/owl.carousel.css" rel="stylesheet">
     <link href="../static/css/owl.theme.css" rel="stylesheet">
+
+    <!-- Handling invalid login credentials -->
+    <script type=text/javascript>
+    $(function() {
+      $('a#loginButton').bind('click', function() {
+        $.getJSON('/login', {
+          loginUsername: $('input[name="username"]').val(),
+          loginPassword: $('input[name="password"]').val()
+        }, function(data) {
+        if (data.redirect == "profile") {
+            window.location.href = data.redirect;
+        }
+        else {
+            $("#result").text(data.success);
+            $("#invalidCredDiv").show();
+        }
+        });
+        return false;
+      });
+    });
+  </script>
 </head>
 
 <body>
@@ -122,7 +146,11 @@ _________________________________________________________ -->
                         <h4 class="modal-title" id="Login">Login</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="/login" method="post">
+                        <div class="alert alert-danger" role="alert" id="invalidCredDiv" style="display:none">
+                            <strong>Uh oh!</strong>
+                            <span id="result"></span>
+                        </div>
+                        <form>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="username" name="username" placeholder="Username">
                             </div>
@@ -131,7 +159,9 @@ _________________________________________________________ -->
                             </div>
 
                             <p class="text-center">
-                                <button type="submit" class="btn btn-template-main"><i class="fa fa-sign-in"></i> Login</button>
+                            <a href="javascript:void();" id="loginButton">
+                                <button class="btn btn-template-main" id="loginButton"><i class="fa fa-sign-in"></i> Login</button>
+                            </a>
                             </p>
 
                         </form>
