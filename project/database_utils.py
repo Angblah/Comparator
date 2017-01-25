@@ -86,14 +86,7 @@ def initialize_db_structure():
                     set val = new_value;
         end;
     $$ language plpgsql;
-    
-    create or replace function register_user (_email varchar, _username varchar, _password varchar) returns void
-        as $$
-        begin
-            -- TODO: change it so that password is hashed with salt
-            insert into account(email, username, password) values(_email, _username, _password);
-        end;
-    $$ language plpgsql;
+
     
     create or replace function get_user_comparisons (_account_id int) returns table(_id int, _name varchar)
         as $$
@@ -236,10 +229,10 @@ def initialize_db_structure():
     end;
     $$ language plpgsql;
 
-    create or replace function register_user(_email varchar, _username varchar, _password varchar) returns void as
+    create or replace function register_user(_email varchar, _username varchar, _password varchar, out _account_id int) returns int as
     $$
         begin
-            insert into account (email, username, password) values (_email, _username, crypt(_password, gen_salt('bf', 8)));
+            insert into account (email, username, password) values (_email, _username, crypt(_password, gen_salt('bf', 8))) returning id into _account_id;
         end;
     $$ language plpgsql;
 
@@ -279,10 +272,8 @@ def initialize_db_structure():
 
         begin
 
-            perform register_user('a@a.com', 'admin', 'password');
+            select register_user('a@a.com', 'admin', 'password') into _account_id;
             perform register_user('b@b.com', 'a', 'a');
-            -- TODO more permanent fix (have register return id)
-            _account_id = 1;
 
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
