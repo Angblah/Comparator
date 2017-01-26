@@ -89,7 +89,6 @@
     <!-- owl carousel -->
     <script src="../static/js/owl.carousel.min.js"></script>
 
-<!-- Handling invalid login credentials -->
     <script type=text/javascript>
     $(function() {
       $('button#loginButton').bind('click', function() {
@@ -103,6 +102,30 @@
         else {
             $("#result").text(data.error);
             $("#invalidCredLoginDiv").show();
+        }
+        });
+        return false;
+      });
+    });
+
+    $(function() {
+      $('button#registerButton').bind('click', function() {
+        $.getJSON('/add_user', {
+          registerEmail: $('input[name="email"]').val(),
+          registerUsername: $('input[name="username"]').val(),
+          registerPassword: $('input[name="password"]').val(),
+          registerPasswordConfirm: $('input[name="password_confirm_register"]').val()
+        }, function(data) {
+        if (data.redirect == "profile") {
+            window.location.href = data.redirect;
+        }
+        if (data.errorEmail == "That email is already registered with an account.") {
+            $("#emailResult").text(data.errorEmail);
+            $("#invalidCredRegisterEmailDiv").show();
+        }
+        if (data.errorUsername == "That username is already registered with an account.") {
+            $("#usernameResult").text(data.errorUsername);
+            $("#invalidCredRegisterUsernameDiv").show();
         }
         });
         return false;

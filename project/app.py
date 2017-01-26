@@ -102,25 +102,34 @@ def reset_with_token(token):
 
     return render_template('reset_with_token.html', token=token)
 
-@app.route('/add_user', methods=['POST'])
+@app.route('/add_user')
 def add_user():
-    # Create the object we want to add
-    # user = Account(request.form['email'], request.form['username'], request.form['password'])
-    input = (request.form['email'], request.form['username'], request.form['password'], request.form['password_confirm_register'])
-    # TODO: prettier form validation
-    if input[2] != input[3]:
-        flash('Passwords must match.', 'password_error')
-    else:
-        temp = validate_registration(input[0], input[1])
-        if temp == 1:
-            register_user(input[0], input[1], input[2])
-            return login_helper(input[1], input[2])
-        elif temp == 2:
-            flash('This email is already attached to an account.', 'email_error')
-        elif temp == 3:
-            flash('This username is taken. Please try another.', 'username_error')
-    return redirect(url_for('index'))
+    data = {}
+    registerEmail = request.args.get('registerEmail')
+    registerUsername = request.args.get('registerUsername')
+    registerPassword = request.args.get('registerPassword')
+    registerPasswordConfirm = request.args.get('registerPasswordConfirm')
 
+    input = (registerEmail, registerUsername, registerPassword, registerPasswordConfirm)
+
+    #Check whether the username or email are already taken
+    temp = validate_registration(input[0], input[1])
+
+    if temp == 1:
+        #We can go ahead and register the user
+        register_user(input[0], input[1], input[2])
+        #They should be logged in and redirected to profile page
+        return login_helper(input[1], input[2])
+    elif temp == 2:
+        #The email has already been taken
+        data['errorEmail'] = "That email is already registered with an account."
+    elif temp == 3:
+        #The username has already been taken
+        data['errorUsername'] = "That username is already registered with an account."
+
+    #TODO: Handle case where both username and email are taken
+
+    return jsonify(data)
 
 @app.route('/login')
 def login():
@@ -148,10 +157,8 @@ def login_helper(loginUsername, loginPassword):
         user = Account.query.filter_by(username = loginUsername).one()
         login_user(user, remember=True)
 
-        return redirect(url_for('profile_page'))
-
-        # data['redirect'] = 'profile'
-        # return jsonify(data)
+        data['redirect'] = 'profile'
+        return jsonify(data)
     else:
         # Login unsuccessful
         data['error'] = "We couldn't find that username and password."
