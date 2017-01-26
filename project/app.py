@@ -93,9 +93,12 @@ def logout():
     logout_user()
     return render_template('home.html')
 
-@app.route('/forgot_password', methods=['POST'])
+@app.route('/forgot_password')
 def forgot_password():
-    emailOrUsername = request.form['emailOrUsername']
+    data = {}
+    emailOrUsername = request.args.get('emailOrUsername')
+    #emailOrUsername = request.form['emailOrUsername']
+
     #Search the username column first
     try:
         user = Account.query.filter_by(username = emailOrUsername).one()
@@ -104,10 +107,9 @@ def forgot_password():
         try:
             user = Account.query.filter_by(email=emailOrUsername).one()
         except NoResultFound:
-            #User not found, inform guest user
-            print ("Not found")
-            #TODO:: How to show the user invalid message
-            return ('', 204)
+            # User not found, inform guest user
+            data['success'] = "We couldn't find an associated email address."
+            return jsonify(data)
 
     #User is populated at this point, grab email to send email to
     print ("Username or email found! Mail will be sent")
