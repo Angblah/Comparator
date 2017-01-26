@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 import os
+import sendgrid
+from sendgrid.helpers.mail import *
+from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
 # TODO: fetch credentials instead of using string as credentials can change under some circumstances (see https://devcenter.heroku.com/articles/connecting-to-heroku-postgres-databases-from-outside-of-heroku)
@@ -13,9 +16,11 @@ app.test_request_context().push()
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+# TODO: make actual secret key for app.config
+ts = URLSafeTimedSerializer('a really bad secret key')
 
 from models import *
-from database_utils import validate_login, validate_registration, register_user
+from database_utils import *
 
 
 @app.route('/')
@@ -45,8 +50,59 @@ def myProfile_page():
 
 @app.route('/forgotPassword')
 def forgotPassword():
+
     return render_template('forgotPassword.html')
 
+@app.route('/reset_password', methods=['POST'])
+def reset_password():
+    # TODO: change api key and move to env variable near final deploy
+    email_or_username = request.form['email_or_username']
+    try:
+        user = Account.query.filter_by(username =email_or_username).one()
+    except NoResultFound:
+        #Search the email column
+        try:
+            user = Account.query.filter_by(email=email_or_username).one()
+        except NoResultFound:
+            #User not found, inform guest user
+            print ("Not found")
+            #TODO:: How to show the user invalid message
+            return ('', 204)
+
+    #User is populated at this point, grab email to send email to
+    token = ts.dumps(user.email, salt='recover-key')
+    recover_url = url_for('reset_with_token', token=token, _external=True)
+
+
+    sg = sendgrid.SendGridAPIClient(apikey="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")
+    from_email = Email("admin@thecomparator.herokuapp.com")
+    to_email = Email(user.email)
+    subject = "TheComparator: Forgot your password?"
+    content = Content("text/plain", "Follow this link to reset your password: " + recover_url)
+    mail = Mail(from_email, subject, to_email, content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+
+    # print(response.status_code)
+    # print(response.body)
+    # print(response.headers)
+    # TODO: response once email submitted (e.g. "email has been sent with reset link, please wait ..."
+    return ('', 204)
+
+@app.route('/reset/<token>', methods=["GET", "POST"])
+def reset_with_token(token):
+    try:
+        # link expires after 24 hours (86400 seconds)
+        email = ts.loads(token, salt="recover-key", max_age=86400)
+    except:
+        # TODO: invalid link message
+        print('invalid link')
+
+    if request.method == 'POST':
+        user = Account.query.filter_by(email=email).first_or_404()
+        set_password(user.id, request.form['password'])
+        # TODO: successful password reset message + go to another page?
+
+    return render_template('reset_with_token.html', token=token)
 
 @app.route('/add_user', methods=['POST'])
 def add_user():
@@ -93,27 +149,27 @@ def logout():
     logout_user()
     return render_template('home.html')
 
-@app.route('/forgot_password', methods=['POST'])
-def forgot_password():
-    emailOrUsername = request.form['emailOrUsername']
-    #Search the username column first
-    try:
-        user = Account.query.filter_by(username = emailOrUsername).one()
-    except NoResultFound:
-        #Search the email column
-        try:
-            user = Account.query.filter_by(email=emailOrUsername).one()
-        except NoResultFound:
-            #User not found, inform guest user
-            print ("Not found")
-            #TODO:: How to show the user invalid message
-            return ('', 204)
-
-    #User is populated at this point, grab email to send email to
-    print ("Username or email found! Mail will be sent")
-    #user.email
-    #TODO:: Implement sending mail to user
-    return ('', 204)
+# @app.route('/forgot_password', methods=['POST'])
+# def forgot_password():
+#     emailOrUsername = request.form['emailOrUsername']
+#     #Search the username column first
+#     try:
+#         user = Account.query.filter_by(username = emailOrUsername).one()
+#     except NoResultFound:
+#         #Search the email column
+#         try:
+#             user = Account.query.filter_by(email=emailOrUsername).one()
+#         except NoResultFound:
+#             #User not found, inform guest user
+#             print ("Not found")
+#             #TODO:: How to show the user invalid message
+#             return ('', 204)
+#
+#     #User is populated at this point, grab email to send email to
+#     print ("Username or email found! Mail will be sent")
+#     #user.email
+#     #TODO:: Implement sending mail to user
+#     return ('', 204)
 
 
 if __name__ == '__main__':

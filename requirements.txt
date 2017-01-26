@@ -18,3 +18,4 @@ sqlacodegen==1.1.6
 SQLAlchemy==1.1.5
 virtualenv==15.1.0
 Werkzeug==0.11.11
+sendgrid==3.6.3

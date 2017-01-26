@@ -236,6 +236,13 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
+    create or replace function set_password(_user_id int, _password varchar) returns void as
+    $$
+        begin
+            update account set password = crypt(_password, gen_salt('bf', 8));
+        end;
+    $$ language plpgsql;
+
     create or replace function validate_login(_username varchar, _password varchar) returns boolean as
     $$
         declare _passhash varchar;
@@ -274,6 +281,7 @@ def initialize_db_structure():
 
             select register_user('a@a.com', 'admin', 'password') into _account_id;
             perform register_user('b@b.com', 'a', 'a');
+            perform register_user('awu68@gatech.edu', 'awu68', 'a');
 
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
@@ -362,6 +370,10 @@ def validate_registration(email, username):
 def register_user(email, username, password):
     query = text("""select register_user(:email, :username, :password)""")
     db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password)
+
+def set_password(user_id, password):
+    query = text("""select set_password(:user_id, :password)""")
+    db.engine.execute(query.execution_options(autocommit=True), user_id=user_id, password=password)
 
 # returns true if login credentials valid, false otherwise
 def validate_login(username, password):
