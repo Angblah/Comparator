@@ -101,8 +101,8 @@
             window.location.href = data.redirect;
         }
         else {
-            $("#result").text(data.success);
-            $("#invalidCredDiv").show();
+            $("#result").text(data.error);
+            $("#invalidCredLoginDiv").show();
         }
         });
         return false;
@@ -111,15 +111,16 @@
 
     $(function() {
       $('button#forgotPasswordButton').bind('click', function() {
-        $.getJSON('/forgot_password', {
+        $.getJSON('/reset_password', {
           emailOrUsername: $('input[name="emailOrUsername"]').val()
         }, function(data) {
-        if (data.success == "We couldn't find an associated email address.") {
-            $("#forgotPasswordResult").text(data.success);
-            $("#invalidCredForgotPasswordDiv").show();
+        if (data.error == "We couldn't find an associated email address.") {
+            $("#forgotPasswordResultError").text(data.error);
+            $("#invalidCredForgotPasswordErrorDiv").show();
         }
         else {
-            $("#forgotPasswordResult").text(data.error);
+            $("#forgotPasswordResultSuccess").text(data.success);
+            $("#invalidCredForgotPasswordSuccessDiv").show();
 
         }
         });

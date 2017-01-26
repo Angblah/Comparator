@@ -50,24 +50,24 @@ def myProfile_page():
 
 @app.route('/forgotPassword')
 def forgotPassword():
-
     return render_template('forgotPassword.html')
 
-@app.route('/reset_password', methods=['POST'])
+@app.route('/reset_password')
 def reset_password():
+    data = {}
+
     # TODO: change api key and move to env variable near final deploy
-    email_or_username = request.form['email_or_username']
+    emailOrUsername = request.args.get('emailOrUsername')
     try:
-        user = Account.query.filter_by(username =email_or_username).one()
+        user = Account.query.filter_by(username =emailOrUsername).one()
     except NoResultFound:
         #Search the email column
         try:
-            user = Account.query.filter_by(email=email_or_username).one()
+            user = Account.query.filter_by(email=emailOrUsername).one()
         except NoResultFound:
             #User not found, inform guest user
-            print ("Not found")
-            #TODO:: How to show the user invalid message
-            return ('', 204)
+            data['error'] = "We couldn't find an associated email address."
+            return jsonify(data)
 
     #User is populated at this point, grab email to send email to
     token = ts.dumps(user.email, salt='recover-key')
@@ -82,11 +82,9 @@ def reset_password():
     mail = Mail(from_email, subject, to_email, content)
     response = sg.client.mail.send.post(request_body=mail.get())
 
-    # print(response.status_code)
-    # print(response.body)
-    # print(response.headers)
     # TODO: response once email submitted (e.g. "email has been sent with reset link, please wait ..."
-    return ('', 204)
+    data['success'] = "You'll receive an email with a link to reset your password shortly."
+    return jsonify(data)
 
 @app.route('/reset/<token>', methods=["GET", "POST"])
 def reset_with_token(token):
@@ -139,7 +137,24 @@ def login():
         return jsonify(data)
     else:
         # Login unsuccessful
-        data['success'] = "We couldn't find that username and password."
+        data['error'] = "We couldn't find that username and password."
+        return jsonify(data)
+
+def login_helper(loginUsername, loginPassword):
+    data = {}
+
+    if validate_login(loginUsername, loginPassword):
+        # Login successful
+        user = Account.query.filter_by(username = loginUsername).one()
+        login_user(user, remember=True)
+
+        return redirect(url_for('profile_page'))
+
+        # data['redirect'] = 'profile'
+        # return jsonify(data)
+    else:
+        # Login unsuccessful
+        data['error'] = "We couldn't find that username and password."
         return jsonify(data)
 
 
@@ -148,30 +163,6 @@ def login():
 def logout():
     logout_user()
     return render_template('home.html')
-
-# @app.route('/forgot_password')
-# def forgot_password():
-#     data = {}
-#     emailOrUsername = request.args.get('emailOrUsername')
-#     #emailOrUsername = request.form['emailOrUsername']
-#
-#     #Search the username column first
-#     try:
-#         user = Account.query.filter_by(username = emailOrUsername).one()
-#     except NoResultFound:
-#         #Search the email column
-#         try:
-#             user = Account.query.filter_by(email=emailOrUsername).one()
-#         except NoResultFound:
-#             # User not found, inform guest user
-#             data['success'] = "We couldn't find an associated email address."
-#             return jsonify(data)
-#
-#     #User is populated at this point, grab email to send email to
-#     print ("Username or email found! Mail will be sent")
-#     #user.email
-#     #TODO:: Implement sending mail to user
-#     return ('', 204)
 
 
 if __name__ == '__main__':
