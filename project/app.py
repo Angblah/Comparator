@@ -74,7 +74,7 @@ def reset_password():
     recover_url = url_for('reset_with_token', token=token, _external=True)
 
 
-    sg = sendgrid.SendGridAPIClient(apikey="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")
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ['SENDGRID_API_KEY'])
     from_email = Email("admin@thecomparator.herokuapp.com")
     to_email = Email(user.email)
     subject = "TheComparator: Forgot your password?"
