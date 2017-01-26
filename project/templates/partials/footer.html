@@ -92,7 +92,7 @@
 <!-- Handling invalid login credentials -->
     <script type=text/javascript>
     $(function() {
-      $('a#loginButton').bind('click', function() {
+      $('button#loginButton').bind('click', function() {
         $.getJSON('/login', {
           loginUsername: $('input[name="username"]').val(),
           loginPassword: $('input[name="password"]').val()
@@ -108,4 +108,22 @@
         return false;
       });
     });
-  </script>
+
+    $(function() {
+      $('button#forgotPasswordButton').bind('click', function() {
+        $.getJSON('/forgot_password', {
+          emailOrUsername: $('input[name="emailOrUsername"]').val()
+        }, function(data) {
+        if (data.success == "We couldn't find an associated email address.") {
+            $("#forgotPasswordResult").text(data.success);
+            $("#invalidCredForgotPasswordDiv").show();
+        }
+        else {
+            $("#forgotPasswordResult").text(data.error);
+
+        }
+        });
+        return false;
+      });
+    });
+    </script>
