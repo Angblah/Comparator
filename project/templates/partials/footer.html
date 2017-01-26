@@ -93,8 +93,8 @@
     $(function() {
       $('button#loginButton').bind('click', function() {
         $.getJSON('/login', {
-          loginUsername: $('input[name="username"]').val(),
-          loginPassword: $('input[name="password"]').val()
+          loginUsername: $('input[name="loginUsername"]').val(),
+          loginPassword: $('input[name="loginPassword"]').val()
         }, function(data) {
         if (data.redirect == "profile") {
             window.location.href = data.redirect;
