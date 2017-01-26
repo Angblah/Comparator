@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
@@ -36,7 +36,7 @@ def newComparison():
 @app.route('/profile')
 @login_required
 def profile_page():
-    return render_template('profileHomePage.html', username=request.args.get('username'))
+    return render_template('profileHomePage.html')
 
 @app.route('/myProfile')
 @login_required
@@ -68,22 +68,24 @@ def add_user():
     return redirect(url_for('index'))
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login')
 def login():
-    loginUsername = request.form['username']
-    loginPassword = request.form['password']
-    return login_helper(loginUsername, loginPassword)
+    data = {}
+    loginUsername = request.args.get('loginUsername')
+    loginPassword = request.args.get('loginPassword')
 
-def login_helper(loginUsername, loginPassword):
     if validate_login(loginUsername, loginPassword):
         # Login successful
         user = Account.query.filter_by(username = loginUsername).one()
         login_user(user, remember=True)
-        return redirect(url_for('profile_page'))
+
+        data['redirect'] = 'profile'
+        return jsonify(data)
     else:
         # Login unsuccessful
-        # TODO:: Handle informing the user of invalid credentials
-        return ('', 204)
+        data['success'] = "We couldn't find that username and password."
+        return jsonify(data)
+
 
 @app.route('/logout')
 @login_required
