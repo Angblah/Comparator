@@ -38,7 +38,7 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             fields: {
-                email: {
+                registerEmail: {
                     validators: {
                         notEmpty: {
                             message: 'The email address is required'
@@ -48,7 +48,7 @@
                         }
                     }
                 },
-                username: {
+                registerUsername: {
                     validators: {
                         notEmpty: {
                             message: 'The username is required'
@@ -59,24 +59,24 @@
                         }
                     }
                 },
-                password: {
+                registerPassword: {
                     validators: {
                         notEmpty: {
                             message: 'The password is required and cannot be empty'
                         },
                         identical: {
-                            field: 'password_confirm_register',
+                            field: 'registerPasswordConfirm',
                             message: 'The password and its confirm must be the same'
                         }
                     }
                 },
-                password_confirm_register: {
+                registerPasswordConfirm: {
                     validators: {
                         notEmpty: {
                             message: 'The password is required and cannot be empty'
                         },
                         identical: {
-                            field: 'password',
+                            field: 'registerPassword',
                             message: 'The password and its confirm must be the same'
                         }
                     }
@@ -111,10 +111,10 @@
     $(function() {
       $('button#registerButton').bind('click', function() {
         $.getJSON('/add_user', {
-          registerEmail: $('input[name="email"]').val(),
-          registerUsername: $('input[name="username"]').val(),
-          registerPassword: $('input[name="password"]').val(),
-          registerPasswordConfirm: $('input[name="password_confirm_register"]').val()
+          registerEmail: $('input[name="registerEmail"]').val(),
+          registerUsername: $('input[name="registerUsername"]').val(),
+          registerPassword: $('input[name="registerPassword"]').val(),
+          registerPasswordConfirm: $('input[name="registerPasswordConfirm"]').val()
         }, function(data) {
         if (data.redirect == "profile") {
             window.location.href = data.redirect;
