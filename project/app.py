@@ -46,7 +46,7 @@ def profile_page():
 @app.route('/myProfile')
 @login_required
 def myProfile_page():
-    return render_template('myProfile.html', username=request.args.get('username'))
+    return render_template('myProfile.html')
 
 @app.route('/forgotPassword')
 def forgotPassword():
@@ -109,10 +109,25 @@ def add_user():
     registerUsername = request.args.get('registerUsername')
     registerPassword = request.args.get('registerPassword')
 
-    if Account.query.filter_by(email=registerEmail).one_or_none():
-        data['errorEmail'] = "That email is already registered with an account."
-    if Account.query.filter_by(username=registerUsername).one_or_none():
-        data['errorUsername'] = "That username is already registered with an account."
+    emailCheck = ""
+    usernameCheck = ""
+    try:
+        emailCheck = Account.query.filter_by(email=registerEmail).one()
+    except NoResultFound:
+        pass
+
+    try:
+        usernameCheck = Account.query.filter_by(username=registerUsername).one()
+    except NoResultFound:
+        pass
+
+    if emailCheck and usernameCheck:
+        data['errorEmailUsername'] = "The email and username are already registered with an account."
+    elif emailCheck:
+        data['errorEmail'] = "The email is already registered with an account."
+    elif usernameCheck:
+        data['errorUsername'] = "The username is already registered with an account."
+
     if data:
         return jsonify(data)
     else:

@@ -43,6 +43,10 @@
                                 <strong>Uh oh!</strong>
                                 <span id="usernameResult"></span>
                             </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterEmailUsernameDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="emailUsernameResult"></span>
+                            </div>
                             <!--TODO: Handle case where both email and username are taken-->
                             <!--<div class="alert alert-danger" role="alert" id="invalidCredRegisterUsernameDiv" style="display:none">-->
                                 <!--<strong>Uh oh!</strong>-->
@@ -61,7 +65,7 @@
                                 <input type="password" class="form-control" id="registerPasswordConfirm" name="registerPasswordConfirm" placeholder="Confirm Password">
                             </div>
                             <div class="text-left">
-                                <button class="btn btn-template-main" id="registerButton" onclick="$('#invalidCredRegisterEmailDiv, #invalidCredRegisterUsernameDiv').hide()"><i class="fa fa-user-md"></i> Register</button>
+                                <button class="btn btn-template-main" id="registerButton" onclick="$('#invalidCredRegisterEmailDiv, #invalidCredRegisterUsernameDiv, #invalidCredRegisterEmailUsernameDiv').hide()"><i class="fa fa-user-md"></i> Register</button>
                             </div>
                         </form>
                         <hr>

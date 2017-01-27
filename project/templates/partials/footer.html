@@ -119,13 +119,17 @@
         if (data.redirect == "profile") {
             window.location.href = data.redirect;
         }
-        if (data.errorEmail == "That email is already registered with an account.") {
+        if (data.errorEmail == "The email is already registered with an account.") {
             $("#emailResult").text(data.errorEmail);
             $("#invalidCredRegisterEmailDiv").show();
         }
-        if (data.errorUsername == "That username is already registered with an account.") {
+        else if (data.errorUsername == "The username is already registered with an account.") {
             $("#usernameResult").text(data.errorUsername);
             $("#invalidCredRegisterUsernameDiv").show();
+        }
+        else if (data.errorEmailUsername == "The email and username are already registered with an account.") {
+            $("#emailUsernameResult").text(data.errorEmailUsername);
+            $("#invalidCredRegisterEmailUsernameDiv").show();
         }
         });
         return false;
