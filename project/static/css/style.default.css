@@ -2912,10 +2912,11 @@ fieldset[disabled] .btn-template-primary.active {
 }
 .navbar-brand {
   float: left;
-  padding: 10px 15px;
-  font-size: 18px;
   line-height: 20px;
   height: 62px;
+  font-family: 'Raleway', sans-serif;
+  padding: 20px 15px;
+  font-size: 45px;
 }
 .navbar-brand:hover,
 .navbar-brand:focus {
