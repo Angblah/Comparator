@@ -97,7 +97,7 @@
           loginPassword: $('input[name="loginPassword"]').val()
         }, function(data) {
         if (data.redirect == "profile") {
-            window.location.href = data.redirect;
+            window.location.href = "../profile";
         }
         else {
             $("#result").text(data.error);
