@@ -411,6 +411,29 @@ def get_user_comparison_ids(user_id):
     for row in result:
         yield row[0]
 
+# type_ids:
+# 0 = varchar
+# 1 = decimal
+# 2 = timestamp
+def add_attribute(comparison_id, attribute_name, attribute_type_id):
+    query = text("""
+    select add_attribute(:comparison_id, :attribute_name, :attribute_type_id);
+    """)
+    db.engine.execute(query, comparison_id=comparison_id, attribute_name=attribute_name, attribute_type_id=attribute_type_id)
+
+def set_attribute_value(item_id, item_attribute_id, new_value):
+    query = text("""
+    select set_attribute_value(:item_id, :item_attribute_id, :new_value);
+    """)
+    db.engine.execute(query, item_id=item_id, item_attribute_id=item_attribute_id, new_value=new_value)
+
+# saves specified comparison as template with given name
+def save_comparison_as_template(comparison_id, template_name):
+    query = text("""
+    select save_comparison_as_template(:comparison_id, :template_name);
+    """)
+    db.engine.execute(query, comparison_id=comparison_id, template_name=template_name)
+
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
     initialize_db_structure()
