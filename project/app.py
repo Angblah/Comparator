@@ -102,6 +102,7 @@ def reset_with_token(token):
 
     return render_template('reset_with_token.html', token=token, valid_link=valid_link, change_success=change_success)
 
+# TODO: consider adding requirements to password (length, character types, etc.)
 @app.route('/add_user')
 def add_user():
     data = {}
