@@ -82,7 +82,6 @@ def reset_password():
     mail = Mail(from_email, subject, to_email, content)
     response = sg.client.mail.send.post(request_body=mail.get())
 
-    # TODO: response once email submitted (e.g. "email has been sent with reset link, please wait ..."
     data['success'] = "You'll receive an email with a link to reset your password shortly."
     return jsonify(data)
 
@@ -100,7 +99,6 @@ def reset_with_token(token):
         user = Account.query.filter_by(email=email).first_or_404()
         set_password(user.id, request.form['password'])
         change_success = True
-        # TODO: successful password reset message + go to another page?
 
     return render_template('reset_with_token.html', token=token, valid_link=valid_link, change_success=change_success)
 
@@ -114,24 +112,15 @@ def add_user():
 
     input = (registerEmail, registerUsername, registerPassword, registerPasswordConfirm)
 
-    #Check whether the username or email are already taken
-    temp = validate_registration(input[0], input[1])
-
-    if temp == 1:
-        #We can go ahead and register the user
-        register_user(input[0], input[1], input[2])
-        #They should be logged in and redirected to profile page
-        return login_helper(input[1], input[2])
-    elif temp == 2:
-        #The email has already been taken
+    if Account.query.filter_by(email=registerEmail).one_or_none():
         data['errorEmail'] = "That email is already registered with an account."
-    elif temp == 3:
-        #The username has already been taken
+    if Account.query.filter_by(username=registerUsername).one_or_none():
         data['errorUsername'] = "That username is already registered with an account."
-
-    #TODO: Handle case where both username and email are taken
-
-    return jsonify(data)
+    if data:
+        return jsonify(data)
+    else:
+        # data is empty, no duplicate usernames/emails
+        return login_helper(input[1], input[2])
 
 @app.route('/login')
 def login():
