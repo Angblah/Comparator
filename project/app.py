@@ -88,19 +88,21 @@ def reset_password():
 
 @app.route('/reset/<token>', methods=["GET", "POST"])
 def reset_with_token(token):
+    change_success = False
     try:
         # link expires after 24 hours (86400 seconds)
         email = ts.loads(token, salt="recover-key", max_age=86400)
+        valid_link = True
     except:
-        # TODO: invalid link message
-        print('invalid link')
+        valid_link = False
 
     if request.method == 'POST':
         user = Account.query.filter_by(email=email).first_or_404()
         set_password(user.id, request.form['password'])
+        change_success = True
         # TODO: successful password reset message + go to another page?
 
-    return render_template('reset_with_token.html', token=token)
+    return render_template('reset_with_token.html', token=token, valid_link=valid_link, change_success=change_success)
 
 @app.route('/add_user')
 def add_user():
