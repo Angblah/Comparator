@@ -108,9 +108,6 @@ def add_user():
     registerEmail = request.args.get('registerEmail')
     registerUsername = request.args.get('registerUsername')
     registerPassword = request.args.get('registerPassword')
-    registerPasswordConfirm = request.args.get('registerPasswordConfirm')
-
-    input = (registerEmail, registerUsername, registerPassword, registerPasswordConfirm)
 
     if Account.query.filter_by(email=registerEmail).one_or_none():
         data['errorEmail'] = "That email is already registered with an account."
@@ -120,7 +117,8 @@ def add_user():
         return jsonify(data)
     else:
         # data is empty, no duplicate usernames/emails
-        return login_helper(input[1], input[2])
+        register_user(registerEmail, registerUsername, registerPassword)
+        return login_helper(registerUsername, registerPassword)
 
 @app.route('/login')
 def login():
