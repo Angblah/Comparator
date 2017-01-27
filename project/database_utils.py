@@ -282,6 +282,7 @@ def initialize_db_structure():
             select register_user('a@a.com', 'admin', 'password') into _account_id;
             perform register_user('b@b.com', 'a', 'a');
             perform register_user('awu68@gatech.edu', 'awu68', 'a');
+            perform register_user('honeychawla96@gmail.com', 'b', 'b');
 
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
@@ -414,4 +415,20 @@ def get_user_comparison_ids(user_id):
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
+
+
+# Example use cases
+
+    # getting all comparison tables of specific user
+
+    # a = get_user_comparison_ids(1)
+    # for id in a:
+    #     b = get_comparison_horizontal(id)
+    #     # new table
+    #     print("_______________________________________________")
+    #     for result in b:
+    #         # row in table
+    #         print(result)
+    #     print("_______________________________________________")
+
 
