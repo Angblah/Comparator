@@ -22,6 +22,9 @@ ts = URLSafeTimedSerializer('a really bad secret key')
 from models import *
 from database_utils import *
 
+@app.route('/test')
+def test():
+    return render_template('test.html')
 
 @app.route('/')
 def index():
@@ -41,7 +44,10 @@ def newComparison():
 @app.route('/profile')
 @login_required
 def profile_page():
-    return render_template('profileHomePage.html')
+    
+    namelist = get_user_comparison_names(current_user.id)
+
+    return render_template('profileHomePage.html', name_list=namelist)
 
 @app.route('/myProfile')
 @login_required
