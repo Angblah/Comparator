@@ -411,6 +411,15 @@ def get_user_comparison_ids(user_id):
     for row in result:
         yield row[0]
 
+def get_user_comparison_names(user_id):
+    from models import Comparison
+
+    result = db.engine.execute((select([Comparison.name]).where(Comparison.account_id == user_id)))
+    output = []
+    for row in result:
+        output.append(row[0])
+    return output
+
 # type_ids:
 # 0 = varchar
 # 1 = decimal
