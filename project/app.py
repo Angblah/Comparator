@@ -22,10 +22,6 @@ ts = URLSafeTimedSerializer('a really bad secret key')
 from models import *
 from database_utils import *
 
-@app.route('/test')
-def test():
-    return render_template('test.html')
-
 @app.route('/')
 def index():
     return render_template('home.html')

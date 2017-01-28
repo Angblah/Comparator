@@ -34,14 +34,9 @@
                         <div class="heading text-left">
                             <h3>Recent Comparisons</h3>
                         </div>
+                        {{name_list}}
                         <div id="recentComp" data-feed={{name_list}}>
-                            <!-- <div>
-                                <div class="tile"></div>
-                                <div class="tile"></div>
-                                <div class="tile">Hover Me</div>
-                                <div class="tile"></div>
-                                <div class="tile"></div>
-                            </div> -->
+
                         </div>
                     </div>
 
@@ -152,6 +147,5 @@
     <script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bower_components/react/react-dom.min.js') }}"></script>
     <script src="../static/scripts/js/profileHomePage.js"></script>
-    <script src="../static/scripts/js/test.js"></script>
 </body>
 </html>
