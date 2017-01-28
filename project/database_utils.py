@@ -239,7 +239,7 @@ def initialize_db_structure():
     create or replace function set_password(_user_id int, _password varchar) returns void as
     $$
         begin
-            update account set password = crypt(_password, gen_salt('bf', 8));
+            update account set password = crypt(_password, gen_salt('bf', 8)) where id = _user_id;
         end;
     $$ language plpgsql;
 
