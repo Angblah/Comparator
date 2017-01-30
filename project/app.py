@@ -36,6 +36,9 @@ def load_user(user_id):
 def newComparison():
     return render_template('newComparison.html')
 
+@app.route('/workspace')
+def workspace():
+    return render_template('workspace.html')
 
 # TODO: rename register and add_user functions to reduce confusion
 @app.route('/profile')
