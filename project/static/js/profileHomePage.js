@@ -8,7 +8,7 @@ var RecentComparisons = React.createClass({
                     
         return (
         	<div>
-        		{names.map(function(name){ return <div class="tile"> {name} </div>}) }
+        		{names.map(function(name){ return <div className="tile"> {name} </div>}) }
     		</div>
     	)
     }

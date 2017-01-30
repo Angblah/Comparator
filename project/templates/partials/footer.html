@@ -2,7 +2,6 @@
     <div class="container">
         <div class="col-md-12">
             <p class="pull-left">&copy; 2017. The Comparator / Byte Me</p>
-            <p class="pull-right">Template by <a href="https://bootstrapious.com/free-templates">Bootstrapious</a>
                  <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
             </p>
 
@@ -12,160 +11,21 @@
 
     <!-- #### JAVASCRIPT FILES ### -->
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script>
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> -->
+<!--     <script>
         window.jQuery || document.write('<script src="../static/js/jquery-1.11.0.min.js"><\/script>')
-    </script>
+    </script> -->
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
     <script src="../static/js/jquery.cookie.js"></script>
     <script src="../static/js/waypoints.min.js"></script>
     <script src="../static/js/jquery.counterup.min.js"></script>
-    <script src="../static/js/jquery.parallax-1.1.3.js"></script>
     <script src="../static/js/front.js"></script>
 
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        $('#registerForm').bootstrapValidator({
-//        live: 'disabled',
-            message: 'This value is not valid',
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                registerEmail: {
-                    validators: {
-                        notEmpty: {
-                            message: 'The email address is required'
-                        },
-                        emailAddress: {
-                            message: 'The email address is not valid'
-                        }
-                    }
-                },
-                registerUsername: {
-                    validators: {
-                        notEmpty: {
-                            message: 'The username is required'
-                        },
-                        stringLength: {
-                            max: 26,
-                            message: 'The username must be less than 26 characters long'
-                        }
-                    }
-                },
-                registerPassword: {
-                    validators: {
-                        notEmpty: {
-                            message: 'The password is required and cannot be empty'
-                        },
-                        identical: {
-                            field: 'registerPasswordConfirm',
-                            message: 'The password and its confirm must be the same'
-                        }
-                    }
-                },
-                registerPasswordConfirm: {
-                    validators: {
-                        notEmpty: {
-                            message: 'The password is required and cannot be empty'
-                        },
-                        identical: {
-                            field: 'registerPassword',
-                            message: 'The password and its confirm must be the same'
-                        }
-                    }
-                },
-            }
-        });
-    });
-    </script>
-
+    
     <!-- owl carousel -->
     <script src="../static/js/owl.carousel.min.js"></script>
 
-    <script type=text/javascript>
-    $(function() {
-      $('button#loginButton').bind('click', function() {
-        $.getJSON('/login', {
-          loginUsername: $('input[name="loginUsername"]').val(),
-          loginPassword: $('input[name="loginPassword"]').val()
-        }, function(data) {
-        if (data.redirect == "profile") {
-            window.location.href = "../profile";
-        }
-        else {
-            $("#result").text(data.error);
-            $("#invalidCredLoginDiv").show();
-        }
-        });
-        return false;
-      });
-    });
-
-    $(function() {
-      $('button#registerButton').bind('click', function() {
-        $.getJSON('/add_user', {
-          registerEmail: $('input[name="registerEmail"]').val(),
-          registerUsername: $('input[name="registerUsername"]').val(),
-          registerPassword: $('input[name="registerPassword"]').val(),
-          registerPasswordConfirm: $('input[name="registerPasswordConfirm"]').val()
-        }, function(data) {
-        if (data.redirect == "profile") {
-            window.location.href = data.redirect;
-        }
-        if (data.nullEmail == "An email is required.") {
-            $("#nullEmailResult").text(data.nullEmail);
-            $("#invalidCredRegisterNullEmailDiv").show();
-        }
-        if (data.nullUsername == "A username is required.") {
-            $("#nullUsernameResult").text(data.nullUsername);
-            $("#invalidCredRegisterNullUsernameDiv").show();
-        }
-        if (data.nullPassword == "A password is required.") {
-            $("#nullPasswordResult").text(data.nullPassword);
-            $("#invalidCredRegisterNullPasswordDiv").show();
-        }
-        if (data.nullPasswordConfirm == "Please confirm your password.") {
-            $("#nullPasswordConfirmResult").text(data.nullPasswordConfirm);
-            $("#invalidCredRegisterNullPasswordConfirmDiv").show();
-        }
-        if (data.errorEmail == "The email is already registered with an account.") {
-            $("#emailResult").text(data.errorEmail);
-            $("#invalidCredRegisterEmailDiv").show();
-        }
-        else if (data.errorUsername == "The username is already registered with an account.") {
-            $("#usernameResult").text(data.errorUsername);
-            $("#invalidCredRegisterUsernameDiv").show();
-        }
-        else if (data.errorEmailUsername == "The email and username are already registered with an account.") {
-            $("#emailUsernameResult").text(data.errorEmailUsername);
-            $("#invalidCredRegisterEmailUsernameDiv").show();
-        }
-        });
-        return false;
-      });
-    });
-
-    $(function() {
-      $('button#forgotPasswordButton').bind('click', function() {
-        $.getJSON('/reset_password', {
-          emailOrUsername: $('input[name="emailOrUsername"]').val()
-        }, function(data) {
-        if (data.error == "We couldn't find an associated email address.") {
-            $("#forgotPasswordResultError").text(data.error);
-            $("#invalidCredForgotPasswordErrorDiv").show();
-        }
-        else {
-            $("#forgotPasswordResultSuccess").text(data.success);
-            $("#invalidCredForgotPasswordSuccessDiv").show();
-
-        }
-        });
-        return false;
-      });
-    });
-    </script>
+    <!-- login/register js -->
+    <script src="../static/js/login-register.js"></script>
