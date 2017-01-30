@@ -1,4 +1,4 @@
-#row {
+#recentComp {
   transition: 1s transform;
 }
 .tile {
@@ -14,7 +14,7 @@
   margin-right: 10px;
 }
 
-#row:hover {
+#recentComp:hover {
   transform: translate3d(-40px, 0, 0);
 }
 

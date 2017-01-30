@@ -20,12 +20,35 @@
         <form action="{{ url_for('reset_with_token', token=token) }}" method="POST">
             <div class="row">
                 <div class="col-lg-4 col-lg-offset-4">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="password" name="password" placeholder="New Password" required>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-template-main">Submit</button>
-                    </div>
+                    {% if change_success %}
+                        <div class="alert alert-success" role="alert">
+                            <strong>Success!</strong>
+                            <span>You have successfully changed your password!</span>
+                        </div>
+                    {% else %}
+                        <!--TODO: consider changing error message to variable in span to avoid code repetition-->
+                        {% if not valid_link %}
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Uh oh!</strong>
+                                <span>This link has expired.</span>
+                            </div>
+                        {% else %}
+                            {% if not password_valid %}
+                                <div class="alert alert-danger" role="alert">
+                                    <strong>Uh oh!</strong>
+                                    <span>Passwords must contain at least 1 character.</span>
+                                </div>
+                            {% endif %}
+
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="New Password">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-template-main">Submit</button>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
                 </div>
             </div>
         </form>

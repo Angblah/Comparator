@@ -22,7 +22,6 @@ ts = URLSafeTimedSerializer('a really bad secret key')
 from models import *
 from database_utils import *
 
-
 @app.route('/')
 def index():
     return render_template('home.html')
@@ -44,40 +43,43 @@ def workspace():
 @app.route('/profile')
 @login_required
 def profile_page():
-    return render_template('profileHomePage.html')
+    
+    namelist = get_user_comparison_names(current_user.id)
+
+    return render_template('profileHomePage.html', name_list=namelist)
 
 @app.route('/myProfile')
 @login_required
 def myProfile_page():
-    return render_template('myProfile.html', username=request.args.get('username'))
+    return render_template('myProfile.html')
 
 @app.route('/forgotPassword')
 def forgotPassword():
-
     return render_template('forgotPassword.html')
 
-@app.route('/reset_password', methods=['POST'])
+@app.route('/reset_password')
 def reset_password():
+    data = {}
+
     # TODO: change api key and move to env variable near final deploy
-    email_or_username = request.form['email_or_username']
+    emailOrUsername = request.args.get('emailOrUsername')
     try:
-        user = Account.query.filter_by(username =email_or_username).one()
+        user = Account.query.filter_by(username =emailOrUsername).one()
     except NoResultFound:
         #Search the email column
         try:
-            user = Account.query.filter_by(email=email_or_username).one()
+            user = Account.query.filter_by(email=emailOrUsername).one()
         except NoResultFound:
             #User not found, inform guest user
-            print ("Not found")
-            #TODO:: How to show the user invalid message
-            return ('', 204)
+            data['error'] = "We couldn't find an associated email address."
+            return jsonify(data)
 
     #User is populated at this point, grab email to send email to
     token = ts.dumps(user.email, salt='recover-key')
     recover_url = url_for('reset_with_token', token=token, _external=True)
 
 
-    sg = sendgrid.SendGridAPIClient(apikey="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")
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ['SENDGRID_API_KEY'])
     from_email = Email("admin@thecomparator.herokuapp.com")
     to_email = Email(user.email)
     subject = "TheComparator: Forgot your password?"
@@ -85,47 +87,81 @@ def reset_password():
     mail = Mail(from_email, subject, to_email, content)
     response = sg.client.mail.send.post(request_body=mail.get())
 
-    # print(response.status_code)
-    # print(response.body)
-    # print(response.headers)
-    # TODO: response once email submitted (e.g. "email has been sent with reset link, please wait ..."
-    return ('', 204)
+    data['success'] = "You'll receive an email with a link to reset your password shortly."
+    return jsonify(data)
 
 @app.route('/reset/<token>', methods=["GET", "POST"])
 def reset_with_token(token):
+    change_success = False
+    password_valid = True
     try:
         # link expires after 24 hours (86400 seconds)
         email = ts.loads(token, salt="recover-key", max_age=86400)
+        valid_link = True
     except:
-        # TODO: invalid link message
-        print('invalid link')
+        valid_link = False
 
     if request.method == 'POST':
         user = Account.query.filter_by(email=email).first_or_404()
-        set_password(user.id, request.form['password'])
-        # TODO: successful password reset message + go to another page?
+        password = request.form['password']
+        if len(password) == 0:
+            password_valid = False
+        else:
+            set_password(user.id, password)
+            change_success = True
 
-    return render_template('reset_with_token.html', token=token)
+    return render_template('reset_with_token.html', token=token, valid_link=valid_link, change_success=change_success, password_valid=password_valid)
 
-@app.route('/add_user', methods=['POST'])
+# TODO: consider adding requirements to password (length, character types, etc.)
+@app.route('/add_user')
 def add_user():
-    # Create the object we want to add
-    # user = Account(request.form['email'], request.form['username'], request.form['password'])
-    input = (request.form['email'], request.form['username'], request.form['password'], request.form['password_confirm_register'])
-    # TODO: prettier form validation
-    if input[2] != input[3]:
-        flash('Passwords must match.', 'password_error')
-    else:
-        temp = validate_registration(input[0], input[1])
-        if temp == 1:
-            register_user(input[0], input[1], input[2])
-            return login_helper(input[1], input[2])
-        elif temp == 2:
-            flash('This email is already attached to an account.', 'email_error')
-        elif temp == 3:
-            flash('This username is taken. Please try another.', 'username_error')
-    return redirect(url_for('index'))
+    data = {}
+    registerEmail = request.args.get('registerEmail')
+    registerUsername = request.args.get('registerUsername')
+    registerPassword = request.args.get('registerPassword')
+    registerPasswordConfirm = request.args.get('registerPasswordConfirm')
 
+    #If anything is null, return the error message back to user
+    if not registerEmail:
+        data['nullEmail'] = "An email is required."
+    if not registerUsername:
+        data['nullUsername'] = "A username is required."
+    if not registerPassword:
+        data['nullPassword'] = "A password is required."
+    if not registerPasswordConfirm:
+        data['nullPasswordConfirm'] = "Please confirm your password."
+
+    if data:
+        return jsonify(data)
+
+    #If nothing was null, proceed to attempt to register the user
+    #First, make sure the username and email are available
+    emailCheck = ""
+    usernameCheck = ""
+
+    try:
+        emailCheck = Account.query.filter_by(email=registerEmail).one()
+    except NoResultFound:
+        pass
+
+    try:
+        usernameCheck = Account.query.filter_by(username=registerUsername).one()
+    except NoResultFound:
+        pass
+
+    if emailCheck and usernameCheck:
+        data['errorEmailUsername'] = "The email and username are already registered with an account."
+    elif emailCheck:
+        data['errorEmail'] = "The email is already registered with an account."
+    elif usernameCheck:
+        data['errorUsername'] = "The username is already registered with an account."
+
+    if data:
+        return jsonify(data)
+    else:
+        # data is empty, no duplicate usernames/emails
+        register_user(registerEmail, registerUsername, registerPassword)
+        return login_helper(registerUsername, registerPassword)
 
 @app.route('/login')
 def login():
@@ -142,7 +178,22 @@ def login():
         return jsonify(data)
     else:
         # Login unsuccessful
-        data['success'] = "We couldn't find that username and password."
+        data['error'] = "We couldn't find that username and password."
+        return jsonify(data)
+
+def login_helper(loginUsername, loginPassword):
+    data = {}
+
+    if validate_login(loginUsername, loginPassword):
+        # Login successful
+        user = Account.query.filter_by(username = loginUsername).one()
+        login_user(user, remember=True)
+
+        data['redirect'] = 'profile'
+        return jsonify(data)
+    else:
+        # Login unsuccessful
+        data['error'] = "We couldn't find that username and password."
         return jsonify(data)
 
 
@@ -151,30 +202,6 @@ def login():
 def logout():
     logout_user()
     return render_template('home.html')
-
-# @app.route('/forgot_password')
-# def forgot_password():
-#     data = {}
-#     emailOrUsername = request.args.get('emailOrUsername')
-#     #emailOrUsername = request.form['emailOrUsername']
-#
-#     #Search the username column first
-#     try:
-#         user = Account.query.filter_by(username = emailOrUsername).one()
-#     except NoResultFound:
-#         #Search the email column
-#         try:
-#             user = Account.query.filter_by(email=emailOrUsername).one()
-#         except NoResultFound:
-#             # User not found, inform guest user
-#             data['success'] = "We couldn't find an associated email address."
-#             return jsonify(data)
-#
-#     #User is populated at this point, grab email to send email to
-#     print ("Username or email found! Mail will be sent")
-#     #user.email
-#     #TODO:: Implement sending mail to user
-#     return ('', 204)
 
 
 if __name__ == '__main__':

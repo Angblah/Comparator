@@ -34,21 +34,49 @@
                             <h3>Sign up!</h3>
                         </div>
 
-                        <form id="registerForm" action="/add_user" method="post">
-                            <div class="form-group">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                        <form id="registerForm">
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterEmailDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="emailResult"></span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterUsernameDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="usernameResult"></span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterEmailUsernameDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="emailUsernameResult"></span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterNullEmailDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="nullEmailResult"></span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterNullUsernameDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="nullUsernameResult"></span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterNullPasswordDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="nullPasswordResult"></span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterNullPasswordConfirmDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="nullPasswordConfirmResult"></span>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                                <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Email">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                                <input type="text" class="form-control" id="registerUsername" name="registerUsername" placeholder="Username">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="password_confirm_register" name="password_confirm_register" placeholder="Confirm Password">
+                                <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="registerPasswordConfirm" name="registerPasswordConfirm" placeholder="Confirm Password">
                             </div>
                             <div class="text-left">
-                                <button type="submit" class="btn btn-template-main"><i class="fa fa-user-md"></i> Register</button>
+                                <button class="btn btn-template-main" id="registerButton" onclick="$('#invalidCredRegisterEmailDiv, #invalidCredRegisterUsernameDiv, #invalidCredRegisterEmailUsernameDiv, #invalidCredRegisterNullEmailDiv, #invalidCredRegisterNullUsernameDiv, #invalidCredRegisterNullPasswordDiv, #invalidCredRegisterNullPasswordConfirmDiv').hide()"><i class="fa fa-user-md"></i> Register</button>
                             </div>
                         </form>
                         <hr>

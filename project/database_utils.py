@@ -239,7 +239,7 @@ def initialize_db_structure():
     create or replace function set_password(_user_id int, _password varchar) returns void as
     $$
         begin
-            update account set password = crypt(_password, gen_salt('bf', 8));
+            update account set password = crypt(_password, gen_salt('bf', 8)) where id = _user_id;
         end;
     $$ language plpgsql;
 
@@ -282,6 +282,7 @@ def initialize_db_structure():
             select register_user('a@a.com', 'admin', 'password') into _account_id;
             perform register_user('b@b.com', 'a', 'a');
             perform register_user('awu68@gatech.edu', 'awu68', 'a');
+            -- perform register_user('honeychawla96@gmail.com', 'b', 'b');
 
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
@@ -410,8 +411,106 @@ def get_user_comparison_ids(user_id):
     for row in result:
         yield row[0]
 
+def get_user_comparison_names(user_id):
+    from models import Comparison
+
+    result = db.engine.execute((select([Comparison.name]).where(Comparison.account_id == user_id)))
+    output = []
+    for row in result:
+        output.append(row[0])
+    return output
+
+# type_ids:
+# 0 = varchar
+# 1 = decimal
+# 2 = timestamp
+def add_attribute(comparison_id, attribute_name, attribute_type_id):
+    query = text("""
+    select add_attribute(:comparison_id, :attribute_name, :attribute_type_id);
+    """)
+    db.engine.execute(query, comparison_id=comparison_id, attribute_name=attribute_name, attribute_type_id=attribute_type_id)
+
+def set_attribute_value(item_id, item_attribute_id, new_value):
+    query = text("""
+    select set_attribute_value(:item_id, :item_attribute_id, :new_value);
+    """)
+    db.engine.execute(query, item_id=item_id, item_attribute_id=item_attribute_id, new_value=new_value)
+
+# saves specified comparison as template with given name
+def save_comparison_as_template(comparison_id, template_name):
+    query = text("""
+    select save_comparison_as_template(:comparison_id, :template_name);
+    """)
+    db.engine.execute(query, comparison_id=comparison_id, template_name=template_name)
+
+
+def add_comparison_item (table_comparison_id, table_position):
+    query = text("""
+    select add_comparison_item(:table_comparison_id, :table_position);
+    """)
+    db.engine.execute(query, table_comparison_id=table_comparison_id, table_position=table_position)
+
+def add_comparison_item_back (comparison_id):
+    query = text("""
+    select add_comparison_item_back(:comparison_id)
+    """)
+    db.engine.execute(query, comparison_id=comparison_id)
+
+def add_comparison_items_back (comparison_id, num_items):
+    query = text("""
+    select add_comparison_item_back(:comparison_id, :num_items);
+    """)
+    db.engine.execute(query, comparison_id=comparison_id, num_items=num_items)
+
+# TODO: consider changing to id instead of position depending on whether stacked/horizontal view chosen as final option
+def delete_comparison_item (table_comparison_id, table_position):
+    query = text("""
+    select delete_comparison_item(:table_comparison_id, :table_position);
+    """)
+    db.engine.execute(query, table_comparison_id=table_comparison_id, table_position=table_position)
+
+def comparison_table_stacked (table_comparison_id):
+    query = text("""
+    select comparison_table_stacked(:table_comparison_id);
+    """)
+    db.engine.execute(query, table_comparison_id=table_comparison_id)
+
+def create_comparison_from_user_template (account_id, template_id, comparison_name):
+    query = text("""
+    select create_comparison_from_user_template(:account_id, :template_id, :comparison_name);
+    """)
+    db.engine.execute(query, account_id=account_id, template_id=template_id, comparison_name=comparison_name)
+
+def create_comparison_from_template (account_id, template_id, comparison_name):
+    query = text("""
+    select create_comparison_from_template(:account_id, :template_id, :comparison_name);
+    """)
+    db.engine.execute(query, account_id=account_id, template_id=template_id, comparison_name=comparison_name)
+
+def sort_by_attribute(comparison_id, attribute_id):
+    query = text("""
+    select sort_by_attribute(:comparison_id, :attribute_id);
+    """)
+    db.engine.execute(query, comparison_id=comparison_id, attribute_id=attribute_id)
+
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
+
+
+# Example use cases
+
+    # getting all comparison tables of specific user
+
+    # a = get_user_comparison_ids(1)
+    # for id in a:
+    #     b = get_comparison_horizontal(id)
+    #     # new table
+    #     print("_______________________________________________")
+    #     for result in b:
+    #         # row in table
+    #         print(result)
+    #     print("_______________________________________________")
+
 
