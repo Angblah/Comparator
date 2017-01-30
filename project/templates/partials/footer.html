@@ -117,6 +117,22 @@
         if (data.redirect == "profile") {
             window.location.href = data.redirect;
         }
+        if (data.nullEmail == "An email is required.") {
+            $("#nullEmailResult").text(data.nullEmail);
+            $("#invalidCredRegisterNullEmailDiv").show();
+        }
+        if (data.nullUsername == "A username is required.") {
+            $("#nullUsernameResult").text(data.nullUsername);
+            $("#invalidCredRegisterNullUsernameDiv").show();
+        }
+        if (data.nullPassword == "A password is required.") {
+            $("#nullPasswordResult").text(data.nullPassword);
+            $("#invalidCredRegisterNullPasswordDiv").show();
+        }
+        if (data.nullPasswordConfirm == "Please confirm your password.") {
+            $("#nullPasswordConfirmResult").text(data.nullPasswordConfirm);
+            $("#invalidCredRegisterNullPasswordConfirmDiv").show();
+        }
         if (data.errorEmail == "The email is already registered with an account.") {
             $("#emailResult").text(data.errorEmail);
             $("#invalidCredRegisterEmailDiv").show();

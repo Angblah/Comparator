@@ -47,6 +47,22 @@
                                 <strong>Uh oh!</strong>
                                 <span id="emailUsernameResult"></span>
                             </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterNullEmailDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="nullEmailResult"></span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterNullUsernameDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="nullUsernameResult"></span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterNullPasswordDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="nullPasswordResult"></span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="invalidCredRegisterNullPasswordConfirmDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="nullPasswordConfirmResult"></span>
+                            </div>
                             <div class="form-group">
                                 <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Email">
                             </div>
@@ -60,7 +76,7 @@
                                 <input type="password" class="form-control" id="registerPasswordConfirm" name="registerPasswordConfirm" placeholder="Confirm Password">
                             </div>
                             <div class="text-left">
-                                <button class="btn btn-template-main" id="registerButton" onclick="$('#invalidCredRegisterEmailDiv, #invalidCredRegisterUsernameDiv, #invalidCredRegisterEmailUsernameDiv').hide()"><i class="fa fa-user-md"></i> Register</button>
+                                <button class="btn btn-template-main" id="registerButton" onclick="$('#invalidCredRegisterEmailDiv, #invalidCredRegisterUsernameDiv, #invalidCredRegisterEmailUsernameDiv, #invalidCredRegisterNullEmailDiv, #invalidCredRegisterNullUsernameDiv, #invalidCredRegisterNullPasswordDiv, #invalidCredRegisterNullPasswordConfirmDiv').hide()"><i class="fa fa-user-md"></i> Register</button>
                             </div>
                         </form>
                         <hr>
