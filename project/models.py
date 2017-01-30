@@ -3,6 +3,7 @@ from app import db
 from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String, UniqueConstraint, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.types import TIMESTAMP
 from flask.ext.login import UserMixin
 
 
@@ -27,6 +28,8 @@ class Comparison(db.Model):
     name = db.Column(String(255), nullable=False)
     last_position = db.Column(Integer, nullable=False, server_default=text("'-1'::integer"))
     account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
+    date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
+    date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
 
     account = relationship(u'Account')
 
@@ -68,6 +71,8 @@ class Template(db.Model):
 
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
+    date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
+    date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
 
 
 class TemplateAttribute(db.Model):
@@ -88,6 +93,8 @@ class UserTemplate(db.Model):
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
     account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
+    date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
+    date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
 
     account = relationship(u'Account')
 
