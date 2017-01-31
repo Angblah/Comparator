@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <title>Comparator Workspace</title>
         <!-- styles -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     </head>
     <body>
@@ -21,11 +21,7 @@
         <!-- Workspace Link -->
         <div id="workspace"></div>
 
-        <!--Scripts-->
-        <script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='bower_components/react/react-dom.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='bower_components/draft-js/dist/Draft.min.js') }}"></script>
-        
-        <script src="{{ url_for('static', filename='scripts/js/workspace.js') }}"></script>
+        <!--Scripts-->        
+        <script src="{{ url_for('static', filename='scripts/js/workspace.bundle.js') }}"></script>
     </body>
 </html>

@@ -1,5 +1,7 @@
 //DRAFT COMPONENTS
-const {Editor, EditorState, RichUtils, CompositeDecorator} = Draft;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Editor, EditorState, RichUtils, CompositeDecorator} from 'draft-js';
 
 class EditorBlock extends React.Component {
     render() {
@@ -112,10 +114,10 @@ class Workspace extends React.Component {
 class InlineStyleButtons extends React.Component {
     constructor() {
         super();
-        this.onToggle = (e) => {
+        /*this.onToggle = (e) => {
             e.preventDefault();
             this.props.onToggle(type.style);
-        };
+        };*/
     }
 
     render() {
@@ -128,9 +130,10 @@ class InlineStyleButtons extends React.Component {
         ];
 
         var buttonclassName = 'btn btn-default';
-        if (currentStyle.has(type.style)) {
+        //Check current style
+        /*if (currentStyle.has(type.style)) {
             buttonclassName += 'active'
-        }
+        }*/
 
         return (
             <div className="btn-group">

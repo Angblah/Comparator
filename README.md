@@ -7,6 +7,6 @@ To install packages:
   2. Install Node Package Manager
   3. run "pip install -r requirements.txt"
   4. run "npm install"
-  5. run "bower install"
-    -If bower not found: run "npm install -g bower"
+  5. run "npm i webpack -g"
+    - To compile the .jsx into the bundles, run "webpack" from the root directory
   

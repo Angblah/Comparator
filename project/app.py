@@ -38,6 +38,10 @@ def newComparison():
 @app.route('/workspace')
 def workspace():
     return render_template('workspace.html')
+    
+@app.route('/index')
+def index2():
+    return render_template('index.html')
 
 # TODO: rename register and add_user functions to reduce confusion
 @app.route('/profile')
