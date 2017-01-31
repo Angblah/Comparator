@@ -8,16 +8,14 @@ from sendgrid.helpers.mail import *
 from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
-# TODO: fetch credentials instead of using string as credentials can change under some circumstances (see https://devcenter.heroku.com/articles/connecting-to-heroku-postgres-databases-from-outside-of-heroku)
 app.config[
-    'SQLALCHEMY_DATABASE_URI'] = "postgres://inpbjnlkzqdkhf:d0a646187c72013be9247400d3abe35c4f3f0360ce657260758c455c9c147cf3@ec2-54-163-234-20.compute-1.amazonaws.com:5432/dfu8hu14lo03hn"
+    'SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.debug = True
 app.test_request_context().push()
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-# TODO: make actual secret key for app.config
-ts = URLSafeTimedSerializer('a really bad secret key')
+ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 from models import *
 from database_utils import *
@@ -43,14 +41,20 @@ def workspace():
 def index2():
     return render_template('index.html')
 
-# TODO: rename register and add_user functions to reduce confusion
 @app.route('/profile')
 @login_required
 def profile_page():
     
     namelist = get_user_comparison_names(current_user.id)
 
-    return render_template('profileHomePage.html', name_list=namelist)
+    recent = []
+    x = 0;
+    for name in namelist:
+        if x == 5:
+            break;
+        recent.append(name)
+
+    return render_template('profileHomePage.html', name_list=recent)
 
 @app.route('/myProfile')
 @login_required
@@ -65,7 +69,6 @@ def forgotPassword():
 def reset_password():
     data = {}
 
-    # TODO: change api key and move to env variable near final deploy
     emailOrUsername = request.args.get('emailOrUsername')
     try:
         user = Account.query.filter_by(username =emailOrUsername).one()

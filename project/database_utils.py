@@ -17,7 +17,7 @@ def initialize_db_structure():
     
           update comparison_item set position = position + 1 where comparison_id = table_comparison_id and position >= table_position;
           insert into comparison_item (position, comparison_id) values (table_position, table_comparison_id);
-          update comparison set last_position = last_position + 1 where id = table_comparison_id;
+          update comparison set last_position = last_position + 1, date_modified = current_timestamp where id = table_comparison_id;
       end;
     $$ language plpgsql;
 
@@ -42,7 +42,7 @@ def initialize_db_structure():
                 insert into comparison_item (position, comparison_id) values (_position, _comparison_id);
             end loop;
 
-            update comparison set last_position = last_position + _num_items where id = _comparison_id;
+            update comparison set last_position = last_position + _num_items, date_modified = current_timestamp where id = _comparison_id;
 
         end;
     $$ language plpgsql;
@@ -50,7 +50,7 @@ def initialize_db_structure():
     create or replace function delete_comparison_item (table_comparison_id int, table_position int) returns void
         as $$
         begin
-            update comparison set last_position = last_position - 1 where id = table_comparison_id;
+            update comparison set last_position = last_position - 1, date_modified = current_timestamp where id = table_comparison_id;
             delete from comparison_item where comparison_id = table_comparison_id and position = table_position;
             update comparison_item set position = position - 1 where comparison_id = table_comparison_id and position > table_position;
         end;
@@ -75,6 +75,7 @@ def initialize_db_structure():
         as $$
         begin
             insert into comparison_attribute (name, type_id, comparison_id) values (attribute_name, attribute_type_id, table_comparison_id);
+            update comparison set date_modified = current_timestamp where id = table_comparison_id;
         end;
     $$ language plpgsql;
     
@@ -84,6 +85,7 @@ def initialize_db_structure():
             insert into attribute_value (item_id, attribute_id, val) values (comparison_item_id, item_attribute_id, new_value)
                 on conflict (item_id, attribute_id) do update
                     set val = new_value;
+            update comparison set date_modified = current_timestamp where id = (select comparison_id from comparison_item where comparison_item.id = comparison_item_id);
         end;
     $$ language plpgsql;
 
@@ -225,6 +227,8 @@ def initialize_db_structure():
         update comparison_item set position = row_number - 1
         from (select row_number() over (), * from sort_view) as t
         where comparison_id = _comparison_id and comparison_item.id = _item_id;
+
+        update comparison set date_modified = current_timestamp where id = _comparison_id;
     
     end;
     $$ language plpgsql;
