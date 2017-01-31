@@ -101,6 +101,12 @@ class Workspace extends React.Component {
                         handleKeyCommand={this.handleKeyCommand}
                         onChange={this.onChange}
                     />
+                    <div className="editor">
+                        <Editor
+                        editorState={this.state.editorState}
+                        onChange={this.onChange}
+                        />
+                    </div>
                 </div>
             </div>
         );

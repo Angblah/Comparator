@@ -41035,7 +41035,15 @@ var Workspace = function (_React$Component3) {
                         editorState: editorState,
                         handleKeyCommand: this.handleKeyCommand,
                         onChange: this.onChange
-                    })
+                    }),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'editor' },
+                        _react2.default.createElement(_draftJs.Editor, {
+                            editorState: this.state.editorState,
+                            onChange: this.onChange
+                        })
+                    )
                 )
             );
         }
