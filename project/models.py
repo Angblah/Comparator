@@ -1,6 +1,6 @@
 # coding: utf-8
 from app import db
-from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String, UniqueConstraint, text
+from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String, UniqueConstraint, text, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import TIMESTAMP
@@ -30,6 +30,7 @@ class Comparison(db.Model):
     account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
     date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
+    comments = db.Column(Text, nullable=True)
 
     account = relationship(u'Account')
 
@@ -73,6 +74,7 @@ class Template(db.Model):
     name = db.Column(String(255), nullable=False)
     date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
+    comments = db.Column(Text, nullable=True)
 
 
 class TemplateAttribute(db.Model):
@@ -95,6 +97,7 @@ class UserTemplate(db.Model):
     account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
     date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
+    comments = db.Column(Text, nullable=True)
 
     account = relationship(u'Account')
 

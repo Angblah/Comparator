@@ -286,7 +286,7 @@ def initialize_db_structure():
             select register_user('a@a.com', 'admin', 'password') into _account_id;
             perform register_user('b@b.com', 'a', 'a');
             perform register_user('awu68@gatech.edu', 'awu68', 'a');
-            -- perform register_user('honeychawla96@gmail.com', 'b', 'b');
+            perform register_user('honeychawla96@gmail.com', 'honey', 'police');
 
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
