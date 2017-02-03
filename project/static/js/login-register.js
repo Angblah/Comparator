@@ -4,7 +4,7 @@ $(function() {
       loginUsername: $('input[name="loginUsername"]').val(),
       loginPassword: $('input[name="loginPassword"]').val()
     }, function(data) {
-    if (data.redirect == "profile") {
+    if (data.redirect) {
         window.location.href = "../profile";
     }
     else {
@@ -24,34 +24,34 @@ $(function() {
       registerPassword: $('input[name="registerPassword"]').val(),
       registerPasswordConfirm: $('input[name="registerPasswordConfirm"]').val()
     }, function(data) {
-    if (data.redirect == "profile") {
+    if (data.redirect) {
         window.location.href = data.redirect;
     }
-    if (data.nullEmail == "An email is required.") {
+    if (data.nullEmail) {
         $("#nullEmailResult").text(data.nullEmail);
         $("#invalidCredRegisterNullEmailDiv").show();
     }
-    if (data.nullUsername == "A username is required.") {
+    if (data.nullUsername) {
         $("#nullUsernameResult").text(data.nullUsername);
         $("#invalidCredRegisterNullUsernameDiv").show();
     }
-    if (data.nullPassword == "A password is required.") {
+    if (data.nullPassword) {
         $("#nullPasswordResult").text(data.nullPassword);
         $("#invalidCredRegisterNullPasswordDiv").show();
     }
-    if (data.nullPasswordConfirm == "Please confirm your password.") {
+    if (data.nullPasswordConfirm) {
         $("#nullPasswordConfirmResult").text(data.nullPasswordConfirm);
         $("#invalidCredRegisterNullPasswordConfirmDiv").show();
     }
-    if (data.errorEmail == "The email is already registered with an account.") {
+    if (data.errorEmail) {
         $("#emailResult").text(data.errorEmail);
         $("#invalidCredRegisterEmailDiv").show();
     }
-    else if (data.errorUsername == "The username is already registered with an account.") {
+    else if (data.errorUsername) {
         $("#usernameResult").text(data.errorUsername);
         $("#invalidCredRegisterUsernameDiv").show();
     }
-    else if (data.errorEmailUsername == "The email and username are already registered with an account.") {
+    else if (data.errorEmailUsername) {
         $("#emailUsernameResult").text(data.errorEmailUsername);
         $("#invalidCredRegisterEmailUsernameDiv").show();
     }
@@ -65,7 +65,7 @@ $(function() {
     $.getJSON('/reset_password', {
       emailOrUsername: $('input[name="emailOrUsername"]').val()
     }, function(data) {
-    if (data.error == "We couldn't find an associated email address.") {
+    if (data.error) {
         $("#forgotPasswordResultError").text(data.error);
         $("#invalidCredForgotPasswordErrorDiv").show();
     }
