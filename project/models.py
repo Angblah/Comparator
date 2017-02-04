@@ -64,7 +64,8 @@ class DataType(db.Model):
     __tablename__ = 'data_type'
 
     id = db.Column(Integer, primary_key=True)
-    name = db.Column(String(255), nullable=False)
+    sort_type = db.Column(String(255), nullable=False)
+    type_name = db.Column(String(255), nullable=False)
 
 
 class Template(db.Model):

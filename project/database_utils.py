@@ -216,7 +216,7 @@ def initialize_db_structure():
     begin
         select type_id from comparison_attribute where id = _attribute_id into _type_id;
     
-        select name from data_type where id = _type_id into _type;
+        select sort_type from data_type where id = _type_id into _type;
     
         execute format('create or replace temp view sort_view as select comparison_item.id as _item_id from comparison_attribute
             inner join comparison_item on comparison_attribute.comparison_id = comparison_item.comparison_id
@@ -265,7 +265,7 @@ def initialize_db_structure():
     create or replace function populate_database() returns void as
     $$
         begin
-            insert into data_type (id, name) values (0, 'vachar'), (1, 'decimal'), (2, 'timestampz');
+            insert into data_type (id, sort_type, type_name) values (0, 'vachar', 'varchar'), (1, 'decimal', 'decimal'), (2, 'timestamptz', 'timestamptz'), (3, 'varchar', 'image');
         end;
     $$ language plpgsql;
 
