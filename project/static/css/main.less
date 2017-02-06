@@ -1,0 +1,74 @@
+ /*Main Styling for The Comparator */
+
+/*Global Variables*/
+@primary-col: #5fa4eb;
+@secondary-col: #ff9900;
+@primary-text: #ccc;
+
+/*Background*/
+body {
+    background-color: @primary-col;
+}
+
+/*Footer*/
+footer {
+    background-color: #444;
+    color: @primary-text;
+    height: 10em;
+    text-align: center;
+    padding-top: 2%;
+    position: fixed;
+    bottom: 0px;
+    width: 100%
+}
+
+/*Nav Bar*/
+#nav navbar-nav navbar-right:focus {
+    border-bottom: 2em solid @secondary-col;
+}
+
+#menu-items ul {
+    list-style-type: none;
+    padding-bottom: 10%;
+    &:extend(h3, img);
+}
+h3 {
+    color: @primary-text;
+    text-align: left;
+}
+img {
+    border-radius: 50%
+}
+#menu-items ul li {
+    list-style-type: none;
+    padding-top: 1%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/*Buttons*/
+button {
+    margin: none;
+    color: @primary-col;
+    background-color: @secondary-col;
+    border-radius: 0 !important;
+}
+button:hover {
+    border-color: rgba(0, 0, 0, 0.1);
+    border-width: 2px;
+    background-color: @primary-col;
+    color: @secondary-col;
+    text-shadow: (@secondary-col + #444);
+}
+
+/*navbar
+
+primary color
+
+secondary color
+
+footer
+
+button
+
+dorpdown*/ 

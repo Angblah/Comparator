@@ -1,31 +1,57 @@
-/* Main Styling for The Comparator */
-:root {
-	primary-col: #000;
-	secondary-col: #fff;
+/*Main Styling for The Comparator */
+/*Global Variables*/
+/*Background*/
+body {
+  background-color: #5fa4eb;
 }
-
+/*Footer*/
 footer {
-	background-color: #444;
-	color: #fff;
-	height: 10em;
-	text-align: center;
-	padding-top: 2%;
+  background-color: #444;
+  color: #ccc;
+  height: 10em;
+  text-align: center;
+  padding-top: 2%;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
 }
-
-#navigation {
-
+/*Nav Bar*/
+#nav navbar-nav navbar-right:focus {
+  border-bottom: 2em solid #ff9900;
 }
 #menu-items ul {
-	list-style-type: none;
-	padding-bottom: 10%;
+  list-style-type: none;
+  padding-bottom: 10%;
+}
+h3,
+#menu-items ul {
+  color: #ccc;
+  text-align: left;
+}
+img,
+#menu-items ul {
+  border-radius: 50%;
 }
 #menu-items ul li {
-	list-style-type: none;
-	padding-top: 1%;
-	border-bottom: 1px solid rgba(0,0,0,0.1);
+  list-style-type: none;
+  padding-top: 1%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
-
-
+/*Buttons*/
+button {
+  margin: none;
+  color: #5fa4eb;
+  background-color: #ff9900;
+  border-radius: 0 !important;
+}
+button:hover {
+  border-color: rgba(0, 0, 0, 0.1);
+  border-width: 2px;
+  background-color: #5fa4eb;
+  color: #ff9900;
+  text-shadow: #ffdd44;
+}
 /*navbar
 
 primary color
@@ -37,5 +63,3 @@ footer
 button
 
 dorpdown*/
-
-/* Google less css */
