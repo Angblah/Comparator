@@ -1,6 +1,32 @@
 /* Main Styling for The Comparator */
+:root {
+	primary-col: #000;
+	secondary-col: #fff;
+}
 
-navbar
+footer {
+	background-color: #444;
+	color: #fff;
+	height: 10em;
+	text-align: center;
+	padding-top: 2%;
+}
+
+#navigation {
+
+}
+#menu-items ul {
+	list-style-type: none;
+	padding-bottom: 10%;
+}
+#menu-items ul li {
+	list-style-type: none;
+	padding-top: 1%;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+
+/*navbar
 
 primary color
 
@@ -10,6 +36,6 @@ footer
 
 button
 
-dorpdown
+dorpdown*/
 
 /* Google less css */
