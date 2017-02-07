@@ -160,7 +160,19 @@ def initialize_db_structure():
                     where user_template.id = _template_id;
         end;
     $$ language plpgsql;
-    
+
+    -- _template_id = id of template to copy from
+    -- _account_id = id of account to copy to
+    create or replace function copy_template (_template_id int, _account_id int) returns int
+        as $$
+            declare _new_template_id int;
+        begin
+            insert into user_template (name, comment, account_id) select name || ' (copy)', comment, _account_id from user_template where id = _template_id returning id into _new_template_id;
+            insert into user_template_attribute (name, type_id, user_template_id, weight) select name, type_id, _new_template_id, weight from user_template_attribute where user_template_id = _template_id;
+            return _new_template_id;
+        end;
+    $$ language plpgsql;
+
     /*
     Function taken from Erwin Brandstetter's response on http://stackoverflow.com/questions/36804551/execute-a-dynamic-crosstab-query
     Creates view xtab_view containing pivot table result
@@ -392,7 +404,8 @@ def initialize_db_structure():
     """)
     db.engine.execute(query.execution_options(autocommit=True))
 
-# TODO: consider making easier template creation function with two arrays (_type_ids, _type_names, _weights)
+# TODO: copy_template function to allow users to edit default(admin) templates, copy_comparison to create similar comparisons
+
 # TODO: change default comparisons + templates for admin to be actual defaults instead of balls
 # TODO: consider function to import csv (both for allowing imports of exported tables/csv tables in general, and to ease example making)
 
