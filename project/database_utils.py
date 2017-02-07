@@ -150,7 +150,7 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function get_template (_template_id int) returns table(type_id int, name varchar)
+    create or replace function get_template (_template_id int) returns table(type_id smallint, name varchar)
         as $$
         begin
             return query
