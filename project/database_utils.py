@@ -123,7 +123,44 @@ def initialize_db_structure():
             update user_template set date_modified = current_timestamp where id = _user_template_id;
         end;
     $$ language plpgsql;
-    
+
+    -- NOTE: all arrays must be of same length, though this will NOT be checked by stored function
+    -- NOTE: 1st index of array is "1", NOT "0"
+    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[], _weights int[]) returns void
+        as $$
+            declare _template_id int;
+        begin
+            insert into user_template (name, account_id) values (_template_name, (select id from account where username = 'admin')) returning id into _template_id;
+            for i in 1..cardinality(_type_ids) loop
+                insert into user_template_attribute (name, type_id, user_template_id, weight) values (_type_names[i], _type_ids[i], _template_id, _weights[i]);
+            end loop;
+        end;
+    $$ language plpgsql;
+
+    -- NOTE: all arrays must be of same length, though this will NOT be checked by stored function
+    -- NOTE: 1st index of array is "1", NOT "0"
+    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[]) returns void
+        as $$
+            declare _template_id int;
+        begin
+            insert into user_template (name, account_id) values (_template_name, (select id from account where username = 'admin')) returning id into _template_id;
+            for i in 1..cardinality(_type_ids) loop
+                insert into user_template_attribute (name, type_id, user_template_id) values (_type_names[i], _type_ids[i], _template_id);
+            end loop;
+        end;
+    $$ language plpgsql;
+
+    create or replace function get_template (_template_id int) returns table(type_id int, name varchar)
+        as $$
+        begin
+            return query
+                select user_template_attribute.type_id, user_template_attribute.name from user_template
+                    inner join user_template_attribute
+                    on user_template.id = user_template_attribute.user_template_id
+                    where user_template.id = _template_id;
+        end;
+    $$ language plpgsql;
+
     
     /*
     Function taken from Erwin Brandstetter's response on http://stackoverflow.com/questions/36804551/execute-a-dynamic-crosstab-query
@@ -262,7 +299,7 @@ def initialize_db_structure():
     create or replace function populate_database() returns void as
     $$
         begin
-            insert into data_type (id, sort_type, type_name) values (0, 'vachar', 'varchar'), (1, 'decimal', 'decimal'), (2, 'timestamptz', 'timestamptz'), (3, 'varchar', 'image');
+            insert into data_type (id, sort_type, type_name) values (0, 'vachar', 'varchar'), (1, 'decimal', 'decimal'), (2, 'timestamptz', 'timestamptz'), (3, 'varchar', 'image'), (4, 'interval', 'duration');
         end;
     $$ language plpgsql;
 
@@ -337,6 +374,9 @@ def initialize_db_structure():
             perform add_comparison_item_back(comp_2, 4);
             perform add_comparison_item_back(comp_3, 5);
 
+            perform make_template('Top Load Washers', Array[0, 1, 1, 0, 4, 1, 1, 0]::smallint[],
+                              Array['name', 'price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']);
+
             -- TODO: combine initialize and create comparison
 
             -- TODO: create a few templates
@@ -348,7 +388,9 @@ def initialize_db_structure():
     """)
     db.engine.execute(query.execution_options(autocommit=True))
 
-# TODO: consider changing ER diagram to attach standard templates to dummy user to reduce redundancy of functions pertaining to both user and regular templates
+# TODO: consider making easier template creation function with two arrays (_type_ids, _type_names, _weights)
+# TODO: change default comparisons + templates for admin to be actual defaults instead of balls
+# TODO: consider function to import csv (both for allowing imports of exported tables/csv tables in general, and to ease example making)
 
 def initialize_db_values():
     query = text("""
