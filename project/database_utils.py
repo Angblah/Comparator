@@ -71,15 +71,15 @@ def initialize_db_structure():
 
     
     
-    create or replace function add_attribute (table_comparison_id int, attribute_name varchar(255), attribute_type_id smallint) returns void
+    create or replace function add_comparison_attribute (table_comparison_id int, attribute_name varchar(255), attribute_type_id smallint, _weight int default 1) returns void
         as $$
         begin
-            insert into comparison_attribute (name, type_id, comparison_id) values (attribute_name, attribute_type_id, table_comparison_id);
+            insert into comparison_attribute (name, type_id, comparison_id, weight) values (attribute_name, attribute_type_id, table_comparison_id, _weight);
             update comparison set date_modified = current_timestamp where id = table_comparison_id;
         end;
     $$ language plpgsql;
     
-    create or replace function set_attribute_value (comparison_item_id int, item_attribute_id int, new_value varchar(255)) returns void
+    create or replace function set_comparison_attribute_value (comparison_item_id int, item_attribute_id int, new_value varchar(255)) returns void
         as $$
         begin
             insert into attribute_value (item_id, attribute_id, val) values (comparison_item_id, item_attribute_id, new_value)
@@ -116,14 +116,11 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-
-    create or replace function create_comparison_from_template (_account_id int, _template_id int, _comparison_name varchar) returns int
+    create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1) returns int
         as $$
-            declare _comparison_id int;
         begin
-            insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
-            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from template_attribute where template_id = _template_id;
-            return _comparison_id;
+            insert into user_template_attribute (name, type_id, user_template_id, weight) values (_attribute_name, _type_id, _user_template_id, _weight);
+            update user_template set date_modified = current_timestamp where id = _user_template_id;
         end;
     $$ language plpgsql;
     
@@ -298,30 +295,30 @@ def initialize_db_structure():
             perform add_comparison_item(_comparison_id, 1);
             perform delete_comparison_item(_comparison_id, 2);
 
-            perform add_attribute(_comparison_id, 'name', 0::smallint);
-            perform add_attribute(_comparison_id, 'size', 0::smallint);
-            perform add_attribute(_comparison_id, 'color', 0::smallint);
-            perform add_attribute(_comparison_id, 'number', 1::smallint);
+            perform add_comparison_attribute(_comparison_id, 'name', 0::smallint);
+            perform add_comparison_attribute(_comparison_id, 'size', 0::smallint);
+            perform add_comparison_attribute(_comparison_id, 'color', 0::smallint);
+            perform add_comparison_attribute(_comparison_id, 'number', 1::smallint);
 
             select id from comparison_item where position = 0 into item_0;
             select id from comparison_item where position = 1 into item_1;
             select id from comparison_item where position = 2 into item_2;
 
 
-            perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 2');
-            perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'large');
-            perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'red');
-            perform set_attribute_value(item_0, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-1.32');
+            perform set_comparison_attribute_value(item_0, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 2');
+            perform set_comparison_attribute_value(item_0, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'large');
+            perform set_comparison_attribute_value(item_0, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'red');
+            perform set_comparison_attribute_value(item_0, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-1.32');
 
-            perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 3');
-            perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'small');
-            perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'blue');
-            perform set_attribute_value(item_1, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '3');
+            perform set_comparison_attribute_value(item_1, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 3');
+            perform set_comparison_attribute_value(item_1, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'small');
+            perform set_comparison_attribute_value(item_1, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'blue');
+            perform set_comparison_attribute_value(item_1, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '3');
 
-            perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 4');
-            perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'medium');
-            perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'green');
-            perform set_attribute_value(item_2, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-8.221');
+            perform set_comparison_attribute_value(item_2, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 4');
+            perform set_comparison_attribute_value(item_2, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'medium');
+            perform set_comparison_attribute_value(item_2, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'green');
+            perform set_comparison_attribute_value(item_2, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-8.221');
 
             perform add_comparison_item(_comparison_id, 2);
             perform add_comparison_item_back(_comparison_id);
@@ -350,6 +347,8 @@ def initialize_db_structure():
 
     """)
     db.engine.execute(query.execution_options(autocommit=True))
+
+# TODO: consider changing ER diagram to attach standard templates to dummy user to reduce redundancy of functions pertaining to both user and regular templates
 
 def initialize_db_values():
     query = text("""
@@ -397,7 +396,7 @@ def get_template_ids():
 
 # returns horizontal view of comparison table with specified id
 # attribute id's and names are the left columns of each row, and all other columns represent an item in the comparison
-# column headers are 'id' and 'name', and each item position, from left to right
+# column headers are 'id' (referring to attribute id) and 'name' (attribute name), and each item position (0..n), from left to right
 def get_comparison_horizontal(comparison_id):
     query = text("""
     do $$ begin
@@ -428,15 +427,15 @@ def get_user_comparison_names(user_id):
 # 0 = varchar
 # 1 = decimal
 # 2 = timestamp
-def add_attribute(comparison_id, attribute_name, attribute_type_id):
+def add_comparison_attribute(comparison_id, attribute_name, attribute_type_id):
     query = text("""
-    select add_attribute(:comparison_id, :attribute_name, :attribute_type_id);
+    select add_comparison_attribute(:comparison_id, :attribute_name, :attribute_type_id);
     """)
     db.engine.execute(query, comparison_id=comparison_id, attribute_name=attribute_name, attribute_type_id=attribute_type_id)
 
-def set_attribute_value(item_id, item_attribute_id, new_value):
+def set_comparison_attribute_value(item_id, item_attribute_id, new_value):
     query = text("""
-    select set_attribute_value(:item_id, :item_attribute_id, :new_value);
+    select set_comparison_attribute_value(:item_id, :item_attribute_id, :new_value);
     """)
     db.engine.execute(query, item_id=item_id, item_attribute_id=item_attribute_id, new_value=new_value)
 
@@ -482,12 +481,6 @@ def comparison_table_stacked (table_comparison_id):
 def create_comparison_from_user_template (account_id, template_id, comparison_name):
     query = text("""
     select create_comparison_from_user_template(:account_id, :template_id, :comparison_name);
-    """)
-    db.engine.execute(query, account_id=account_id, template_id=template_id, comparison_name=comparison_name)
-
-def create_comparison_from_template (account_id, template_id, comparison_name):
-    query = text("""
-    select create_comparison_from_template(:account_id, :template_id, :comparison_name);
     """)
     db.engine.execute(query, account_id=account_id, template_id=template_id, comparison_name=comparison_name)
 
