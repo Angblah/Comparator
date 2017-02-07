@@ -375,7 +375,12 @@ def initialize_db_structure():
             perform add_comparison_item_back(comp_3, 5);
 
             perform make_template('Top Load Washers', Array[0, 1, 1, 0, 4, 1, 1, 0]::smallint[],
-                              Array['name', 'price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']);
+                                  Array['name', 'price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']);
+            perform make_template('Laptops', Array[0, 1, 0, 1, 1, 1, 1, 0, 4]::smallint[],
+                                  Array['Name', 'Price', 'Operating System', 'Memory', 'Hard Drive', 'Graphics Card', 'Weight', 'Size', 'Battery Life']);
+            perform make_template('Cameras', Array[0, 1, 1, 1, 4, 4, 1, 0, 1, 4]::smallint[],
+                                  Array['Name', 'Price', 'Megapixels', 'Image Quality','Shutter Lag', 'Startup Time', 'Weight', 'Size', 'Storage Space', 'Battery Life']);
+
 
             -- TODO: combine initialize and create comparison
 
