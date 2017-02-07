@@ -150,17 +150,16 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function get_template (_template_id int) returns table(type_id smallint, name varchar)
+    create or replace function get_template (_template_id int) returns table(id int, type_id smallint, name varchar)
         as $$
         begin
             return query
-                select user_template_attribute.type_id, user_template_attribute.name from user_template
+                select user_template_attribute.id, user_template_attribute.type_id, user_template_attribute.name from user_template
                     inner join user_template_attribute
                     on user_template.id = user_template_attribute.user_template_id
                     where user_template.id = _template_id;
         end;
     $$ language plpgsql;
-
     
     /*
     Function taken from Erwin Brandstetter's response on http://stackoverflow.com/questions/36804551/execute-a-dynamic-crosstab-query
