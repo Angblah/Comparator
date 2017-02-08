@@ -3,17 +3,19 @@
 /*Global Variables*/
 @primary-col: #5fa4eb;
 @secondary-col: #ff9900;
-@primary-text: #ccc;
+@back-col: #eee;
+@primary-text: #111;
+@secondary-text: #fff;
 
 /*Background*/
 body {
-    background-color: @primary-col;
+    background-color: @back-col;
 }
 
 /*Footer*/
 footer {
-    background-color: #444;
-    color: @primary-text;
+    background-color: @primary-col;
+    color: @secondary-text;
     height: 10em;
     text-align: center;
     padding-top: 2%;
@@ -30,7 +32,7 @@ footer {
 #menu-items ul {
     list-style-type: none;
     padding-bottom: 10%;
-    &:extend(h3, img);
+    &:extend(h3, img, li);
 }
 h3 {
     color: @primary-text;
@@ -39,26 +41,35 @@ h3 {
 img {
     border-radius: 50%
 }
-#menu-items ul li {
+li {
     list-style-type: none;
     padding-top: 1%;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     text-align: left;
 }
+#login-dropdown {
+    background-color: @primary-col;
+    color:  @secondary-col !important;  /*why u no worl???*/
+}
 
 /*Buttons*/
 button {
     margin: none;
-    color: @primary-col;
-    background-color: @secondary-col;
+    color: @secondary-text;
+    background-color: @primary-col;
     border-radius: 0 !important;
 }
 button:hover {
     border-color: rgba(0, 0, 0, 0.1);
     border-width: 2px;
-    background-color: @primary-col;
-    color: @secondary-col;
+    background-color: @secondary-col;
+    color: @secondary-text !important;
     text-shadow: (@secondary-col + #444);
+}
+
+/*Div.Container*/
+div.container {
+
 }
 
 /*navbar

@@ -2,12 +2,12 @@
 /*Global Variables*/
 /*Background*/
 body {
-  background-color: #5fa4eb;
+  background-color: #eee;
 }
 /*Footer*/
 footer {
-  background-color: #444;
-  color: #ccc;
+  background-color: #5fa4eb;
+  color: #fff;
   height: 10em;
   text-align: center;
   padding-top: 2%;
@@ -25,33 +25,40 @@ footer {
 }
 h3,
 #menu-items ul {
-  color: #ccc;
+  color: #111;
   text-align: left;
 }
 img,
 #menu-items ul {
   border-radius: 50%;
 }
-#menu-items ul li {
+li,
+#menu-items ul {
   list-style-type: none;
   padding-top: 1%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   text-align: left;
 }
+#login-dropdown {
+  background-color: #5fa4eb;
+  color: #ff9900 !important;
+  /*why u no worl???*/
+}
 /*Buttons*/
 button {
   margin: none;
-  color: #5fa4eb;
-  background-color: #ff9900;
+  color: #fff;
+  background-color: #5fa4eb;
   border-radius: 0 !important;
 }
 button:hover {
   border-color: rgba(0, 0, 0, 0.1);
   border-width: 2px;
-  background-color: #5fa4eb;
-  color: #ff9900;
+  background-color: #ff9900;
+  color: #fff !important;
   text-shadow: #ffdd44;
 }
+/*Div.Container*/
 /*navbar
 
 primary color
