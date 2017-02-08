@@ -22,18 +22,16 @@ footer {
 #menu-items ul {
   list-style-type: none;
   padding-bottom: 10%;
+  /*&:extend(h3, img, li);*/
 }
-h3,
-#menu-items ul {
+#menu-items ul h3 {
   color: #111;
   text-align: left;
 }
-img,
-#menu-items ul {
+#menu-items ul img {
   border-radius: 50%;
 }
-li,
-#menu-items ul {
+#menu-items ul li {
   list-style-type: none;
   padding-top: 1%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -59,6 +57,13 @@ button:hover {
   text-shadow: #ffdd44;
 }
 /*Div.Container*/
+div.col-sm-5,
+div.col-sm-7 {
+  border: 2px outset #ff9900;
+  box-shadow: 2px 2px 3em black;
+  background-color: #ffffff;
+  margin: 2px;
+}
 /*navbar
 
 primary color
