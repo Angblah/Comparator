@@ -64,11 +64,9 @@ $(function() {
     }); 
 });
 
-
-//TODO: Check field validation before registering
 $(function() {
     $('button#registerButton').bind('click', function() {
-        
+
         checkNull("registerEmail", "emailField")
         checkNull("registerUsername", "usernameField")
         checkNull("registerPassword", "passwordField")
@@ -100,6 +98,8 @@ $(function() {
     });
 });
 
+
+// Checks if input is null, and calls setGroupInvalid if so.
 function checkNull(inputID, formGroup) {
     var value = $("#" + inputID).val();
     if (!value) {      
@@ -109,6 +109,8 @@ function checkNull(inputID, formGroup) {
     return true;
 }
 
+
+// Does DOM modifications to form group to make valid
 function setGroupGood(formGroup) {
     $('#' + formGroup + 'helpBlock').remove();
     $('#' + formGroup + 'icon').remove();
@@ -119,6 +121,7 @@ function setGroupGood(formGroup) {
     $("#" + formGroup).addClass("has-success");
 }
 
+// Does DOM modifications to form group to make invalid, Error message optional
 function setGroupInvalid(formGroup, errorMessage) {
     $('#' + formGroup + 'helpBlock').remove();
     $('#' + formGroup + 'icon').remove();
@@ -132,6 +135,8 @@ function setGroupInvalid(formGroup, errorMessage) {
     $("#" + formGroup).addClass("has-error");
 }
 
+
+// Iterates through form groups to check if form is valid, sets submitButton to disaabled
 function checkFormValid(form, submitButton) {
     var valid = true;
     $('#' + form + ' *').filter('.form-group').each(function(){
