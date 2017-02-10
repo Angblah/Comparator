@@ -12,6 +12,7 @@ $(function() {
         }
         checkNull("registerPassword", "passwordField");
         checkNull("registerPasswordConfirm", "confirmPassField");
+        checkFormValid("registerForm", "registerButton");
     });
 });
 
@@ -29,6 +30,7 @@ $(function() {
         }
         checkNull("registerPassword", "passwordField");
         checkNull("registerPasswordConfirm", "confirmPassField");
+        checkFormValid("registerForm", "registerButton");
     });
 });
 
@@ -43,6 +45,7 @@ $(function() {
             setGroupGood("usernameField");
         }
         checkNull("registerUsername", "usernameField");
+        checkFormValid("registerForm", "registerButton");
     }); 
 });
 
@@ -57,6 +60,7 @@ $(function() {
             setGroupGood("emailField");
         }
         checkNull("registerEmail", "emailField");
+        checkFormValid("registerForm", "registerButton");
     }); 
 });
 
@@ -64,21 +68,12 @@ $(function() {
 //TODO: Check field validation before registering
 $(function() {
     $('button#registerButton').bind('click', function() {
-
-        var areNulls;
-        if(!checkNull("registerEmail", "emailField")) {
-            areNulls = true;
-        }
-        if(!checkNull("registerUsername", "usernameField")) {
-            areNulls = true;
-        }
-        if(!checkNull("registerPassword", "passwordField")) {
-            areNulls = true;
-        }
-        if(!checkNull("registerPasswordConfirm", "confirmPassField")) {
-            areNulls = true;
-        }
-        if (areNulls) {
+        
+        checkNull("registerEmail", "emailField")
+        checkNull("registerUsername", "usernameField")
+        checkNull("registerPassword", "passwordField")
+        checkNull("registerPasswordConfirm", "confirmPassField")
+        if (!checkFormValid("registerForm", "registerButton")) {
             return false;
         }
 
@@ -135,4 +130,21 @@ function setGroupInvalid(formGroup, errorMessage) {
     }
     $("#" + formGroup).removeClass("has-success");
     $("#" + formGroup).addClass("has-error");
+}
+
+function checkFormValid(form, submitButton) {
+    var valid = true;
+    $('#' + form + ' *').filter('.form-group').each(function(){
+        if ($("#" + this.id).hasClass("has-error")) {
+            valid = false;
+        }
+    });
+
+    if (!valid) {
+        $('#' + form + " #" + submitButton).attr('disabled', 'disabled');
+        return false;
+    } else {
+        $('#' + form + " #" + submitButton).removeAttr('disabled');
+        return true;
+    }
 }
