@@ -559,7 +559,7 @@ def set_template_attribute_field(attribute_id, field, field_value):
 # valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
 def set_comparison_attribute_field(attribute_id, field, field_value):
     query = text("""
-    update user_template_attribute set """ + field + """ = :field_value where id = :attribute_id;
+    update comparison_attribute set """ + field + """ = :field_value where id = :attribute_id;
     """)
     db.engine.execute(query, field_value=field_value, attribute_id=attribute_id)
 
