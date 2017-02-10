@@ -26,15 +26,16 @@ class Toolbar extends React.Component {
     render() {
         return (
             <div className="btn-toolbar">
+                <div className="btn-group" role="group" aria-label="Save group">
+                    <button type="button" className="btn btn-default" aria-label="Left Align">
+                        <span className="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                    </button>
+                </div>
                 <InlineStyleButtons
                     editorState={this.props.editorState}
                     onToggle={this.props.toggleInlineStyle}
                 />
-                <div className="btn-group">
-                    <button className="btn" data-original-title="Align Right"><i className="icon-align-right"></i></button>
-                    <button className="btn" data-original-title="Align Center"><i className="icon-align-center"></i></button>
-                    <button className="btn" data-original-title="Align Left"><i className="icon-align-left"></i></button>
-                </div>
+                
                 <div className="btn-group pull-right" role="group" aria-label="Share/Export group">
                     <button type="button" className="btn btn-default" aria-label="Left Align">
                         <span className="glyphicon glyphicon-send" aria-hidden="true"></span>
@@ -96,11 +97,13 @@ class Workspace extends React.Component {
                 <Toolbar editorState={editorState} onToggle={this.toggleInlineStyle}/>
                 <div className="container">
                     TestBed
-                    <EditorBlock
-                        editorState={editorState}
-                        handleKeyCommand={this.handleKeyCommand}
-                        onChange={this.onChange}
-                    />
+                    <div className="editor">
+                        <EditorBlock
+                            editorState={editorState}
+                            handleKeyCommand={this.handleKeyCommand}
+                            onChange={this.onChange}
+                        />
+                    </div>
                     <div className="editor">
                         <Editor
                         editorState={this.state.editorState}
@@ -120,10 +123,17 @@ class Workspace extends React.Component {
 class InlineStyleButtons extends React.Component {
     constructor() {
         super();
-        /*this.onToggle = (e) => {
-            e.preventDefault();
-            this.props.onToggle(type.style);
-        };*/
+        this.onToggle = (event, style) => {
+            event.preventDefault();
+            this.props.onToggle(style);
+        };
+        this.classNameSet = function(currentStyle, style) {
+            var buttonclassName = 'btn btn-default';
+            if (currentStyle.has(style)) {
+                buttonclassName += 'active'
+            }
+            return buttonclassName;
+        };
     }
 
     render() {
@@ -132,26 +142,21 @@ class InlineStyleButtons extends React.Component {
             {label: 'Bold', style: 'BOLD', icon: 'glyphicon glyphicon-bold'},
             {label: 'Italic', style: 'ITALIC', icon: 'glyphicon glyphicon-italic'},
             {label: 'Link', style: 'LINK', icon: 'glyphicon glyphicon-link'},
-            {label: 'Underline', style: 'UNDERLINE', icon: ''},
+            {label: 'Underline', style: 'UNDERLINE', icon: 'glyphicon glyphicon-minus'},
         ];
-
-        var buttonclassName = 'btn btn-default';
-        //Check current style
-        /*if (currentStyle.has(type.style)) {
-            buttonclassName += 'active'
-        }*/
 
         return (
             <div className="btn-group">
                 {INLINE_STYLES.map(type =>
+                    
                     <button
-                        className={buttonclassName}
+                        className={this.classNameSet(currentStyle, type.style)}
                         key={type.label}
                         aria-label={type.label}
-                        onMouseDown={this.onToggle}
                     >
                         <span className={type.icon} aria-hidden="true"></span>
                     </button>
+                    
                 )}
             </div>
         );

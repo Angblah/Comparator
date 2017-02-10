@@ -71,7 +71,7 @@ def reset_password():
 
     emailOrUsername = request.args.get('emailOrUsername')
     try:
-        user = Account.query.filter_by(username =emailOrUsername).one()
+        user = Account.query.filter_by(username=emailOrUsername).one()
     except NoResultFound:
         #Search the email column
         try:
@@ -128,21 +128,7 @@ def add_user():
     registerPassword = request.args.get('registerPassword')
     registerPasswordConfirm = request.args.get('registerPasswordConfirm')
 
-    #If anything is null, return the error message back to user
-    if not registerEmail:
-        data['nullEmail'] = "An email is required."
-    if not registerUsername:
-        data['nullUsername'] = "A username is required."
-    if not registerPassword:
-        data['nullPassword'] = "A password is required."
-    if not registerPasswordConfirm:
-        data['nullPasswordConfirm'] = "Please confirm your password."
-
-    if data:
-        return jsonify(data)
-
-    #If nothing was null, proceed to attempt to register the user
-    #First, make sure the username and email are available
+    #Make sure the username and email are available
     emailCheck = ""
     usernameCheck = ""
 
