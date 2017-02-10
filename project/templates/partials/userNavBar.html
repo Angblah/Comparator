@@ -31,7 +31,7 @@
                         <li class="dropdown">
                           <a><img src="../static/img/user.png" class="img-responsive hidden-xs" style="width:30px; height: 30px"></a>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown" id="login-dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.username }}<b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
@@ -42,8 +42,8 @@
                                                 <div class="col-sm-6">
                                                     <img src="../static/img/user.png" class="img-responsive hidden-xs">
                                                 </div>
-                                                <div class="col-sm-3" style="width:15em">
-                                                    <h5>User Options</h5>
+                                                <div class="col-sm-3" style="width:15em" id="menu-items">
+                                                    <h3>User Options</h3>
                                                     <ul>
                                                         <li><a href="myProfile">My Profile</a>
                                                         </li>

@@ -64,30 +64,8 @@ class DataType(db.Model):
     __tablename__ = 'data_type'
 
     id = db.Column(Integer, primary_key=True)
-    name = db.Column(String(255), nullable=False)
-
-
-class Template(db.Model):
-    __tablename__ = 'template'
-
-    id = db.Column(Integer, primary_key=True)
-    name = db.Column(String(255), nullable=False)
-    date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
-    date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
-    comments = db.Column(Text, nullable=True)
-
-
-class TemplateAttribute(db.Model):
-    __tablename__ = 'template_attribute'
-
-    id = db.Column(Integer, primary_key=True)
-    name = db.Column(String(255), nullable=False)
-    type_id = db.Column(SmallInteger, nullable=False)
-    template_id = db.Column(ForeignKey(u'template.id', ondelete=u'CASCADE'), nullable=False)
-    weight = db.Column(Integer, nullable=False, server_default=text("1"))
-
-    template = relationship(u'Template')
-
+    sort_type = db.Column(String(255), nullable=False)
+    type_name = db.Column(String(255), nullable=False)
 
 class UserTemplate(db.Model):
     __tablename__ = 'user_template'

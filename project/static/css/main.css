@@ -1,0 +1,77 @@
+/*Main Styling for The Comparator */
+/*Global Variables*/
+/*Background*/
+body {
+  background-color: #eee;
+}
+/*Footer*/
+footer {
+  background-color: #5fa4eb;
+  color: #fff;
+  height: 10em;
+  text-align: center;
+  padding-top: 2%;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}
+/*Nav Bar*/
+#nav navbar-nav navbar-right:focus {
+  border-bottom: 2em solid #ff9900;
+}
+#menu-items ul {
+  list-style-type: none;
+  padding-bottom: 10%;
+  /*&:extend(h3, img, li);*/
+}
+#menu-items ul h3 {
+  color: #111;
+  text-align: left;
+}
+#menu-items ul img {
+  border-radius: 50%;
+}
+#menu-items ul li {
+  list-style-type: none;
+  padding-top: 1%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+#login-dropdown {
+  background-color: #5fa4eb;
+  color: #ff9900 !important;
+  /*why u no worl???*/
+}
+/*Buttons*/
+button {
+  margin: none;
+  color: #fff;
+  background-color: #5fa4eb;
+  border-radius: 0 !important;
+}
+button:hover {
+  border-color: rgba(0, 0, 0, 0.1);
+  border-width: 2px;
+  background-color: #ff9900;
+  color: #fff !important;
+  text-shadow: #ffdd44;
+}
+/*Div.Container*/
+div.col-sm-5,
+div.col-sm-7 {
+  border: 2px outset #ff9900;
+  box-shadow: 2px 2px 3em black;
+  background-color: #ffffff;
+  margin: 2px;
+}
+/*navbar
+
+primary color
+
+secondary color
+
+footer
+
+button
+
+dorpdown*/
