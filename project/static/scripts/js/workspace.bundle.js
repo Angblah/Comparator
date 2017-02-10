@@ -40890,29 +40890,19 @@ var Toolbar = function (_React$Component2) {
             return _react2.default.createElement(
                 'div',
                 { className: 'btn-toolbar' },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'btn-group', role: 'group', 'aria-label': 'Save group' },
+                    _react2.default.createElement(
+                        'button',
+                        { type: 'button', className: 'btn btn-default', 'aria-label': 'Left Align' },
+                        _react2.default.createElement('span', { className: 'glyphicon glyphicon-floppy-disk', 'aria-hidden': 'true' })
+                    )
+                ),
                 _react2.default.createElement(InlineStyleButtons, {
                     editorState: this.props.editorState,
                     onToggle: this.props.toggleInlineStyle
                 }),
-                _react2.default.createElement(
-                    'div',
-                    { className: 'btn-group' },
-                    _react2.default.createElement(
-                        'button',
-                        { className: 'btn', 'data-original-title': 'Align Right' },
-                        _react2.default.createElement('i', { className: 'icon-align-right' })
-                    ),
-                    _react2.default.createElement(
-                        'button',
-                        { className: 'btn', 'data-original-title': 'Align Center' },
-                        _react2.default.createElement('i', { className: 'icon-align-center' })
-                    ),
-                    _react2.default.createElement(
-                        'button',
-                        { className: 'btn', 'data-original-title': 'Align Left' },
-                        _react2.default.createElement('i', { className: 'icon-align-left' })
-                    )
-                ),
                 _react2.default.createElement(
                     'div',
                     { className: 'btn-group pull-right', role: 'group', 'aria-label': 'Share/Export group' },
@@ -41031,11 +41021,15 @@ var Workspace = function (_React$Component3) {
                     'div',
                     { className: 'container' },
                     'TestBed',
-                    _react2.default.createElement(EditorBlock, {
-                        editorState: editorState,
-                        handleKeyCommand: this.handleKeyCommand,
-                        onChange: this.onChange
-                    }),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'editor' },
+                        _react2.default.createElement(EditorBlock, {
+                            editorState: editorState,
+                            handleKeyCommand: this.handleKeyCommand,
+                            onChange: this.onChange
+                        })
+                    ),
                     _react2.default.createElement(
                         'div',
                         { className: 'editor' },
@@ -41059,11 +41053,21 @@ var InlineStyleButtons = function (_React$Component4) {
 
     function InlineStyleButtons() {
         (0, _classCallCheck3.default)(this, InlineStyleButtons);
-        return (0, _possibleConstructorReturn3.default)(this, (InlineStyleButtons.__proto__ || (0, _getPrototypeOf2.default)(InlineStyleButtons)).call(this));
-        /*this.onToggle = (e) => {
-            e.preventDefault();
-            this.props.onToggle(type.style);
-        };*/
+
+        var _this4 = (0, _possibleConstructorReturn3.default)(this, (InlineStyleButtons.__proto__ || (0, _getPrototypeOf2.default)(InlineStyleButtons)).call(this));
+
+        _this4.onToggle = function (event, style) {
+            event.preventDefault();
+            _this4.props.onToggle(style);
+        };
+        _this4.classNameSet = function (currentStyle, style) {
+            var buttonclassName = 'btn btn-default';
+            if (currentStyle.has(style)) {
+                buttonclassName += 'active';
+            }
+            return buttonclassName;
+        };
+        return _this4;
     }
 
     (0, _createClass3.default)(InlineStyleButtons, [{
@@ -41072,13 +41076,7 @@ var InlineStyleButtons = function (_React$Component4) {
             var _this5 = this;
 
             var currentStyle = this.props.editorState.getCurrentInlineStyle();
-            var INLINE_STYLES = [{ label: 'Bold', style: 'BOLD', icon: 'glyphicon glyphicon-bold' }, { label: 'Italic', style: 'ITALIC', icon: 'glyphicon glyphicon-italic' }, { label: 'Link', style: 'LINK', icon: 'glyphicon glyphicon-link' }, { label: 'Underline', style: 'UNDERLINE', icon: '' }];
-
-            var buttonclassName = 'btn btn-default';
-            //Check current style
-            /*if (currentStyle.has(type.style)) {
-                buttonclassName += 'active'
-            }*/
+            var INLINE_STYLES = [{ label: 'Bold', style: 'BOLD', icon: 'glyphicon glyphicon-bold' }, { label: 'Italic', style: 'ITALIC', icon: 'glyphicon glyphicon-italic' }, { label: 'Link', style: 'LINK', icon: 'glyphicon glyphicon-link' }, { label: 'Underline', style: 'UNDERLINE', icon: 'glyphicon glyphicon-minus' }];
 
             return _react2.default.createElement(
                 'div',
@@ -41087,10 +41085,9 @@ var InlineStyleButtons = function (_React$Component4) {
                     return _react2.default.createElement(
                         'button',
                         {
-                            className: buttonclassName,
+                            className: _this5.classNameSet(currentStyle, type.style),
                             key: type.label,
-                            'aria-label': type.label,
-                            onMouseDown: _this5.onToggle
+                            'aria-label': type.label
                         },
                         _react2.default.createElement('span', { className: type.icon, 'aria-hidden': 'true' })
                     );

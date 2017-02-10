@@ -3,17 +3,19 @@
 /*Global Variables*/
 @primary-col: #5fa4eb;
 @secondary-col: #ff9900;
-@primary-text: #ccc;
+@back-col: #ddd;
+@primary-text: #111;
+@secondary-text: #fff;
 
 /*Background*/
 body {
-    background-color: @primary-col;
+    background-color: @back-col;
 }
 
 /*Footer*/
 footer {
-    background-color: #444;
-    color: @primary-text;
+    background-color: @primary-col;
+    color: @secondary-text;
     height: 10em;
     text-align: center;
     padding-top: 2%;
@@ -30,14 +32,15 @@ footer {
 #menu-items ul {
     list-style-type: none;
     padding-bottom: 10%;
-    &:extend(h3, img);
+    /*&:extend(h3, img, li);*/
 }
-h3 {
+#menu-items ul h3 {
     color: @primary-text;
     text-align: left;
 }
-img {
+#menu-items ul img {
     border-radius: 50%
+
 }
 #menu-items ul li {
     list-style-type: none;
@@ -45,21 +48,78 @@ img {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     text-align: left;
 }
+#login-dropdown {
+    background-color: @primary-col;
+    color:  @secondary-col !important;  /*why u no work???*/
+}
 
 /*Buttons*/
 button {
     margin: none;
-    color: @primary-col;
-    background-color: @secondary-col;
+    color: @secondary-text;
+    background-color: @primary-col;
     border-radius: 0 !important;
 }
 button:hover {
     border-color: rgba(0, 0, 0, 0.1);
     border-width: 2px;
-    background-color: @primary-col;
-    color: @secondary-col;
+    background-color: @secondary-col;
+    color: @secondary-text !important;
     text-shadow: (@secondary-col + #444);
 }
+
+/*Div.Container*/
+div.col-sm-5, div.col-sm-6, div.col-sm-7, div.col-sm-11 {
+    border-right: 2px outset @secondary-col;
+    border-bottom: 2px outset @secondary-col;
+    box-shadow: 10px 10px 3em gray;
+    background-color: (@back-col + #222);
+    border-radius: 5px;
+    margin: 1.5em;
+    margin-top: 0;
+}
+
+
+/*COMPARISON-TEMPLATE TABS*/
+ul.tab {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Float the list items side by side */
+ul.tab li {float: left;}
+
+/* Style the links inside the list items */
+ul.tab li a {
+    display: inline-block;
+    color: @secondary-text;
+    text-align: center;
+    padding: 1em 1em;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of links on hover */
+ul.tab li a:hover {
+    background-color: @secondary-col;
+}
+
+/* Create an active/current tablink class */
+ul.tab li a:focus, .active {
+    background-color: @primary-col;
+    color: @secondary-text;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border-top: none;
+}
+/*END TABS*/
 
 /*navbar
 
@@ -71,4 +131,4 @@ footer
 
 button
 
-dorpdown*/ 
+dorpdown*/
