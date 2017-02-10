@@ -1,3 +1,4 @@
+// Length: 6 min 
 $(function() {
     $('#registerPassword').on('input', function(e) {
         var registerPassword = $('#registerPassword').val();
@@ -7,8 +8,13 @@ $(function() {
             setGroupInvalid("passwordField", "Passwords do not match.");
             setGroupInvalid("confirmPassField");
         } else {
-            setGroupGood("passwordField");
-            setGroupGood("confirmPassField");
+            if (registerPassword.length < 6) {
+                setGroupInvalid("passwordField", "Password length must be greater than 6 characters.");
+                setGroupInvalid("confirmPassField");
+            } else {
+                setGroupGood("passwordField");
+                setGroupGood("confirmPassField");
+            }
         }
         checkNull("registerPassword", "passwordField");
         checkNull("registerPasswordConfirm", "confirmPassField");
@@ -25,8 +31,13 @@ $(function() {
             setGroupInvalid("passwordField", "Passwords do not match.");
             setGroupInvalid("confirmPassField");
         } else {
-            setGroupGood("passwordField");
-            setGroupGood("confirmPassField");
+            if (registerPassword.length < 6) {
+                setGroupInvalid("passwordField", "Password length must be at least 6 characters.");
+                setGroupInvalid("confirmPassField");
+            } else {
+                setGroupGood("passwordField");
+                setGroupGood("confirmPassField");
+            }
         }
         checkNull("registerPassword", "passwordField");
         checkNull("registerPasswordConfirm", "confirmPassField");
@@ -34,13 +45,16 @@ $(function() {
     });
 });
 
+// Alpha-numeric With ._ Length: 2-25 (For PJ)
 $(function() {
     $('#registerUsername').on('input', function(e) {
         var username = $('#registerUsername').val();
-        var charRegex = new RegExp(/^[a-zA-Z0-9]+[a-zA-Z0-9._]+[a-zA-Z0-9]$/);
+        var charRegex = new RegExp("^[A-Z0-9]*$", 'i');
 
         if (!charRegex.test(username)) {
-            setGroupInvalid("usernameField", "Username has invalid characters.");
+            setGroupInvalid("usernameField", "Username can only contain alphanumeric characters.");
+        } else if (username.length > 25 || username.length < 2) {
+            setGroupInvalid("usernameField", "Username length must be between 2-25 characters.");
         } else {
             setGroupGood("usernameField");
         }
@@ -49,10 +63,11 @@ $(function() {
     }); 
 });
 
+// Something@Comething.something
 $(function() {
     $('#registerEmail').on('input', function(e) {
         var email = $('#registerEmail').val();
-        var emailRegex = new RegExp('^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,4}$');
+        var emailRegex = new RegExp(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/, 'i');
 
         if (!emailRegex.test(email)) {
             setGroupInvalid("emailField", "Email has invalid formatting.");
@@ -109,7 +124,6 @@ function checkNull(inputID, formGroup) {
     return true;
 }
 
-
 // Does DOM modifications to form group to make valid
 function setGroupGood(formGroup) {
     $('#' + formGroup + 'helpBlock').remove();
@@ -134,7 +148,6 @@ function setGroupInvalid(formGroup, errorMessage) {
     $("#" + formGroup).removeClass("has-success");
     $("#" + formGroup).addClass("has-error");
 }
-
 
 // Iterates through form groups to check if form is valid, sets submitButton to disaabled
 function checkFormValid(form, submitButton) {
