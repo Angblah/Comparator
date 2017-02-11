@@ -6,6 +6,8 @@
 <!-- Include the nav bar for a user who isn't logged in -->
 {% include "partials/userNavBar.html" %}
 
+<link href="../static/css/profile.css" rel="stylesheet">
+
 <body>
 
 
@@ -16,7 +18,7 @@
 <div id="all">
 
     <!-- *** HOMEPAGE CAROUSEL *** -->
-    <div class="home-carousel" style="height: 10em">
+    <div id="dash-username">
         <br>
         <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
     </div>
@@ -35,8 +37,8 @@
                             <h3>Recent Comparisons</h3>
                         </div>
                         {{name_list}}
-                        <div id="recentComp" data-feed={{name_list}}>
-
+                        <div id="recent-comp" data-feed={{name_list}}>
+                        
                         </div>
                     </div>
 
@@ -103,6 +105,6 @@
 
     <script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bower_components/react/react-dom.min.js') }}"></script>
-    <script src="../static/scripts/js/profileHomePage.js"></script>
+    <script src="../static/scripts/js/dashboard.bundle.js"></script>
 </body>
 </html>
