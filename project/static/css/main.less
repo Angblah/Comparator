@@ -3,10 +3,19 @@
 /*Global Variables*/
 @primary-col: #5fa4eb;
 @secondary-col: #ff9900;
-@back-col: #eee;
+@back-col: #ddd;
 @primary-text: #111;
 @secondary-text: #fff;
 
+
+header {
+    box-shadow: 10px 10px 3em gray;
+}
+header img {
+    border-radius: 50%;
+    max-height: 20px;
+    padding-top: 0 !important;
+}
 /*Background*/
 body {
     background-color: @back-col;
@@ -27,6 +36,10 @@ footer {
 /*Nav Bar*/
 #nav navbar-nav navbar-right:focus {
     border-bottom: 2em solid @secondary-col;
+}
+.navbar-brand {
+    font-size: 30px;
+    font-family: 'Raleway', sans-serif;
 }
 
 #menu-items ul {
@@ -50,7 +63,7 @@ footer {
 }
 #login-dropdown {
     background-color: @primary-col;
-    color:  @secondary-col !important;  /*why u no worl???*/
+    color:  @secondary-col !important;  /*why u no work???*/
 }
 
 /*Buttons*/
@@ -69,11 +82,16 @@ button:hover {
 }
 
 /*Div.Container*/
-div.col-sm-5, div.col-sm-7 {
-    border: 2px outset @secondary-col;
-    box-shadow: 2px 2px 3em black;
-    background-color: (@back-col + #111);
+div.col-sm-5, div.col-sm-6, div.col-sm-7, div.col-sm-11 {
+    border-right: 2px outset @secondary-col;
+    border-bottom: 2px outset @secondary-col;
+    box-shadow: 10px 10px 3em gray;
+    background-color: (@back-col + #222);
+    border-radius: 5px;
+    margin: 1.5em;
+    margin-top: 0;
 }
+
 
 /*navbar
 
@@ -85,4 +103,4 @@ footer
 
 button
 
-dorpdown*/ 
+dorpdown*/

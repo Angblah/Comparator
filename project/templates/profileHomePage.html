@@ -6,6 +6,8 @@
 <!-- Include the nav bar for a user who isn't logged in -->
 {% include "partials/userNavBar.html" %}
 
+<link href="../static/css/profile.css" rel="stylesheet">
+
 <body>
 
 
@@ -16,7 +18,7 @@
 <div id="all">
 
     <!-- *** HOMEPAGE CAROUSEL *** -->
-    <div class="home-carousel" style="height: 10em">
+    <div id="dash-username">
         <br>
         <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
     </div>
@@ -30,13 +32,13 @@
                 <div class="container">
                     <br>
                     <br>
-                    <div class="col-sm-7">
+                    <div class="col-sm-6">
                         <div class="heading text-left">
                             <h3>Recent Comparisons</h3>
                         </div>
                         {{name_list}}
-                        <div id="recentComp" data-feed={{name_list}}>
-
+                        <div id="recent-comp" data-feed={{name_list}}>
+                        
                         </div>
                     </div>
 
@@ -55,21 +57,23 @@
         </div>
     </div>
 
-    <div class="home-carousel" align="center">
-        <div class="container" align="center" style="width: 60em">
-            <ul class="tab" style="">
-              <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Comparisons')" id="defaultOpen">My Comparisons</a></li>
-              <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Templates')">My Templates</a></li>
+    <div class="container" align="center" style="width: 90em; padding-left: 5em">
+            <!-- <div class="col-sm-11" align="center"> -->
+            <ul class="tab" style="padding-left: 2em">
+              <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'comparisons')" id="defaultOpen">My Comparisons</a></li>
+              <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'templates')">My Templates</a></li>
             </ul>
 
-            <div id="Comparisons" class="tabcontent">
+            <div class="col-sm-11" align="center" style="margin-top: 0">
+            <div id="comparisons" class="tabcontent">
               <h3>Comparisons</h3>
               <p>Your Comparisons Will Live Here</p>
             </div>
 
-            <div id="Templates" class="tabcontent">
+            <div id="templates" class="tabcontent">
               <h3>Templates</h3>
               <p>Your Templates Will Live Here</p>
+            </div>
             </div>
 
             <script>
@@ -90,9 +94,10 @@
             // Get the element with id="defaultOpen" and click on it
             document.getElementById("defaultOpen").click();
             </script>
-        </div>
+            <!-- </div> -->
+        <!-- </div> -->
     </div>
-    <!-- *** HOMEPAGE CAROUSEL END *** -->
+    <!-- *** HOMEPAGE CAROUSEL END ***
 
     <!-- Include the footer for things like copyright info and JS scripts -->
     {% include "partials/footer.html" %}
@@ -100,6 +105,6 @@
 
     <script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bower_components/react/react-dom.min.js') }}"></script>
-    <script src="../static/scripts/js/profileHomePage.js"></script>
+    <script src="../static/scripts/js/dashboard.bundle.js"></script>
 </body>
 </html>

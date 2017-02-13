@@ -549,6 +549,26 @@ def sort_by_attribute(comparison_id, attribute_id):
     """)
     db.engine.execute(query, comparison_id=comparison_id, attribute_id=attribute_id)
 
+# valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
+def set_template_attribute_field(attribute_id, field, field_value):
+    query = text("""
+    update user_template_attribute set """ + field + """ = :field_value where id = :attribute_id;
+    """)
+    db.engine.execute(query, field_value=field_value, attribute_id=attribute_id)
+
+# valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
+def set_comparison_attribute_field(attribute_id, field, field_value):
+    query = text("""
+    update comparison_attribute set """ + field + """ = :field_value where id = :attribute_id;
+    """)
+    db.engine.execute(query, field_value=field_value, attribute_id=attribute_id)
+
+def get_template(id):
+    query = text("""
+    select * from get_template(:id);
+    """)
+    db.engine.execute(query, id=id)
+
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
     initialize_db_structure()
