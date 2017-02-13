@@ -35,7 +35,19 @@ def newComparison():
 
 @app.route('/workspace')
 def workspace():
-    data = get_template(1)
+    result = get_template(1)
+    data = {}
+    data['header'] = {}
+    for key in result._metadata.keys:
+        data['header'][key] = []
+    for row in result:
+        for key in data['header']:
+            data['header'][key].append(row[0])
+        a = row[0]
+
+
+    jsonify(data)
+
     return render_template('workspace.html')
     
 @app.route('/index')

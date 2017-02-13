@@ -567,7 +567,7 @@ def get_template(id):
     query = text("""
     select * from get_template(:id);
     """)
-    db.engine.execute(query, id=id)
+    return db.engine.execute(query, id=id)
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
