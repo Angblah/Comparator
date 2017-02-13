@@ -21932,7 +21932,7 @@ var RecentComparisons = _react2.default.createClass({
   }
 });
 
-_reactDom2.default.render(_react2.default.createElement(RecentComparisons, recent - comp.dataset), document.getElementById('recent-comp'));
+_reactDom2.default.render(_react2.default.createElement(RecentComparisons, recent-comp.dataset), document.getElementById('recent-comp'));
 
 /***/ })
 /******/ ]);
