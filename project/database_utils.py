@@ -565,7 +565,7 @@ def comparison_table_stacked (table_comparison_id):
     query = text("""
     select comparison_table_stacked(:table_comparison_id);
     """)
-    db.engine.execute(query, table_comparison_id=table_comparison_id)
+    return db.engine.execute(query, table_comparison_id=table_comparison_id)
 
 def create_comparison_from_user_template (account_id, template_id, comparison_name):
     query = text("""

@@ -60,31 +60,41 @@ ul.tab li a:focus, .active {
 
 
 /*RECENT COMPARISONS*/
+#recent-comp-extra {
+  height: 10px;
+  clear: both;
+}
 #recent-comp {
-  transition: 1s transform;
+    transition: 1s transform;
 }
 .tile {
-  width: 80px;
-  height: 80px;
-  border: 1px solid blue;
-  background-color: skyblue;
-  padding: 5px;
-  box-sizing: border-box;
-  transition: 1s transform;
-  transform-origin: top left;
-  float: left;
-  margin-right: 10px;
+    width: 5em;
+    height: 5em;
+    border: 2px solid @secondary-col;
+    background-color: @primary-col;
+    padding: 1em;
+    box-sizing: border-box;
+    transition: 1s transform;
+    transform-origin: top left;
+    float: left;
+    margin-right: 1em;
 }
 
 #recentComp:hover {
-  transform: translate3d(-40px, 0, 0);
+    transform: translate3d(-2em, 0, 0);
 }
 
 .tile:hover {
-  transform: scale(2);
+    transform: scale(2);
 }
 
 .tile:hover ~ .tile {
-  transform: translate3d(80px, 0, 0);
+    transform: translate3d(2em, 0, 0);
+}
+
+.tile:hover + #recent-comp-extra {
+    height: 6em;
+    max-height: 500px;
+    transition: max-height 0.25s ease-in;
 }
 /*END RECENT COMPARISONS*/
