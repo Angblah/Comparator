@@ -161,6 +161,38 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
+    create or replace function copy_comparison (_comparison_id int, _account_id int) returns int
+        as $$
+            declare new_comparison_id int;
+        begin
+            insert into comparison (name, last_position, comment, account_id) select name || ' (copy)', last_position, comment, account_id from comparison where id = _account_id returning id into new_comparison_id;
+
+            with attribute_ids as (
+            select id as attribute_id, name, type_id, weight, row_number() over () from comparison_attribute where comparison_id = _comparison_id
+            ),
+            item_ids as (
+                select id as item_id, position, row_number() over () from comparison_item where comparison_id = _comparison_id
+            ),
+            ins1 as (
+                insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, new_comparison_id, weight from attribute_ids returning id as attribute_ins_id
+            ),
+            ins2 as (
+                insert into comparison_item (position, comparison_id) select position, new_comparison_id from item_ids returning id as item_ins_id
+            ),
+            attribute_ins as (
+                select * from (select row_number() over (), * from ins1) as ins1 inner join attribute_ids on ins1.row_number = attribute_ids.row_number
+            ),
+            item_ins as (
+                select * from (select row_number() over (), * from ins2) as ins2 inner join item_ids on ins2.row_number = item_ids.row_number
+            ) insert into attribute_value (item_id, attribute_id, val) select item_ins_id, attribute_ins_id, val from attribute_value
+                inner join attribute_ins on attribute_value.attribute_id = attribute_ins.attribute_id
+                inner join item_ins on attribute_value.item_id = item_ins.item_id;
+
+            return new_comparison_id;
+        end;
+    $$ language plpgsql;
+
+
     -- _template_id = id of template to copy from
     -- _account_id = id of account to copy to
     create or replace function copy_template (_template_id int, _account_id int) returns int
@@ -567,7 +599,21 @@ def get_template(id):
     query = text("""
     select * from get_template(:id);
     """)
-    db.engine.execute(query, id=id)
+    return db.engine.execute(query, id=id)
+
+# copies template into specified account, returns new template id
+def copy_template(template_id, account_id):
+    query = text("""
+    select * from copy_template(:template_id, :account_id);
+    """)
+    return db.engine.execute(query, template_id=template_id, account_id=account_id)
+
+# copies comparison into specified account, returns comparison id
+def copy_comparison (comparison_id, account_id):
+    query = text("""
+    select * from copy_comparison(:comparison_id, :account_id);
+    """)
+    return db.engine.execute(query, comparison_id=comparison_id, account_id=account_id)
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
