@@ -30,7 +30,7 @@ class Comparison(db.Model):
     account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
     date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
-    comments = db.Column(Text, nullable=True)
+    comment = db.Column(Text, nullable=True)
 
     account = relationship(u'Account')
 

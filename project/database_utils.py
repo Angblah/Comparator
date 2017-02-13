@@ -565,7 +565,7 @@ def comparison_table_stacked (table_comparison_id):
     query = text("""
     select comparison_table_stacked(:table_comparison_id);
     """)
-    db.engine.execute(query, table_comparison_id=table_comparison_id)
+    return db.engine.execute(query, table_comparison_id=table_comparison_id)
 
 def create_comparison_from_user_template (account_id, template_id, comparison_name):
     query = text("""
@@ -612,7 +612,6 @@ def copy_comparison (comparison_id, account_id):
     select * from copy_comparison(:comparison_id, :account_id);
     """)
     return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, account_id=account_id)
-    return db.engine.execute(query, id=id)
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
