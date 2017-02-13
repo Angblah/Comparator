@@ -436,8 +436,6 @@ def initialize_db_structure():
     """)
     db.engine.execute(query.execution_options(autocommit=True))
 
-# TODO: copy_template function to allow users to edit default(admin) templates, copy_comparison to create similar comparisons
-
 # TODO: change default comparisons + templates for admin to be actual defaults instead of balls
 # TODO: consider function to import csv (both for allowing imports of exported tables/csv tables in general, and to ease example making)
 
@@ -522,46 +520,46 @@ def add_comparison_attribute(comparison_id, attribute_name, attribute_type_id):
     query = text("""
     select add_comparison_attribute(:comparison_id, :attribute_name, :attribute_type_id);
     """)
-    db.engine.execute(query, comparison_id=comparison_id, attribute_name=attribute_name, attribute_type_id=attribute_type_id)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, attribute_name=attribute_name, attribute_type_id=attribute_type_id)
 
 def set_comparison_attribute_value(item_id, item_attribute_id, new_value):
     query = text("""
     select set_comparison_attribute_value(:item_id, :item_attribute_id, :new_value);
     """)
-    db.engine.execute(query, item_id=item_id, item_attribute_id=item_attribute_id, new_value=new_value)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, item_attribute_id=item_attribute_id, new_value=new_value)
 
 # saves specified comparison as template with given name
 def save_comparison_as_template(comparison_id, template_name):
     query = text("""
     select save_comparison_as_template(:comparison_id, :template_name);
     """)
-    db.engine.execute(query, comparison_id=comparison_id, template_name=template_name)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, template_name=template_name)
 
 
 def add_comparison_item (table_comparison_id, table_position):
     query = text("""
     select add_comparison_item(:table_comparison_id, :table_position);
     """)
-    db.engine.execute(query, table_comparison_id=table_comparison_id, table_position=table_position)
+    db.engine.execute(query.execution_options(autocommit=True), table_comparison_id=table_comparison_id, table_position=table_position)
 
 def add_comparison_item_back (comparison_id):
     query = text("""
     select add_comparison_item_back(:comparison_id)
     """)
-    db.engine.execute(query, comparison_id=comparison_id)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id)
 
 def add_comparison_items_back (comparison_id, num_items):
     query = text("""
     select add_comparison_item_back(:comparison_id, :num_items);
     """)
-    db.engine.execute(query, comparison_id=comparison_id, num_items=num_items)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, num_items=num_items)
 
 # TODO: consider changing to id instead of position depending on whether stacked/horizontal view chosen as final option
 def delete_comparison_item (table_comparison_id, table_position):
     query = text("""
     select delete_comparison_item(:table_comparison_id, :table_position);
     """)
-    db.engine.execute(query, table_comparison_id=table_comparison_id, table_position=table_position)
+    db.engine.execute(query.execution_options(autocommit=True), table_comparison_id=table_comparison_id, table_position=table_position)
 
 def comparison_table_stacked (table_comparison_id):
     query = text("""
@@ -573,27 +571,27 @@ def create_comparison_from_user_template (account_id, template_id, comparison_na
     query = text("""
     select create_comparison_from_user_template(:account_id, :template_id, :comparison_name);
     """)
-    db.engine.execute(query, account_id=account_id, template_id=template_id, comparison_name=comparison_name)
+    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name)
 
 def sort_by_attribute(comparison_id, attribute_id):
     query = text("""
     select sort_by_attribute(:comparison_id, :attribute_id);
     """)
-    db.engine.execute(query, comparison_id=comparison_id, attribute_id=attribute_id)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, attribute_id=attribute_id)
 
 # valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
 def set_template_attribute_field(attribute_id, field, field_value):
     query = text("""
     update user_template_attribute set """ + field + """ = :field_value where id = :attribute_id;
     """)
-    db.engine.execute(query, field_value=field_value, attribute_id=attribute_id)
+    db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
 
 # valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
 def set_comparison_attribute_field(attribute_id, field, field_value):
     query = text("""
     update comparison_attribute set """ + field + """ = :field_value where id = :attribute_id;
     """)
-    db.engine.execute(query, field_value=field_value, attribute_id=attribute_id)
+    db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
 
 def get_template(id):
     query = text("""
@@ -606,14 +604,14 @@ def copy_template(template_id, account_id):
     query = text("""
     select * from copy_template(:template_id, :account_id);
     """)
-    return db.engine.execute(query, template_id=template_id, account_id=account_id)
+    return db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, account_id=account_id)
 
 # copies comparison into specified account, returns comparison id
 def copy_comparison (comparison_id, account_id):
     query = text("""
     select * from copy_comparison(:comparison_id, :account_id);
     """)
-    return db.engine.execute(query, comparison_id=comparison_id, account_id=account_id)
+    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, account_id=account_id)
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
