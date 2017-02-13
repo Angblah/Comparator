@@ -7,6 +7,15 @@
 @primary-text: #111;
 @secondary-text: #fff;
 
+
+header {
+    box-shadow: 10px 10px 3em gray;
+}
+header img {
+    border-radius: 50%;
+    max-height: 20px;
+    padding-top: 0 !important;
+}
 /*Background*/
 body {
     background-color: @back-col;
@@ -27,6 +36,10 @@ footer {
 /*Nav Bar*/
 #nav navbar-nav navbar-right:focus {
     border-bottom: 2em solid @secondary-col;
+}
+.navbar-brand {
+    font-size: 30px;
+    font-family: 'Raleway', sans-serif;
 }
 
 #menu-items ul {
@@ -79,47 +92,6 @@ div.col-sm-5, div.col-sm-6, div.col-sm-7, div.col-sm-11 {
     margin-top: 0;
 }
 
-
-/*COMPARISON-TEMPLATE TABS*/
-ul.tab {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-/* Float the list items side by side */
-ul.tab li {float: left;}
-
-/* Style the links inside the list items */
-ul.tab li a {
-    display: inline-block;
-    color: @secondary-text;
-    text-align: center;
-    padding: 1em 1em;
-    text-decoration: none;
-    transition: 0.3s;
-    font-size: 17px;
-}
-
-/* Change background color of links on hover */
-ul.tab li a:hover {
-    background-color: @secondary-col;
-}
-
-/* Create an active/current tablink class */
-ul.tab li a:focus, .active {
-    background-color: @primary-col;
-    color: @secondary-text;
-}
-
-/* Style the tab content */
-.tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border-top: none;
-}
-/*END TABS*/
 
 /*navbar
 

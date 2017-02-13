@@ -47,14 +47,7 @@ def profile_page():
     
     namelist = get_user_comparison_names(current_user.id)
 
-    recent = []
-    x = 0;
-    for name in namelist:
-        if x == 5:
-            break;
-        recent.append(name)
-
-    return render_template('profileHomePage.html', name_list=recent)
+    return render_template('profileHomePage.html', name_list=namelist)
 
 @app.route('/myProfile')
 @login_required

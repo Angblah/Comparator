@@ -16,6 +16,6 @@ var RecentComparisons = React.createClass({
 });
  
 ReactDOM.render(
-	<RecentComparisons {...(recentComp.dataset)}/>, 
-	document.getElementById('recentComp')
+	<RecentComparisons {...(recent-comp.dataset)}/>, 
+	document.getElementById('recent-comp')
 	);

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 392);
+/******/ 	return __webpack_require__(__webpack_require__.s = 393);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -21892,7 +21892,8 @@ module.exports = traverseAllChildren;
 /* 389 */,
 /* 390 */,
 /* 391 */,
-/* 392 */
+/* 392 */,
+/* 393 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21908,59 +21909,30 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var DynamicSearch = _react2.default.createClass({
-  displayName: 'DynamicSearch',
+var RecentComparisons = _react2.default.createClass({
+  displayName: 'RecentComparisons',
 
-
-  // sets initial state
-  getInitialState: function getInitialState() {
-    return { searchString: '' };
-  },
-
-  // sets state, triggers render method
-  handleChange: function handleChange(event) {
-    // grab value form input box
-    this.setState({ searchString: event.target.value });
-    console.log("scope updated!");
-  },
 
   render: function render() {
-
-    var countries = this.props.items;
-    var searchString = this.state.searchString.trim().toLowerCase();
-
-    // filter countries list by value from input box
-    if (searchString.length > 0) {
-      countries = countries.filter(function (country) {
-        return country.name.toLowerCase().match(searchString);
-      });
-    }
+    var names = this.props.feed;
 
     return _react2.default.createElement(
       'div',
       null,
-      _react2.default.createElement('input', { type: 'text', value: this.state.searchString, onChange: this.handleChange, placeholder: 'Search!' }),
-      _react2.default.createElement(
-        'ul',
-        null,
-        countries.map(function (country) {
-          return _react2.default.createElement(
-            'li',
-            null,
-            country.name,
-            ' '
-          );
-        })
-      )
+      names.map(function (name) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'tile' },
+          ' ',
+          name,
+          ' '
+        );
+      })
     );
   }
-
 });
 
-// list of countries, defined with JavaScript object literals
-var countries = [{ "name": "Sweden" }, { "name": "China" }, { "name": "Peru" }, { "name": "Czech Republic" }, { "name": "Bolivia" }, { "name": "Latvia" }, { "name": "Samoa" }, { "name": "Armenia" }, { "name": "Greenland" }, { "name": "Cuba" }, { "name": "Western Sahara" }, { "name": "Ethiopia" }, { "name": "Malaysia" }, { "name": "Argentina" }, { "name": "Uganda" }, { "name": "Chile" }, { "name": "Aruba" }, { "name": "Japan" }, { "name": "Trinidad and Tobago" }, { "name": "Italy" }, { "name": "Cambodia" }, { "name": "Iceland" }, { "name": "Dominican Republic" }, { "name": "Turkey" }, { "name": "Spain" }, { "name": "Poland" }, { "name": "Haiti" }];
-
-_reactDom2.default.render(_react2.default.createElement(DynamicSearch, { items: countries }), document.getElementById('main'));
+_reactDom2.default.render(_react2.default.createElement(RecentComparisons, recent - comp.dataset), document.getElementById('recent-comp'));
 
 /***/ })
 /******/ ]);
