@@ -563,6 +563,12 @@ def set_comparison_attribute_field(attribute_id, field, field_value):
     """)
     db.engine.execute(query, field_value=field_value, attribute_id=attribute_id)
 
+def get_template(id):
+    query = text("""
+    select * from get_template(:id);
+    """)
+    db.engine.execute(query, id=id)
+
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
     initialize_db_structure()
