@@ -35,6 +35,7 @@ def newComparison():
 
 @app.route('/workspace')
 def workspace():
+    data = get_template(1)
     return render_template('workspace.html')
     
 @app.route('/index')
