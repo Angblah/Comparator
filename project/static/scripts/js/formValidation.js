@@ -1,29 +1,21 @@
 // Length: 6 min 
 $(function() {
-    $('#registerPassword').on('input', function(e) {
+    $('#registerPassword').on('focusout', function(e) {
         var registerPassword = $('#registerPassword').val();
         var passwordConfirm = $('#registerPasswordConfirm').val();
         
-        if (registerPassword !== passwordConfirm) {
-            setGroupInvalid("passwordField", "Passwords do not match.");
-            setGroupInvalid("confirmPassField");
+        if (registerPassword.length < 6) {
+            setGroupInvalid("passwordField", "Password length must be greater than 6 characters.");
         } else {
-            if (registerPassword.length < 6) {
-                setGroupInvalid("passwordField", "Password length must be greater than 6 characters.");
-                setGroupInvalid("confirmPassField");
-            } else {
-                setGroupGood("passwordField");
-                setGroupGood("confirmPassField");
-            }
+            setGroupGood("passwordField");
         }
         checkNull("registerPassword", "passwordField");
-        checkNull("registerPasswordConfirm", "confirmPassField");
         checkFormValid("registerForm", "registerButton");
     });
 });
 
 $(function() {
-    $('#registerPasswordConfirm').on('input', function(e) {
+    $('#registerPasswordConfirm').on('focusout', function(e) {
         var registerPassword = $('#registerPassword').val();
         var passwordConfirm = $('#registerPasswordConfirm').val();
         
@@ -47,7 +39,7 @@ $(function() {
 
 // Alpha-numeric With ._ Length: 2-25 (For PJ)
 $(function() {
-    $('#registerUsername').on('input', function(e) {
+    $('#registerUsername').on('focusout', function(e) {
         var username = $('#registerUsername').val();
         var charRegex = new RegExp("^[A-Z0-9]*$", 'i');
 
@@ -65,7 +57,7 @@ $(function() {
 
 // Something@Comething.something
 $(function() {
-    $('#registerEmail').on('input', function(e) {
+    $('#registerEmail').on('focusout', function(e) {
         var email = $('#registerEmail').val();
         var emailRegex = new RegExp(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/, 'i');
 

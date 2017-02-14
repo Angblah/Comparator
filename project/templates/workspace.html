@@ -5,18 +5,37 @@
         <meta charset="utf-8" />
         <title>Comparator Workspace</title>
         <!-- styles -->
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/workspace.css') }}">
     </head>
     <body>
         <!--Navbar Options-->
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-light">
             <!-- TODO: Create Dynamic NavBar for Workspace with Form and User/Guest Info-->
             <div class="navbar-header">
                 <a class="navbar-brand" href="#"> COMPARATOR </a>
             </div>
 
         </nav>
+
+        <div class="btn-toolbar d-flex justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-secondary">1</button>
+                <button type="button" class="btn btn-secondary">2</button>
+                <button type="button" class="btn btn-secondary">3</button>
+                <button type="button" class="btn btn-secondary">4</button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Second group">
+                <button type="button" class="btn btn-secondary">5</button>
+                <button type="button" class="btn btn-secondary">6</button>
+                <button type="button" class="btn btn-secondary">7</button>
+            </div>
+
+            <div class="btn-group ml-auto" role="group" aria-label="Export/Share">
+                <button type="button blank-bg" class="btn btn-secondary">Share/Export</button>
+            </div>
+        </div>
 
         <!-- Workspace Link -->
         <div id="workspace"></div>
