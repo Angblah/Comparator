@@ -36,16 +36,7 @@ def newComparison():
 @app.route('/workspace')
 def workspace():
     # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
-    result = get_template(1)
-    data = {}
-    columns = result._metadata.keys
-    for column in columns:
-        data[column] = []
-    for row in result:
-        for i in range(len(columns)):
-            data[columns[i]].append(row[i])
-    data = jsonify(data)
-
+    data = get_template(1)
     return render_template('workspace.html', data=data)
     
 @app.route('/index')
