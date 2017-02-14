@@ -117,7 +117,7 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1) returns int
+    create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1) returns void
         as $$
         begin
             insert into user_template_attribute (name, type_id, user_template_id, weight) values (_attribute_name, _type_id, _user_template_id, _weight);
@@ -127,7 +127,7 @@ def initialize_db_structure():
 
     -- NOTE: all arrays must be of same length, though this will NOT be checked by stored function
     -- NOTE: 1st index of array is "1", NOT "0"
-    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[], _weights int[]) returns void
+    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[], _weights int[]) returns int
         as $$
             declare _template_id int;
         begin
@@ -135,12 +135,13 @@ def initialize_db_structure():
             for i in 1..cardinality(_type_ids) loop
                 insert into user_template_attribute (name, type_id, user_template_id, weight) values (_type_names[i], _type_ids[i], _template_id, _weights[i]);
             end loop;
+            return _template_id;
         end;
     $$ language plpgsql;
 
     -- NOTE: all arrays must be of same length, though this will NOT be checked by stored function
     -- NOTE: 1st index of array is "1", NOT "0"
-    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[]) returns void
+    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[]) returns int
         as $$
             declare _template_id int;
         begin
@@ -148,6 +149,7 @@ def initialize_db_structure():
             for i in 1..cardinality(_type_ids) loop
                 insert into user_template_attribute (name, type_id, user_template_id) values (_type_names[i], _type_ids[i], _template_id);
             end loop;
+            return _template_id;
         end;
     $$ language plpgsql;
 
@@ -474,14 +476,11 @@ def validate_login(username, password):
     query = text("""select validate_login(:username, :password)""")
     return db.engine.execute(query, username=username, password=password).scalar()
 
-# TODO: improve result returns
+# returns array of template ids for specified user
 def get_user_template_ids(user_id):
     from models import UserTemplate
-    return db.engine.execute((select([UserTemplate.id]).where(UserTemplate.id == user_id)))
-
-def get_template_ids():
-    from models import Template
-    return db.engine.execute((select([Template.id])))
+    result = db.engine.execute((select([UserTemplate.id]).where(UserTemplate.account_id == user_id)))
+    return [row[0] for row in result]
 
 # returns horizontal view of comparison table with specified id
 # attribute id's and names are the left columns of each row, and all other columns represent an item in the comparison
@@ -498,23 +497,19 @@ def get_comparison_horizontal(comparison_id, json=True):
         return jsonify_table(result)
     return result
 
-# TODO: simplify below syntax
-# returns generator over all comparison ids of specified user
+# returns array of all comparison ids of specified user
 def get_user_comparison_ids(user_id):
     from models import Comparison
 
     result = db.engine.execute((select([Comparison.id]).where(Comparison.account_id == user_id)))
-    for row in result:
-        yield row[0]
+    return [row[0] for row in result]
 
+# returns array of all comparison names of specified user
 def get_user_comparison_names(user_id):
     from models import Comparison
 
     result = db.engine.execute((select([Comparison.name]).where(Comparison.account_id == user_id)))
-    output = []
-    for row in result:
-        output.append(row[0])
-    return output
+    return [row[0] for row in result]
 
 # type_ids:
 # 0 = varchar

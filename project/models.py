@@ -40,7 +40,7 @@ class ComparisonAttribute(db.Model):
 
     id = db.Column(Integer, primary_key=True,)
     name = db.Column(String(255), nullable=False)
-    type_id = db.Column(SmallInteger, nullable=False)
+    type_id = db.Column(ForeignKey(u'data_type.id'), nullable=False)
     comparison_id = db.Column(ForeignKey(u'comparison.id', ondelete=u'CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
 
@@ -85,7 +85,7 @@ class UserTemplateAttribute(db.Model):
 
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
-    type_id = db.Column(SmallInteger, nullable=False)
+    type_id = db.Column(ForeignKey(u'data_type.id'), nullable=False)
     user_template_id = db.Column(ForeignKey(u'user_template.id', ondelete=u'CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
 
