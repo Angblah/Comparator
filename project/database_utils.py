@@ -511,10 +511,6 @@ def get_user_comparison_names(user_id):
     result = db.engine.execute((select([Comparison.name]).where(Comparison.account_id == user_id)))
     return [row[0] for row in result]
 
-# type_ids:
-# 0 = varchar
-# 1 = decimal
-# 2 = timestamp
 def add_comparison_attribute(comparison_id, attribute_name, attribute_type_id):
     query = text("""
     select add_comparison_attribute(:comparison_id, :attribute_name, :attribute_type_id);

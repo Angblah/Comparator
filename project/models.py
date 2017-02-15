@@ -59,7 +59,13 @@ class ComparisonItem(db.Model):
 
     comparison = relationship(u'Comparison')
 
-
+# NOTE:
+# type_ids:
+# 0 = varchar
+# 1 = decimal
+# 2 = timestamp
+# 3 = image
+# 4 = duration
 class DataType(db.Model):
     __tablename__ = 'data_type'
 

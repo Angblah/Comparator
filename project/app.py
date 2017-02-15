@@ -27,7 +27,7 @@ def index():
 @login_manager.user_loader
 def load_user(user_id):
     #Given user_id, return the associated User object
-    return Account.query.filter_by(username = user_id).one()
+    return Account.query.filter_by(username=user_id).one()
 
 @app.route('/newComparison')
 def newComparison():
