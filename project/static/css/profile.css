@@ -74,7 +74,7 @@ ul.tab li a:focus,
 .tile:hover ~ .tile {
   transform: translate3d(2em, 0, 0);
 }
-.tile:hover + #recent-comp-extra {
+#recent-comp:hover + #recent-comp-extra {
   height: 6em;
   max-height: 500px;
   transition: max-height 0.25s ease-in;
