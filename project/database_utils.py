@@ -97,12 +97,13 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
     
-    create or replace function save_comparison_as_template (_comparison_id int, _template_name varchar) returns void
+    create or replace function save_comparison_as_template (_comparison_id int, _template_name varchar) returns int
         as $$
             declare _user_template_id int;
         begin
             insert into user_template (name, account_id) select _template_name, account_id from comparison where id = _comparison_id returning id into _user_template_id;
             insert into user_template_attribute (name, type_id, user_template_id, weight) select name, type_id, _user_template_id, weight from comparison_attribute where comparison_id = _comparison_id;
+            return _user_template_id;
         end;
     $$ language plpgsql;
 
@@ -116,7 +117,7 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1) returns int
+    create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1) returns void
         as $$
         begin
             insert into user_template_attribute (name, type_id, user_template_id, weight) values (_attribute_name, _type_id, _user_template_id, _weight);
@@ -126,7 +127,7 @@ def initialize_db_structure():
 
     -- NOTE: all arrays must be of same length, though this will NOT be checked by stored function
     -- NOTE: 1st index of array is "1", NOT "0"
-    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[], _weights int[]) returns void
+    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[], _weights int[]) returns int
         as $$
             declare _template_id int;
         begin
@@ -134,12 +135,13 @@ def initialize_db_structure():
             for i in 1..cardinality(_type_ids) loop
                 insert into user_template_attribute (name, type_id, user_template_id, weight) values (_type_names[i], _type_ids[i], _template_id, _weights[i]);
             end loop;
+            return _template_id;
         end;
     $$ language plpgsql;
 
     -- NOTE: all arrays must be of same length, though this will NOT be checked by stored function
     -- NOTE: 1st index of array is "1", NOT "0"
-    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[]) returns void
+    create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[]) returns int
         as $$
             declare _template_id int;
         begin
@@ -147,6 +149,7 @@ def initialize_db_structure():
             for i in 1..cardinality(_type_ids) loop
                 insert into user_template_attribute (name, type_id, user_template_id) values (_type_names[i], _type_ids[i], _template_id);
             end loop;
+            return _template_id;
         end;
     $$ language plpgsql;
 
@@ -471,51 +474,43 @@ def set_password(user_id, password):
 # returns true if login credentials valid, false otherwise
 def validate_login(username, password):
     query = text("""select validate_login(:username, :password)""")
-    result = db.engine.execute(query.execution_options(autocommit=True), username=username, password=password)
-    for row in result:
-        return row[0]
+    return db.engine.execute(query, username=username, password=password).scalar()
 
+# returns array of template ids for specified user
 def get_user_template_ids(user_id):
     from models import UserTemplate
-    return db.engine.execute((select([UserTemplate.id]).where(UserTemplate.id == user_id)))
-
-def get_template_ids():
-    from models import Template
-    return db.engine.execute((select([Template.id])))
+    result = db.engine.execute((select([UserTemplate.id]).where(UserTemplate.account_id == user_id)))
+    return [row[0] for row in result]
 
 # returns horizontal view of comparison table with specified id
 # attribute id's and names are the left columns of each row, and all other columns represent an item in the comparison
 # column headers are 'id' (referring to attribute id) and 'name' (attribute name), and each item position (0..n), from left to right
-def get_comparison_horizontal(comparison_id):
+def get_comparison_horizontal(comparison_id, json=True):
     query = text("""
     do $$ begin
         execute create_comparison_table_horizontal(:id);
     end $$;
     select * from comparison_table_horizontal;
     """)
-    return db.engine.execute(query, id=comparison_id)
+    result = db.engine.execute(query, id=comparison_id)
+    if json:
+        return jsonify_table(result)
+    return result
 
-# returns generator over all comparison ids of specified user
+# returns array of all comparison ids of specified user
 def get_user_comparison_ids(user_id):
     from models import Comparison
 
     result = db.engine.execute((select([Comparison.id]).where(Comparison.account_id == user_id)))
-    for row in result:
-        yield row[0]
+    return [row[0] for row in result]
 
+# returns array of all comparison names of specified user
 def get_user_comparison_names(user_id):
     from models import Comparison
 
     result = db.engine.execute((select([Comparison.name]).where(Comparison.account_id == user_id)))
-    output = []
-    for row in result:
-        output.append(row[0])
-    return output
+    return [row[0] for row in result]
 
-# type_ids:
-# 0 = varchar
-# 1 = decimal
-# 2 = timestamp
 def add_comparison_attribute(comparison_id, attribute_name, attribute_type_id):
     query = text("""
     select add_comparison_attribute(:comparison_id, :attribute_name, :attribute_type_id);
@@ -528,12 +523,12 @@ def set_comparison_attribute_value(item_id, item_attribute_id, new_value):
     """)
     db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, item_attribute_id=item_attribute_id, new_value=new_value)
 
-# saves specified comparison as template with given name
+# saves specified comparison as template with given name, returns new template id
 def save_comparison_as_template(comparison_id, template_name):
     query = text("""
     select save_comparison_as_template(:comparison_id, :template_name);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, template_name=template_name)
+    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, template_name=template_name).scalar()
 
 
 def add_comparison_item (table_comparison_id, table_position):
@@ -561,17 +556,21 @@ def delete_comparison_item (table_comparison_id, table_position):
     """)
     db.engine.execute(query.execution_options(autocommit=True), table_comparison_id=table_comparison_id, table_position=table_position)
 
-def comparison_table_stacked (table_comparison_id):
+def comparison_table_stacked (table_comparison_id, json=True):
     query = text("""
     select comparison_table_stacked(:table_comparison_id);
     """)
-    db.engine.execute(query, table_comparison_id=table_comparison_id)
+
+    result = db.engine.execute(query, table_comparison_id=table_comparison_id)
+    if json:
+        return jsonify_table(result)
+    return result
 
 def create_comparison_from_user_template (account_id, template_id, comparison_name):
     query = text("""
     select create_comparison_from_user_template(:account_id, :template_id, :comparison_name);
     """)
-    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name)
+    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name).scalar()
 
 def sort_by_attribute(comparison_id, attribute_id):
     query = text("""
@@ -593,26 +592,41 @@ def set_comparison_attribute_field(attribute_id, field, field_value):
     """)
     db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
 
-def get_template(id):
+def get_template(id, json=True):
     query = text("""
     select * from get_template(:id);
     """)
-    return db.engine.execute(query, id=id)
+    result = db.engine.execute(query, id=id)
+    if json:
+        return jsonify_table(result)
+    return result
 
 # copies template into specified account, returns new template id
 def copy_template(template_id, account_id):
     query = text("""
     select * from copy_template(:template_id, :account_id);
     """)
-    return db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, account_id=account_id)
+    return db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, account_id=account_id).scalar()
 
 # copies comparison into specified account, returns comparison id
 def copy_comparison (comparison_id, account_id):
     query = text("""
     select * from copy_comparison(:comparison_id, :account_id);
     """)
-    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, account_id=account_id)
-    return db.engine.execute(query, id=id)
+    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, account_id=account_id).scalar()
+
+
+# takes in ResultProxy from executed query, returns json mapping column names to arrays of values in order
+def jsonify_table(result):
+    from flask import jsonify
+    data = {}
+    columns = result.keys()
+    for column in columns:
+        data[column] = []
+    for row in result:
+        for i in range(len(columns)):
+            data[columns[i]].append(row[i])
+    return jsonify(data)
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':

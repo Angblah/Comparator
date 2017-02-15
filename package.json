@@ -19,7 +19,10 @@
   "dependencies": {
     "babel-polyfill": "^6.22.0",
     "babel-runtime": "^6.22.0",
+    "blueimp-file-upload": "^9.15.0",
+    "cloudinary-jquery-file-upload": "^2.1.9",
     "draft-js": "^0.9.1",
+    "jquery": "^3.1.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   }

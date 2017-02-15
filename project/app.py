@@ -27,7 +27,7 @@ def index():
 @login_manager.user_loader
 def load_user(user_id):
     #Given user_id, return the associated User object
-    return Account.query.filter_by(username = user_id).one()
+    return Account.query.filter_by(username=user_id).one()
 
 @app.route('/newComparison')
 def newComparison():
@@ -35,20 +35,9 @@ def newComparison():
 
 @app.route('/workspace')
 def workspace():
-    result = get_template(1)
-    data = {}
-    data['header'] = {}
-    for key in result._metadata.keys:
-        data['header'][key] = []
-    for row in result:
-        for key in data['header']:
-            data['header'][key].append(row[0])
-        a = row[0]
-
-
-    jsonify(data)
-
-    return render_template('workspace.html')
+    # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
+    data = get_template(1)
+    return render_template('workspace.html', data=data)
     
 @app.route('/index')
 def index2():

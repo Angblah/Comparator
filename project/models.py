@@ -30,7 +30,7 @@ class Comparison(db.Model):
     account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
     date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
-    comments = db.Column(Text, nullable=True)
+    comment = db.Column(Text, nullable=True)
 
     account = relationship(u'Account')
 
@@ -40,7 +40,7 @@ class ComparisonAttribute(db.Model):
 
     id = db.Column(Integer, primary_key=True,)
     name = db.Column(String(255), nullable=False)
-    type_id = db.Column(SmallInteger, nullable=False)
+    type_id = db.Column(ForeignKey(u'data_type.id'), nullable=False)
     comparison_id = db.Column(ForeignKey(u'comparison.id', ondelete=u'CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
 
@@ -59,11 +59,17 @@ class ComparisonItem(db.Model):
 
     comparison = relationship(u'Comparison')
 
-
+# NOTE:
+# type_ids:
+# 0 = varchar
+# 1 = decimal
+# 2 = timestamp
+# 3 = image
+# 4 = duration
 class DataType(db.Model):
     __tablename__ = 'data_type'
 
-    id = db.Column(Integer, primary_key=True)
+    id = db.Column(SmallInteger, primary_key=True)
     sort_type = db.Column(String(255), nullable=False)
     type_name = db.Column(String(255), nullable=False)
 
@@ -85,7 +91,7 @@ class UserTemplateAttribute(db.Model):
 
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
-    type_id = db.Column(SmallInteger, nullable=False)
+    type_id = db.Column(ForeignKey(u'data_type.id'), nullable=False)
     user_template_id = db.Column(ForeignKey(u'user_template.id', ondelete=u'CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
 
