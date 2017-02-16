@@ -36,8 +36,10 @@ def newComparison():
 @app.route('/workspace')
 def workspace():
     # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
-    data = get_template(1)
-    return render_template('workspace.html', data=data)
+    template = get_template(1)
+    comparison = get_comparison_horizontal(1)
+
+    return render_template('workspace.html', template=template, comparison=comparison)
     
 @app.route('/index')
 def index2():

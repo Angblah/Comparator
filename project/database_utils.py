@@ -1,5 +1,6 @@
 from app import db
 from sqlalchemy import text, select
+from flask import json
 import sqlalchemy
 # TODO: look into sessions and rollback
 # initializes db stored functions and adds some values
@@ -485,7 +486,7 @@ def get_user_template_ids(user_id):
 # returns horizontal view of comparison table with specified id
 # attribute id's and names are the left columns of each row, and all other columns represent an item in the comparison
 # column headers are 'id' (referring to attribute id) and 'name' (attribute name), and each item position (0..n), from left to right
-def get_comparison_horizontal(comparison_id, json=True):
+def get_comparison_horizontal(comparison_id, get_json=True):
     query = text("""
     do $$ begin
         execute create_comparison_table_horizontal(:id);
@@ -493,8 +494,23 @@ def get_comparison_horizontal(comparison_id, json=True):
     select * from comparison_table_horizontal;
     """)
     result = db.engine.execute(query, id=comparison_id)
-    if json:
-        return jsonify_table(result)
+    if get_json:
+        data = {}
+        attributes = []
+        num_items = len(result.keys()) - 3
+        items = [{} for i in range(num_items)]
+        for row in result:
+            attribute = {}
+            attribute['name'] = row[2]
+            attribute['type_id'] = row[1]
+            attribute['id'] = row[0]
+            attributes.append(attribute)
+            for i in range(num_items):
+                val = row[i + 3]
+                items[i][row[2]] = val
+        data['attributes'] = attributes
+        data['items'] = items
+        return json.dumps(data)
     return result
 
 # returns array of all comparison ids of specified user
@@ -556,13 +572,13 @@ def delete_comparison_item (table_comparison_id, table_position):
     """)
     db.engine.execute(query.execution_options(autocommit=True), table_comparison_id=table_comparison_id, table_position=table_position)
 
-def comparison_table_stacked (table_comparison_id, json=True):
+def comparison_table_stacked (table_comparison_id, get_json=True):
     query = text("""
     select comparison_table_stacked(:table_comparison_id);
     """)
 
     result = db.engine.execute(query, table_comparison_id=table_comparison_id)
-    if json:
+    if get_json:
         return jsonify_table(result)
     return result
 
@@ -592,13 +608,20 @@ def set_comparison_attribute_field(attribute_id, field, field_value):
     """)
     db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
 
-def get_template(id, json=True):
+def get_template(id, get_json=True):
     query = text("""
     select * from get_template(:id);
     """)
     result = db.engine.execute(query, id=id)
-    if json:
-        return jsonify_table(result)
+    if get_json:
+        attributes = []
+        for row in result:
+            attribute = {}
+            attribute['name'] = row[2]
+            attribute['type_id'] = row[1]
+            attribute['id'] = row[0]
+            attributes.append(attribute)
+        return json.dumps(attributes)
     return result
 
 # copies template into specified account, returns new template id
@@ -618,7 +641,6 @@ def copy_comparison (comparison_id, account_id):
 
 # takes in ResultProxy from executed query, returns json mapping column names to arrays of values in order
 def jsonify_table(result):
-    from flask import json
     data = {}
     columns = result.keys()
     for column in columns:
@@ -626,14 +648,12 @@ def jsonify_table(result):
     for row in result:
         for i in range(len(columns)):
             data[columns[i]].append(row[i])
-    from flask import json
     return json.dumps(data)
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
-
 
 # Example use cases
 
