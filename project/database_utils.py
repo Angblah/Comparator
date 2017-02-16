@@ -618,7 +618,7 @@ def copy_comparison (comparison_id, account_id):
 
 # takes in ResultProxy from executed query, returns json mapping column names to arrays of values in order
 def jsonify_table(result):
-    from flask import jsonify
+    from flask import json
     data = {}
     columns = result.keys()
     for column in columns:
@@ -626,7 +626,8 @@ def jsonify_table(result):
     for row in result:
         for i in range(len(columns)):
             data[columns[i]].append(row[i])
-    return jsonify(data)
+    from flask import json
+    return json.dumps(data)
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
