@@ -478,24 +478,36 @@ def validate_login(username, password):
     return db.engine.execute(query, username=username, password=password).scalar()
 
 # returns array of template ids for specified user
-def get_user_template_ids(user_id):
+def get_user_template_ids(user_id, get_json=True):
     from models import UserTemplate
     result = db.engine.execute((select([UserTemplate.id]).where(UserTemplate.account_id == user_id)))
-    return [row[0] for row in result]
+    output = [row[0] for row in result]
+
+    if get_json:
+        return json.dumps(output)
+    return output
 
 # returns array of all comparison ids of specified user
-def get_user_comparison_ids(user_id):
+def get_user_comparison_ids(user_id, get_json=True):
     from models import Comparison
 
     result = db.engine.execute((select([Comparison.id]).where(Comparison.account_id == user_id)))
-    return [row[0] for row in result]
+    output = [row[0] for row in result]
+
+    if get_json:
+        return json.dumps(output)
+    return output
 
 # returns array of all comparison names of specified user
-def get_user_comparison_names(user_id):
+def get_user_comparison_names(user_id, get_json=True):
     from models import Comparison
 
     result = db.engine.execute((select([Comparison.name]).where(Comparison.account_id == user_id)))
-    return [row[0] for row in result]
+    output = [row[0] for row in result]
+
+    if get_json:
+        return json.dumps(output)
+    return output
 
 def add_comparison_attribute(comparison_id, attribute_name, attribute_type_id):
     query = text("""
@@ -517,7 +529,7 @@ def save_comparison_as_template(comparison_id, template_name):
     return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, template_name=template_name).scalar()
 
 
-def add_comparison_item (table_comparison_id, table_position):
+def add_comparison_item(table_comparison_id, table_position):
     query = text("""
     select add_comparison_item(:table_comparison_id, :table_position);
     """)
@@ -653,8 +665,10 @@ def jsonify_table(result):
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
-    initialize_db_structure()
-    initialize_db_values()
+    #initialize_db_structure()
+    #initialize_db_values()
+    a = get_comparison(1)
+    b = 1
 
 # Example use cases
 
