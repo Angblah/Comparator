@@ -56,11 +56,11 @@ def initialize_db_structure():
             update comparison_item set position = position - 1 where comparison_id = table_comparison_id and position > table_position;
         end;
     $$ language plpgsql;
-    
-    create or replace function comparison_table_stacked (table_comparison_id int) returns table(type_id smallint, "id" int, "position" int, attribute_name varchar, val varchar, item_name varchar)
+
+    create or replace function comparison_table_stacked (table_comparison_id int) returns table(type_id smallint, "id" int, "position" int, attribute_name varchar, val varchar, item_name varchar, item_id int)
         as $$
         begin
-            return query select comparison_attribute.type_id, comparison_attribute.id, comparison_item.position, comparison_attribute.name, attribute_value.val, comparison_item.name
+            return query select comparison_attribute.type_id, comparison_attribute.id, comparison_item.position, comparison_attribute.name, attribute_value.val, comparison_item.name, comparison_item.id
             from comparison
                 inner join comparison_attribute on comparison.id = comparison_attribute.comparison_id
                 inner join comparison_item on comparison.id = comparison_item.comparison_id
@@ -579,6 +579,7 @@ def get_comparison (table_comparison_id, get_json=True):
                 item = {}
             item[str(row[1])] = row[4]
             item['name'] = row[5]
+            item['id'] = row[6]
 
             if not attributes_parsed:
                 attribute = {}
