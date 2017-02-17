@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 266);
+/******/ 	return __webpack_require__(__webpack_require__.s = 267);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -23217,10 +23217,240 @@ for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList'
 }
 
 /***/ }),
-/* 263 */,
+/* 263 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory(__webpack_require__(61));
+	else if(typeof define === 'function' && define.amd)
+		define(["react"], factory);
+	else if(typeof exports === 'object')
+		exports["react-zoom"] = factory(require("react"));
+	else
+		root["react-zoom"] = factory(root["react"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__) {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _zoom = __webpack_require__(1);
+	
+	var _zoom2 = _interopRequireDefault(_zoom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _zoom2.default;
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _justify = {
+	    left: 'flex-start',
+	    center: 'center',
+	    right: 'flex-end'
+	};
+	
+	var _align = {
+	    top: 'flex-start',
+	    center: 'center',
+	    bottom: 'flex-end'
+	};
+	
+	var Zoom = function (_Component) {
+	    _inherits(Zoom, _Component);
+	
+	    function Zoom() {
+	        _classCallCheck(this, Zoom);
+	
+	        return _possibleConstructorReturn(this, (Zoom.__proto__ || Object.getPrototypeOf(Zoom)).apply(this, arguments));
+	    }
+	
+	    _createClass(Zoom, [{
+	        key: 'render',
+	        value: function render() {
+	            var _props = this.props;
+	            var vAlign = _props.vAlign;
+	            var hAlign = _props.hAlign;
+	            var offset = _props.offset;
+	            var width = _props.width;
+	            var maxWidth = _props.maxWidth;
+	            var maxHeight = _props.maxHeight;
+	            var height = _props.height;
+	            var isVisible = _props.isVisible;
+	            var children = _props.children;
+	            var zIndex = _props.zIndex;
+	            var overlay = _props.overlay;
+	
+	
+	            var wrapperStyle = {
+	                zIndex: zIndex,
+	                position: 'fixed',
+	                height: '100%',
+	                width: '100%',
+	                top: 0,
+	                left: 0,
+	                display: isVisible ? 'table' : 'none'
+	            };
+	
+	            var tableCellStyle = {
+	                display: 'table-cell',
+	                verticalAlign: vAlign === 'top' ? 'top' : vAlign === 'bottom' ? 'bottom' : 'middle'
+	            };
+	
+	            var modalStyle = {
+	                position: 'relative',
+	                overflow: 'auto',
+	                marginLeft: hAlign === 'left' ? 0 : 'auto',
+	                marginRight: hAlign === 'right' ? 0 : 'auto',
+	                top: offset.y,
+	                left: offset.x,
+	                width: width,
+	                maxWidth: maxWidth,
+	                height: height,
+	                maxHeight: maxHeight,
+	                zIndex: zIndex
+	
+	            };
+	
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'zoom_wrapper', style: wrapperStyle },
+	                overlay && overlay,
+	                _react2.default.createElement(
+	                    'div',
+	                    { style: tableCellStyle },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'zoom_modal', style: modalStyle },
+	                        children
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return Zoom;
+	}(_react.Component);
+	
+	Zoom.propTypes = {
+	    isVisible: _react.PropTypes.bool,
+	    width: _react.PropTypes.string,
+	    maxWidth: _react.PropTypes.string,
+	    height: _react.PropTypes.string,
+	    maxHeight: _react.PropTypes.string,
+	    hAlign: _react.PropTypes.oneOf(['left', 'center', 'right']),
+	    vAlign: _react.PropTypes.oneOf(['top', 'center', 'bottom']),
+	    offset: _react.PropTypes.shape({
+	        x: _react.PropTypes.number,
+	        y: _react.PropTypes.number
+	    }),
+	    zIndex: _react.PropTypes.number
+	};
+	
+	Zoom.defaultProps = {
+	    isVisible: false,
+	    width: 'auto',
+	    maxWidth: 'none',
+	    height: 'auto',
+	    maxHeight: 'none',
+	    hAlign: 'center',
+	    vAlign: 'center',
+	    offset: {
+	        x: 0,
+	        y: 0
+	    },
+	    zIndex: 1
+	};
+	
+	exports.default = Zoom;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+
+/***/ }
+/******/ ])
+});
+;
+//# sourceMappingURL=react-zoom.js.map
+
+/***/ }),
 /* 264 */,
 /* 265 */,
-/* 266 */
+/* 266 */,
+/* 267 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23254,9 +23484,12 @@ var _reactDom = __webpack_require__(92);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
+var _reactZoom = __webpack_require__(263);
+
+var _reactZoom2 = _interopRequireDefault(_reactZoom);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//COMPONENTS
 var Workspace = function (_React$Component) {
     (0, _inherits3.default)(Workspace, _React$Component);
 
@@ -23268,66 +23501,165 @@ var Workspace = function (_React$Component) {
     (0, _createClass3.default)(Workspace, [{
         key: 'render',
         value: function render() {
-            // var template_data = [
-            //     {name: "name"},
-            //     {name: "size"},
-            //     {name: "color"},
-            //     {name: "number"}
-            // ];
+            // var table_data = this.props.feed;
+            var template_data = [{ name: "name" }, { name: "size" }, { name: "color" }, { name: "number" }];
 
-            var template_data = JSON.parse(this.props.template);
+            var comparison_data = [{ name: "ball 2", size: "large", color: "red", number: -1.32 }, { name: "ball 3", size: "small", color: "blue", number: 3 }, { name: "ball 4", size: "medium", color: "green", number: 8.22 }];
 
-            // var comparison_data = {items: [
-            //     {name: "ball 2", size: "large", color: "red", number: -1.32},
-            //     {name: "ball 3", size: "small", color: "blue", number: 3},
-            //     {name: "ball 4", size: "medium", color: "green", number: 8.22}
-            // ]};
-
-            var comparison_data = JSON.parse(this.props.comparison);
+            var overlay = _react2.default.createElement('div', { style: {
+                    backgroundColor: 'blue',
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 99
+                } });
 
             return _react2.default.createElement(
-                'table',
-                { className: 'table table-bordered table-inverse' },
+                'div',
+                null,
                 _react2.default.createElement(
-                    'thead',
-                    null,
+                    _reactZoom2.default,
+                    {
+                        isVisible: true,
+                        width: '50%',
+                        height: 'auto',
+                        overlay: overlay,
+                        zIndex: 999
+                    },
                     _react2.default.createElement(
-                        'tr',
-                        null,
-                        _react2.default.createElement('th', { className: 'invisible' }),
-                        comparison_data.items.map(function (attr) {
-                            return _react2.default.createElement(
-                                'th',
-                                null,
-                                attr.name
-                            );
-                        })
-                    )
-                ),
-                _react2.default.createElement(
-                    'tbody',
-                    null,
-                    template_data.map(function (attr) {
-                        // Generate <td> column elements in each row
-                        var rowCells = comparison_data.items.map(function (item) {
-                            return _react2.default.createElement(
-                                'td',
-                                null,
-                                item[attr.name]
-                            );
-                        });
-
-                        return _react2.default.createElement(
-                            'tr',
+                        'div',
+                        { className: 'row' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'card-deck' },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'card' },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'card-block' },
+                                    _react2.default.createElement(
+                                        'h4',
+                                        { className: 'card-title' },
+                                        'Card title'
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        { className: 'card-text' },
+                                        'This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.'
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        { className: 'card-text' },
+                                        _react2.default.createElement(
+                                            'small',
+                                            { className: 'text-muted' },
+                                            'Last updated 3 mins ago'
+                                        )
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'card' },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'card-block' },
+                                    _react2.default.createElement(
+                                        'h4',
+                                        { className: 'card-title' },
+                                        'Card title'
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        { className: 'card-text' },
+                                        'This card has supporting text below as a natural lead-in to additional content.'
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        { className: 'card-text' },
+                                        _react2.default.createElement(
+                                            'small',
+                                            { className: 'text-muted' },
+                                            'Last updated 3 mins ago'
+                                        )
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'card' },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'card-block' },
+                                    _react2.default.createElement(
+                                        'h4',
+                                        { className: 'card-title' },
+                                        'Card title'
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        { className: 'card-text' },
+                                        'This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.'
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        { className: 'card-text' },
+                                        _react2.default.createElement(
+                                            'small',
+                                            { className: 'text-muted' },
+                                            'Last updated 3 mins ago'
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'table',
+                        { className: 'table table-bordered table-inverse' },
+                        _react2.default.createElement(
+                            'thead',
                             null,
                             _react2.default.createElement(
-                                'td',
+                                'tr',
                                 null,
-                                attr.name
-                            ),
-                            rowCells
-                        );
-                    })
+                                _react2.default.createElement('th', { className: 'invisible' }),
+                                comparison_data.map(function (attr) {
+                                    return _react2.default.createElement(
+                                        'th',
+                                        null,
+                                        attr.name
+                                    );
+                                })
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'tbody',
+                            null,
+                            comparison_data.map(function (item) {
+                                // Generate <td> column elements in each row
+                                var rowCells = template_data.map(function (attr) {
+                                    return _react2.default.createElement(
+                                        'td',
+                                        null,
+                                        ' ',
+                                        item[attr.name],
+                                        ' '
+                                    );
+                                });
+                                return _react2.default.createElement(
+                                    'tr',
+                                    null,
+                                    ' ',
+                                    rowCells,
+                                    ' '
+                                );
+                            })
+                        )
+                    )
                 )
             );
         }
@@ -23337,7 +23669,11 @@ var Workspace = function (_React$Component) {
 
 // ========================================
 
-_reactDom2.default.render(_react2.default.createElement(Workspace, document.getElementById("workspace").dataset), document.getElementById("workspace"));
+//import PanZoomElement from 'react-pan-zoom-element';
+//COMPONENTS
+
+
+_reactDom2.default.render(_react2.default.createElement(Workspace, null), document.getElementById("workspace"));
 
 /***/ })
 /******/ ]);

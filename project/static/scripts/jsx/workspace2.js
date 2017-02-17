@@ -6,26 +6,32 @@ class Workspace extends React.Component {
     
 
     render() {
-        // var table_data = this.props.feed;
-        var template_data = [
-            {name: "name"},
-            {name: "size"},
-            {name: "color"},
-            {name: "number"}
-        ];
+        // var template_data = [
+        //     {name: "name"},
+        //     {name: "size"},
+        //     {name: "color"},
+        //     {name: "number"}
+        // ];
 
-        var comparison_data = [
-            {name: "ball 2", size: "large", color: "red", number: -1.32},
-            {name: "ball 3", size: "small", color: "blue", number: 3},
-            {name: "ball 4", size: "medium", color: "green", number: 8.22}
-        ];
+        var template_data = JSON.parse(this.props.template);
+
+        // var comparison_data = {items: [
+        //     {name: "ball 2", size: "large", color: "red", number: -1.32},
+        //     {name: "ball 3", size: "small", color: "blue", number: 3},
+        //     {name: "ball 4", size: "medium", color: "green", number: 8.22}
+        // ]};
+
+        var comparison_data = JSON.parse(this.props.comparison);
+
+        
 
         return (
+
             <table className="table table-bordered table-inverse">
                 <thead>
                     <tr>
                         <th className="invisible"></th>
-                        {comparison_data.map(attr =>
+                        {comparison_data.items.map(attr =>
                             <th>
                                 {attr.name}
                             </th>
@@ -33,16 +39,21 @@ class Workspace extends React.Component {
                     </tr>
                 </thead>    
                 <tbody>
-                    {comparison_data.map(function(item) {
+                    {template_data.map(function(attr) {
                         // Generate <td> column elements in each row
-                        var rowCells = template_data.map(attr =>
-                            <td> {item[attr.name]} </td>
+                        var rowCells = comparison_data.items.map(item =>
+                            <td>{item[attr.name]}</td>
                         );
 
-                        return <tr> {rowCells} </tr>;
+                        return( 
+                            <tr>
+                                <td>{attr.name}</td>
+                                {rowCells} 
+                            </tr>);
                     })}
                 </tbody>
             </table>
+            
         );
     }
 }
@@ -50,6 +61,6 @@ class Workspace extends React.Component {
 // ========================================
 
 ReactDOM.render(
-    <Workspace />,
+    <Workspace {...(document.getElementById("workspace").dataset)}/>,
     document.getElementById("workspace")
 );
