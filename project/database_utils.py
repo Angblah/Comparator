@@ -483,9 +483,7 @@ def get_user_template_ids(user_id):
     result = db.engine.execute((select([UserTemplate.id]).where(UserTemplate.account_id == user_id)))
     return [row[0] for row in result]
 
-# returns horizontal view of comparison table with specified id
-# attribute id's and names are the left columns of each row, and all other columns represent an item in the comparison
-# column headers are 'id' (referring to attribute id) and 'name' (attribute name), and each item position (0..n), from left to right
+
 def get_comparison_horizontal(comparison_id, get_json=True):
     query = text("""
     do $$ begin
@@ -501,13 +499,13 @@ def get_comparison_horizontal(comparison_id, get_json=True):
         items = [{} for i in range(num_items)]
         for row in result:
             attribute = {}
-            attribute['name'] = row[2]
+            attribute['id'] = row[2]
             attribute['type_id'] = row[1]
             attribute['id'] = row[0]
             attributes.append(attribute)
             for i in range(num_items):
                 val = row[i + 3]
-                items[i][row[2]] = val
+                items[i][row[0]] = val
         data['attributes'] = attributes
         data['items'] = items
         return json.dumps(data)
