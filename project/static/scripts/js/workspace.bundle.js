@@ -23287,49 +23287,58 @@ var Workspace = function (_React$Component) {
 
             // Inverse table with blank first block
             return _react2.default.createElement(
-                'table',
-                { className: 'table table-bordered table-inverse' },
+                'div',
+                { id: 'wrapper' },
                 _react2.default.createElement(
-                    'thead',
-                    null,
+                    'table',
+                    { className: 'table table-bordered table-inverse' },
                     _react2.default.createElement(
-                        'tr',
+                        'thead',
                         null,
-                        _react2.default.createElement('th', null),
-                        comparison_data.items.map(function (attr) {
+                        _react2.default.createElement(
+                            'tr',
+                            null,
+                            _react2.default.createElement('th', null),
+                            comparison_data.items.map(function (item) {
+                                return _react2.default.createElement(
+                                    'th',
+                                    null,
+                                    item.id
+                                );
+                            })
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'tbody',
+                        null,
+                        template_data.map(function (attr) {
+                            // Generate <td> column elements in each row
+                            var rowCells = comparison_data.items.map(function (item) {
+                                return _react2.default.createElement(
+                                    'td',
+                                    null,
+                                    item[attr.id]
+                                );
+                            });
+
+                            // Set each row to be attribute name, then generated column cells
                             return _react2.default.createElement(
-                                'th',
+                                'tr',
                                 null,
-                                attr.name
+                                _react2.default.createElement(
+                                    'td',
+                                    null,
+                                    attr.name
+                                ),
+                                rowCells
                             );
                         })
                     )
                 ),
                 _react2.default.createElement(
-                    'tbody',
-                    null,
-                    template_data.map(function (attr) {
-                        // Generate <td> column elements in each row
-                        var rowCells = comparison_data.items.map(function (item) {
-                            return _react2.default.createElement(
-                                'td',
-                                null,
-                                item[attr.name]
-                            );
-                        });
-
-                        // Set each row to be attribute name, then generated column cells
-                        return _react2.default.createElement(
-                            'tr',
-                            null,
-                            _react2.default.createElement(
-                                'td',
-                                null,
-                                attr.name
-                            ),
-                            rowCells
-                        );
-                    })
+                    'button',
+                    { id: 'saveButton' },
+                    'Save'
                 )
             );
         }
