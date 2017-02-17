@@ -26,33 +26,36 @@ class Workspace extends React.Component {
         
         // Inverse table with blank first block
         return (
-            <table className="table table-bordered table-inverse">
-                <thead>
-                    <tr>
-                        <th></th>
-                        {comparison_data.items.map(attr =>
-                            <th>
-                                {attr.name}
-                            </th>
-                        )}
-                    </tr>
-                </thead>    
-                <tbody>
-                    {template_data.map(function(attr) {
-                        // Generate <td> column elements in each row
-                        var rowCells = comparison_data.items.map(item =>
-                            <td>{item[attr.name]}</td>
-                        );
+            <div id="wrapper">
+                <table className="table table-bordered table-inverse">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            {comparison_data.items.map(item =>
+                                <th>
+                                    {item.id}
+                                </th>
+                            )}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {template_data.map(function(attr) {
+                            // Generate <td> column elements in each row
+                            var rowCells = comparison_data.items.map(item =>
+                                <td>{item[attr.id]}</td>
+                            );
 
-                        // Set each row to be attribute name, then generated column cells
-                        return( 
-                            <tr>
-                                <td>{attr.name}</td>
-                                {rowCells} 
-                            </tr>);
-                    })}
-                </tbody>
-            </table>
+                            // Set each row to be attribute name, then generated column cells
+                            return(
+                                <tr>
+                                    <td>{attr.name}</td>
+                                    {rowCells}
+                                </tr>);
+                        })}
+                    </tbody>
+                </table>
+                <button id="saveButton">Save</button>
+            </div>
         );
     }
 }
