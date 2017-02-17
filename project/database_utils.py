@@ -70,12 +70,11 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    
-    
-    create or replace function add_comparison_attribute (table_comparison_id int, attribute_name varchar(255), attribute_type_id smallint, _weight int default 1) returns void
+
+    create or replace function add_comparison_attribute (table_comparison_id int, attribute_name varchar(255), attribute_type_id smallint, _weight int default 1, out attribute_id int) returns int
         as $$
         begin
-            insert into comparison_attribute (name, type_id, comparison_id, weight) values (attribute_name, attribute_type_id, table_comparison_id, _weight);
+            insert into comparison_attribute (name, type_id, comparison_id, weight) values (attribute_name, attribute_type_id, table_comparison_id, _weight) returning id into attribute_id;
             update comparison set date_modified = current_timestamp where id = table_comparison_id;
         end;
     $$ language plpgsql;
@@ -118,10 +117,10 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1) returns void
+    create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1, out attribute_id int) returns int
         as $$
         begin
-            insert into user_template_attribute (name, type_id, user_template_id, weight) values (_attribute_name, _type_id, _user_template_id, _weight);
+            insert into user_template_attribute (name, type_id, user_template_id, weight) values (_attribute_name, _type_id, _user_template_id, _weight) returning id into attribute_id;
             update user_template set date_modified = current_timestamp where id = _user_template_id;
         end;
     $$ language plpgsql;
@@ -509,11 +508,11 @@ def get_user_comparison_names(user_id, get_json=True):
         return json.dumps(output)
     return output
 
-def add_comparison_attribute(comparison_id, attribute_name, attribute_type_id):
+def add_comparison_attribute(comparison_id, attribute_name, attribute_type_id, weight=1):
     query = text("""
-    select add_comparison_attribute(:comparison_id, :attribute_name, :attribute_type_id);
+    select add_comparison_attribute(:comparison_id, :attribute_name, CAST(:attribute_type_id AS SMALLINT), :weight);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, attribute_name=attribute_name, attribute_type_id=attribute_type_id)
+    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, attribute_name=attribute_name, attribute_type_id=attribute_type_id, weight=weight).scalar()
 
 def set_comparison_attribute_value(item_id, item_attribute_id, new_value):
     query = text("""
@@ -653,6 +652,11 @@ def copy_comparison (comparison_id, account_id):
     """)
     return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, account_id=account_id).scalar()
 
+def add_user_template_attribute (template_id, attribute_name, type_id, weight=1):
+    query = text("""
+    select * from add_user_template_attribute(:template_id, :attribute_name, cast(:type_id AS SMALLINT), :weight);
+    """)
+    return db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, attribute_name=attribute_name, type_id=type_id, weight=weight).scalar()
 
 # takes in ResultProxy from executed query, returns json mapping column names to arrays of values in order
 def jsonify_table(result):
@@ -670,18 +674,4 @@ if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
 
-# Example use cases
-
-    # getting all comparison tables of specific user
-
-    # a = get_user_comparison_ids(1)
-    # for id in a:
-    #     b = get_comparison_horizontal(id)
-    #     # new table
-    #     print("_______________________________________________")
-    #     for result in b:
-    #         # row in table
-    #         print(result)
-    #     print("_______________________________________________")
-
-# TODO: item swapping function
+# TODO: swap items
