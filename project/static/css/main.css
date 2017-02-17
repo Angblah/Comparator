@@ -3,14 +3,19 @@
 header {
   box-shadow: 10px 10px 3em rgba(4, 4, 4, 0.1);
 }
+#nav-container {
+  height: 1px ! important;
+}
 header img {
   border-radius: 50%;
-  max-height: 20px;
+  max-height: 2em;
   padding-top: 0 !important;
 }
 /*Background*/
 body {
   background-color: #ddd;
+  padding-top: 5em;
+  padding-bottom: 5em;
 }
 /*Footer*/
 footer {
@@ -53,6 +58,16 @@ footer {
   background-color: #5fa4eb;
   color: #ff9900 !important;
   /*why u no work???*/
+}
+#login-dropdown:hover {
+  background-color: #ff9900;
+  border-color: #ff9900;
+}
+#forgot-pass {
+  position: fixed;
+  left: 50%
+    top: 50%;
+  transform: translate(50%, 50%);
 }
 /*Buttons*/
 button {
