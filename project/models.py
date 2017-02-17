@@ -13,12 +13,12 @@ metadata = Base.metadata
 class AttributeValue(db.Model):
     __tablename__ = 'attribute_value'
 
-    item_id = db.Column(ForeignKey(u'comparison_item.id', ondelete=u'CASCADE'), primary_key=True, nullable=False)
-    attribute_id = db.Column(ForeignKey(u'comparison_attribute.id', ondelete=u'CASCADE'), primary_key=True, nullable=False)
+    item_id = db.Column(ForeignKey('comparison_item.id', ondelete='CASCADE'), primary_key=True, nullable=False)
+    attribute_id = db.Column(ForeignKey('comparison_attribute.id', ondelete='CASCADE'), primary_key=True, nullable=False)
     val = db.Column(String(255), nullable=False)
 
-    attribute = relationship(u'ComparisonAttribute')
-    item = relationship(u'ComparisonItem')
+    attribute = relationship('ComparisonAttribute')
+    item = relationship('ComparisonItem')
 
 
 class Comparison(db.Model):
@@ -27,12 +27,12 @@ class Comparison(db.Model):
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
     last_position = db.Column(Integer, nullable=False, server_default=text("'-1'::integer"))
-    account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
+    account_id = db.Column(ForeignKey('account.id', ondelete='CASCADE'), nullable=False)
     date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     comment = db.Column(Text, nullable=True)
 
-    account = relationship(u'Account')
+    account = relationship('Account')
 
 
 class ComparisonAttribute(db.Model):
@@ -40,11 +40,12 @@ class ComparisonAttribute(db.Model):
 
     id = db.Column(Integer, primary_key=True,)
     name = db.Column(String(255), nullable=False)
-    type_id = db.Column(ForeignKey(u'data_type.id'), nullable=False)
-    comparison_id = db.Column(ForeignKey(u'comparison.id', ondelete=u'CASCADE'), nullable=False)
+    type_id = db.Column(ForeignKey('data_type.id'), nullable=False)
+    comparison_id = db.Column(ForeignKey('comparison.id', ondelete='CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
+    UniqueConstraint(comparison_id, name)
 
-    comparison = relationship(u'Comparison')
+    comparison = relationship('Comparison')
 
 
 class ComparisonItem(db.Model):
@@ -55,9 +56,9 @@ class ComparisonItem(db.Model):
 
     id = db.Column(Integer, primary_key=True)
     position = db.Column(Integer, nullable=False)
-    comparison_id = db.Column(ForeignKey(u'comparison.id', ondelete=u'CASCADE'), nullable=False)
+    comparison_id = db.Column(ForeignKey('comparison.id', ondelete='CASCADE'), nullable=False)
 
-    comparison = relationship(u'Comparison')
+    comparison = relationship('Comparison')
 
 # NOTE:
 # type_ids:
@@ -78,12 +79,12 @@ class UserTemplate(db.Model):
 
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
-    account_id = db.Column(ForeignKey(u'account.id', ondelete=u'CASCADE'), nullable=False)
+    account_id = db.Column(ForeignKey('account.id', ondelete='CASCADE'), nullable=False)
     date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     comments = db.Column(Text, nullable=True)
 
-    account = relationship(u'Account')
+    account = relationship('Account')
 
 
 class UserTemplateAttribute(db.Model):
@@ -91,11 +92,12 @@ class UserTemplateAttribute(db.Model):
 
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
-    type_id = db.Column(ForeignKey(u'data_type.id'), nullable=False)
-    user_template_id = db.Column(ForeignKey(u'user_template.id', ondelete=u'CASCADE'), nullable=False)
+    type_id = db.Column(ForeignKey('data_type.id'), nullable=False)
+    user_template_id = db.Column(ForeignKey('user_template.id', ondelete='CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
+    UniqueConstraint(user_template_id, name)
 
-    user_template = relationship(u'UserTemplate')
+    user_template = relationship('UserTemplate')
 
 class Account(db.Model, UserMixin):
     __tablename__ = 'account'
