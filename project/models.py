@@ -57,6 +57,7 @@ class ComparisonItem(db.Model):
     id = db.Column(Integer, primary_key=True)
     position = db.Column(Integer, nullable=False)
     comparison_id = db.Column(ForeignKey('comparison.id', ondelete='CASCADE'), nullable=False)
+    name = db.Column(String(255), nullable=True)
 
     comparison = relationship('Comparison')
 

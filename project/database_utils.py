@@ -57,10 +57,10 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
     
-    create or replace function comparison_table_stacked (table_comparison_id int) returns table(type_id smallint, "id" int, "position" int, "name" varchar, val varchar)
+    create or replace function comparison_table_stacked (table_comparison_id int) returns table(type_id smallint, "id" int, "position" int, attribute_name varchar, val varchar, item_name varchar)
         as $$
         begin
-            return query select comparison_attribute.type_id, comparison_attribute.id, comparison_item.position, comparison_attribute.name, attribute_value.val
+            return query select comparison_attribute.type_id, comparison_attribute.id, comparison_item.position, comparison_attribute.name, attribute_value.val, comparison_item.name
             from comparison
                 inner join comparison_attribute on comparison.id = comparison_attribute.comparison_id
                 inner join comparison_item on comparison.id = comparison_item.comparison_id
@@ -274,7 +274,7 @@ def initialize_db_structure():
           'DROP VIEW IF EXISTS comparison_table_horizontal;
            CREATE TEMP VIEW comparison_table_horizontal AS SELECT * FROM crosstab(
            $q$
-               SELECT id, type_id, name, position, val
+               SELECT id, type_id, attribute_name, position, val
                FROM   (select * from comparison_table_stacked(%3$s)) as t1
                order by id
            $q$
@@ -577,7 +577,8 @@ def get_comparison (table_comparison_id, get_json=True):
                     items.append(item)
                     attributes_parsed = True
                 item = {}
-            item[row[1]] = row[4]
+            item[str(row[1])] = row[4]
+            item['name'] = row[5]
 
             if not attributes_parsed:
                 attribute = {}
@@ -665,10 +666,8 @@ def jsonify_table(result):
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
-    #initialize_db_structure()
-    #initialize_db_values()
-    a = get_comparison(1)
-    b = 1
+    initialize_db_structure()
+    initialize_db_values()
 
 # Example use cases
 
@@ -684,4 +683,4 @@ if __name__ == '__main__':
     #         print(result)
     #     print("_______________________________________________")
 
-
+# TODO: item swapping function
