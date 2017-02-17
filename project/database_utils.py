@@ -483,34 +483,6 @@ def get_user_template_ids(user_id):
     result = db.engine.execute((select([UserTemplate.id]).where(UserTemplate.account_id == user_id)))
     return [row[0] for row in result]
 
-
-def get_comparison_horizontal(comparison_id, get_json=True):
-    query = text("""
-    do $$ begin
-        execute create_comparison_table_horizontal(:id);
-    end $$;
-    select * from comparison_table_horizontal;
-    """)
-    result = db.engine.execute(query, id=comparison_id)
-    if get_json:
-        data = {}
-        attributes = []
-        num_items = len(result.keys()) - 3
-        items = [{} for i in range(num_items)]
-        for row in result:
-            attribute = {}
-            attribute['id'] = row[2]
-            attribute['type_id'] = row[1]
-            attribute['id'] = row[0]
-            attributes.append(attribute)
-            for i in range(num_items):
-                val = row[i + 3]
-                items[i][row[0]] = val
-        data['attributes'] = attributes
-        data['items'] = items
-        return json.dumps(data)
-    return result
-
 # returns array of all comparison ids of specified user
 def get_user_comparison_ids(user_id):
     from models import Comparison
@@ -570,14 +542,45 @@ def delete_comparison_item (table_comparison_id, table_position):
     """)
     db.engine.execute(query.execution_options(autocommit=True), table_comparison_id=table_comparison_id, table_position=table_position)
 
-def comparison_table_stacked (table_comparison_id, get_json=True):
+def get_comparison (table_comparison_id, get_json=True):
     query = text("""
-    select comparison_table_stacked(:table_comparison_id);
+    select * from comparison_table_stacked(:table_comparison_id);
     """)
 
     result = db.engine.execute(query, table_comparison_id=table_comparison_id)
     if get_json:
-        return jsonify_table(result)
+        curr_position = -1
+        data = {}
+        attributes = []
+        items = []
+        item = None
+        attributes_parsed = False
+        for row in result:
+
+            # start of new item
+            if row[2] != curr_position:
+                curr_position = row[2]
+                # not start of first item (previous item can be appended to list of items)
+                if item is not None:
+                    items.append(item)
+                    attributes_parsed = True
+                item = {}
+            item[row[1]] = row[4]
+
+            if not attributes_parsed:
+                attribute = {}
+                attribute['type_id'] = row[0]
+                attribute['id'] = row[1]
+                attribute['name'] = row[3]
+                attributes.append(attribute)
+
+        if item is not None:
+            items.append(item)
+
+        data['attributes'] = attributes
+        data['items'] = items
+
+        return json.dumps(data)
     return result
 
 def create_comparison_from_user_template (account_id, template_id, comparison_name):
@@ -650,8 +653,11 @@ def jsonify_table(result):
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
-    initialize_db_structure()
-    initialize_db_values()
+    #initialize_db_structure()
+    #initialize_db_values()
+    d = get_template(1)
+    a = get_comparison(1)
+    b = 1
 
 # Example use cases
 
