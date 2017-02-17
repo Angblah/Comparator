@@ -5,12 +5,12 @@ var RecentComparisons = React.createClass({
 	
 
     render: function() {
-    	var names = this.props.feed;
+    	var names = JSON.parse(this.props.feed);
         // names = Array.isArray(names) ? names : [names];
         if (names != undefined) {            
             return (
             	<div>
-            		{names.map(function(name){ return <div className="tile"> {name} </div>}) }
+            		{names.items.map(function(name){ return <div className="tile"> {name} </div>}) }
         		</div>
         	)
         } else {
@@ -22,8 +22,9 @@ var RecentComparisons = React.createClass({
         }
     }
 });
- 
+
+var namedoc = document.getElementById('recent-comp');
 ReactDOM.render(
-	<RecentComparisons {...(RecentComparisons.dataset)}/>, 
-	document.getElementById('recent-comp')
+	<RecentComparisons {...(namedoc.dataset)}/>, 
+	   namedoc
 	);
