@@ -24,13 +24,12 @@ class Workspace extends React.Component {
         var comparison_data = JSON.parse(this.props.comparison);
 
         
-
+        // Inverse table with blank first block
         return (
-
             <table className="table table-bordered table-inverse">
                 <thead>
                     <tr>
-                        <th className="invisible"></th>
+                        <th></th>
                         {comparison_data.items.map(attr =>
                             <th>
                                 {attr.name}
@@ -45,6 +44,7 @@ class Workspace extends React.Component {
                             <td>{item[attr.name]}</td>
                         );
 
+                        // Set each row to be attribute name, then generated column cells
                         return( 
                             <tr>
                                 <td>{attr.name}</td>
@@ -53,14 +53,15 @@ class Workspace extends React.Component {
                     })}
                 </tbody>
             </table>
-            
         );
     }
 }
 
 // ========================================
 
+var workspaceElem = document.getElementById("workspace");
+
 ReactDOM.render(
-    <Workspace {...(document.getElementById("workspace").dataset)}/>,
-    document.getElementById("workspace")
+    <Workspace {...(workspaceElem.dataset)}/>,
+    workspaceElem
 );

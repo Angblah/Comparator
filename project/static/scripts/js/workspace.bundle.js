@@ -23285,6 +23285,7 @@ var Workspace = function (_React$Component) {
 
             var comparison_data = JSON.parse(this.props.comparison);
 
+            // Inverse table with blank first block
             return _react2.default.createElement(
                 'table',
                 { className: 'table table-bordered table-inverse' },
@@ -23294,7 +23295,7 @@ var Workspace = function (_React$Component) {
                     _react2.default.createElement(
                         'tr',
                         null,
-                        _react2.default.createElement('th', { className: 'invisible' }),
+                        _react2.default.createElement('th', null),
                         comparison_data.items.map(function (attr) {
                             return _react2.default.createElement(
                                 'th',
@@ -23317,6 +23318,7 @@ var Workspace = function (_React$Component) {
                             );
                         });
 
+                        // Set each row to be attribute name, then generated column cells
                         return _react2.default.createElement(
                             'tr',
                             null,
@@ -23337,7 +23339,9 @@ var Workspace = function (_React$Component) {
 
 // ========================================
 
-_reactDom2.default.render(_react2.default.createElement(Workspace, document.getElementById("workspace").dataset), document.getElementById("workspace"));
+var workspaceElem = document.getElementById("workspace");
+
+_reactDom2.default.render(_react2.default.createElement(Workspace, workspaceElem.dataset), workspaceElem);
 
 /***/ })
 /******/ ]);

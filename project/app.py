@@ -41,6 +41,10 @@ def workspace():
 
     return render_template('workspace.html', template=template, comparison=comparison)
     
+@app.route('/testbed')
+def testbed():
+    return render_template('testbed.html')
+
 @app.route('/index')
 def index2():
     return render_template('index.html')
