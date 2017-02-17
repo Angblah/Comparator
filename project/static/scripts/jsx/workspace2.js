@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 class Workspace extends React.Component {
-    
+
 
     render() {
         // var template_data = [
@@ -23,7 +23,7 @@ class Workspace extends React.Component {
 
         var comparison_data = JSON.parse(this.props.comparison);
 
-        
+
         // Inverse table with blank first block
         return (
             <div id="wrapper">

@@ -653,11 +653,8 @@ def jsonify_table(result):
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
-    #initialize_db_structure()
-    #initialize_db_values()
-    d = get_template(1)
-    a = get_comparison(1)
-    b = 1
+    initialize_db_structure()
+    initialize_db_values()
 
 # Example use cases
 

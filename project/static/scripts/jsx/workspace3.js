@@ -34,7 +34,7 @@ class Workspace extends React.Component {
         }} />;
 
         return (
-        
+
             <div>
                 <Zoom
                     isVisible={true}
@@ -78,7 +78,7 @@ class Workspace extends React.Component {
                                     </th>
                                 )}
                             </tr>
-                        </thead>    
+                        </thead>
                         <tbody>
                             {comparison_data.map(function(item) {
                                 // Generate <td> column elements in each row
