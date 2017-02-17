@@ -40,7 +40,7 @@
                         <div id="recent-comp-extra">
                                 
                         </div>
-                        <div id="recent-comp" data-feed={{name_list}}>
+                        <div id="recent-comp" data-feed="{{name_list}}">
                             <!-- <div class="tile"> Hello Honey </div> -->
                             
                         </div>
@@ -109,9 +109,6 @@
     <!-- Include the footer for things like copyright info and JS scripts -->
     {% include "partials/footer.html" %}
 </div>
-
-    <script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bower_components/react/react-dom.min.js') }}"></script>
     <script src="../static/scripts/js/dashboard.bundle.js"></script>
 </body>
 </html>
