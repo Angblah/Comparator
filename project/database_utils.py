@@ -62,6 +62,110 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
+    create or replace function move_comparison_item (_item_id int, _position int) returns void
+        as $$
+            declare _comparison_id int;
+            declare _old_position int;
+        begin
+
+            update comparison_item t1
+            set position = _position
+            from comparison_item t2
+            where t2.id = _item_id and t1.id = _item_id
+            returning t2.comparison_id, t2.position
+            into _comparison_id, _old_position;
+
+            -- move forwards
+            if _position > _old_position then
+                update comparison_item set position = position - 1 where comparison_id = _comparison_id and position between _old_position and _position and id != _item_id;
+            -- move backwards
+            elsif _position < _old_position then
+                update comparison_item set position = position + 1 where comparison_id = _comparison_id and position between _position and _old_position and id != _item_id;
+            end if;
+            update comparison set date_modified = current_timestamp where id = _comparison_id;
+
+        end;
+    $$ language plpgsql;
+
+    create or replace function swap_comparison_attribute (_id1 int, _id2 int) returns void
+        as $$
+        begin
+            with comparison_id as(
+                    UPDATE comparison_attribute as t1
+                    SET position = t2.position
+                    FROM comparison_attribute as t2
+                    WHERE t1.id IN(_id1,_id2)
+                    AND t2.id IN(_id1,_id2)
+                    AND t1.id != t2.id
+                    RETURNING t1.comparison_id
+                ) update comparison set date_modified = current_timestamp where id = (select id from comparison_id limit 1);
+        end;
+    $$ language plpgsql;
+
+    create or replace function move_comparison_attribute (_attribute_id int, _position int) returns void
+        as $$
+            declare _comparison_id int;
+            declare _old_position int;
+        begin
+            update comparison_attribute t1
+            set position = _position
+            from comparison_attribute t2
+            where t2.id = _attribute_id and t1.id = t2.id
+            returning t2.comparison_id, t2.position
+            into _comparison_id, _old_position;
+
+            -- move forwards
+            if _position > _old_position then
+                update comparison_attribute set position = position - 1 where comparison_id = _comparison_id and position between _old_position and _position and id != _attribute_id;
+            -- move backwards
+            elsif _position < _old_position then
+                update comparison_attribute set position = position + 1 where comparison_id = _comparison_id and position between _position and _old_position and id != _attribute_id;
+            end if;
+            update comparison set date_modified = current_timestamp where id = _comparison_id;
+
+        end;
+    $$ language plpgsql;
+
+    create or replace function swap_template_attribute (_id1 int, _id2 int) returns void
+        as $$
+        begin
+            with user_template_id as(
+                    UPDATE user_template_attribute as t1
+                    SET position = t2.position
+                    FROM user_template_attribute as t2
+                    WHERE t1.id IN(_id1,_id2)
+                    AND t2.id IN(_id1,_id2)
+                    AND t1.id != t2.id
+                    RETURNING t1.user_template_id
+                ) update user_template set date_modified = current_timestamp where id = (select id from user_template_id limit 1);
+        end;
+    $$ language plpgsql;
+
+    create or replace function move_template_attribute (_attribute_id int, _position int) returns void
+        as $$
+            declare _template_id int;
+            declare _old_position int;
+        begin
+            update user_template_attribute t1
+            set position = _position
+            from user_template_attribute t2
+            where t2.id = _attribute_id and t1.id = t2.id
+            returning t2.user_template_id, t2.position
+            into _template_id, _old_position;
+
+            -- move forwards
+            if _position > _old_position then
+                update user_template_attribute set position = position - 1 where user_template_id = _template_id and position between _old_position and _position and id != _attribute_id;
+            -- move backwards
+            elsif _position < _old_position then
+                update user_template_attribute set position = position + 1 where user_template_id = _template_id and position between _position and _old_position and id != _attribute_id;
+            end if;
+            update user_template set date_modified = current_timestamp where id = _template_id;
+
+        end;
+    $$ language plpgsql;
+
+
     create or replace function delete_comparison_item (_comparison_id int, _position int) returns void
         as $$
         begin
@@ -705,6 +809,13 @@ if __name__ == '__main__':
     initialize_db_values()
 
 # TODO: improve documentation
-# TODO: test attribute ordering more
-# TODO: consider changing schema so that both attributes inherit from common table to reduce redundant functions
+# TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
+    # single inheritance for attribute downside: unique constraint for (name, comparison_id) can't be enforced easily
+# TODO: consider changing schema so that templates inherit from common table to reduce redundant functions
+# TODO: change adding attributes to more closely follow item adding syntax (add_back, add multiple items, etc.)
 # TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
+# TODO: fix move (different position updates for other items depending on move backwards or forwards)
+    # if forwards
+        # items between new_pos and old_pos move back (includes ends)
+    # if backwards
+        # items between new_pos and old_pos (including ends, though right end won't have anything) move forward
