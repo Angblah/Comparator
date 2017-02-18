@@ -236,12 +236,13 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function create_comparison_from_user_template (_account_id int, _template_id int, _comparison_name varchar) returns int
+    create or replace function create_comparison_from_user_template (_account_id int, _template_id int, _comparison_name varchar, _num_items int default 2) returns int
         as $$
             declare _comparison_id int;
         begin
             insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
             insert into comparison_attribute (name, type_id, comparison_id, weight, position) select name, type_id, _comparison_id, weight, position from user_template_attribute where user_template_id = _template_id;
+            perform add_comparison_item_back(_comparison_id, _num_items);
             return _comparison_id;
         end;
     $$ language plpgsql;
@@ -730,11 +731,11 @@ def get_comparison (table_comparison_id, get_json=True):
         return json.dumps(data)
     return result
 
-def create_comparison_from_user_template (account_id, template_id, comparison_name):
+def create_comparison_from_user_template (account_id, template_id, comparison_name, num_items=2):
     query = text("""
-    select create_comparison_from_user_template(:account_id, :template_id, :comparison_name);
+    select create_comparison_from_user_template(:account_id, :template_id, :comparison_name, :num_items);
     """)
-    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name).scalar()
+    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name, num_items=num_items).scalar()
 
 def sort_by_attribute(comparison_id, attribute_id):
     query = text("""
