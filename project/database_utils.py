@@ -47,13 +47,39 @@ def initialize_db_structure():
 
         end;
     $$ language plpgsql;
-    
-    create or replace function delete_comparison_item (table_comparison_id int, table_position int) returns void
+
+    create or replace function swap_comparison_item (_id1 int, _id2 int) returns void
         as $$
         begin
-            update comparison set last_position = last_position - 1, date_modified = current_timestamp where id = table_comparison_id;
-            delete from comparison_item where comparison_id = table_comparison_id and position = table_position;
-            update comparison_item set position = position - 1 where comparison_id = table_comparison_id and position > table_position;
+            with comparison_id as(
+                    UPDATE comparison_item as t1
+                    SET position = t2.position
+                    FROM comparison_item as t2
+                    WHERE t1.id IN(_id1,_id2)
+                    AND t2.id IN(_id1,_id2)
+                    AND t1.id != t2.id
+                    RETURNING t1.comparison_id
+                ) update comparison set date_modified = current_timestamp where id = (select id from comparison_id limit 1);
+        end;
+    $$ language plpgsql;
+
+    create or replace function delete_comparison_item (_comparison_id int, _position int) returns void
+        as $$
+        begin
+            update comparison set last_position = last_position - 1, date_modified = current_timestamp where id = _comparison_id;
+            delete from comparison_item where comparison_id = _comparison_id and position = _position;
+            update comparison_item set position = position - 1 where comparison_id = _comparison_id and position > _position;
+        end;
+    $$ language plpgsql;
+
+    create or replace function delete_comparison_item(_item_id int) returns void
+        as $$
+        begin
+            with delete_1 as (
+                delete from comparison_item where id = _item_id returning position, comparison_id
+                ), update_1 as (
+                  update comparison set last_position = last_position - 1, date_modified = current_timestamp where id = (select comparison_id from delete_1)
+                ) update comparison_item set position = position - 1 where comparison_id = (select comparison_id from delete_1) and position > (select position from delete_1);
         end;
     $$ language plpgsql;
 
@@ -370,8 +396,6 @@ def initialize_db_structure():
 
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
 
-            -- TODO: have all add items return id of inserted item
-
             perform add_comparison_item_back(_comparison_id);
             perform add_comparison_item_back(_comparison_id);
             perform add_comparison_item(_comparison_id, 0);
@@ -411,7 +435,6 @@ def initialize_db_structure():
             perform save_comparison_as_template(_comparison_id, 'balls template 2');
             perform save_comparison_as_template(_comparison_id, 'balls template 3');
 
-            -- TODO: fix create_comparison_stacked as table has values for comp_1, comp_2, and comp_3
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 2') into comp_1;
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 3') into comp_2;
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 4') into comp_3;
@@ -427,10 +450,6 @@ def initialize_db_structure():
             perform make_template('Cameras', Array[0, 1, 1, 1, 4, 4, 1, 0, 1, 4]::smallint[],
                                   Array['Name', 'Price', 'Megapixels', 'Image Quality','Shutter Lag', 'Startup Time', 'Weight', 'Size', 'Storage Space', 'Battery Life']);
 
-
-            -- TODO: combine initialize and create comparison
-
-            -- TODO: create a few templates
 
         end;
     $$ language plpgsql;
@@ -546,12 +565,23 @@ def add_comparison_items_back (comparison_id, num_items):
     """)
     db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, num_items=num_items)
 
-# TODO: consider changing to id instead of position depending on whether stacked/horizontal view chosen as final option
-def delete_comparison_item (table_comparison_id, table_position):
+def swap_comparison_item (id1, id2):
     query = text("""
-    select delete_comparison_item(:table_comparison_id, :table_position);
+    select swap_comparison_item (:id1, :id2);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), table_comparison_id=table_comparison_id, table_position=table_position)
+    db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2)
+
+def delete_comparison_item_by_position (comparison_id, position):
+    query = text("""
+    select delete_comparison_item(:comparison_id, :position);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position)
+
+def delete_comparison_item_by_id (id):
+    query = text("""
+    select delete_comparison_item(:id);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), id=id)
 
 def get_comparison (table_comparison_id, get_json=True):
     query = text("""
@@ -674,4 +704,6 @@ if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
 
-# TODO: swap items
+# TODO: improve documentation
+# TODO: keep track of sort order of attributes
+# TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
