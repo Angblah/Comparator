@@ -29,10 +29,16 @@ def load_user(user_id):
     #Given user_id, return the associated User object
     return Account.query.filter_by(username=user_id).one()
 
+@app.route('/getComparisonData')
+def getComparisonData():
+    data = get_comparison(1)
+    return (data)
+
 @app.route('/newComparison')
 def newComparison():
     return render_template('newComparison.html')
 
+#TODO:: Pass in template/comparison_id from Select a Template/Comparison
 @app.route('/workspace')
 def workspace():
     # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
