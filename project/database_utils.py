@@ -91,7 +91,7 @@ def initialize_db_structure():
                 inner join comparison_item on comparison.id = comparison_item.comparison_id
                 left join attribute_value on comparison_item.id = attribute_value.item_id and comparison_attribute.id = attribute_value.attribute_id
                 where comparison.id = table_comparison_id
-                order by position, attribute_id;
+                order by comparison_item.position, comparison_attribute.position;
         end;
     $$ language plpgsql;
 
@@ -99,7 +99,7 @@ def initialize_db_structure():
     create or replace function add_comparison_attribute (table_comparison_id int, attribute_name varchar(255), attribute_type_id smallint, _weight int default 1, out attribute_id int) returns int
         as $$
         begin
-            insert into comparison_attribute (name, type_id, comparison_id, weight) values (attribute_name, attribute_type_id, table_comparison_id, _weight) returning id into attribute_id;
+            insert into comparison_attribute (name, type_id, comparison_id, weight, position) select attribute_name, attribute_type_id, table_comparison_id, _weight, coalesce(max(position), -1) + 1 from comparison_attribute where comparison_id = table_comparison_id returning id into attribute_id;
             update comparison set date_modified = current_timestamp where id = table_comparison_id;
         end;
     $$ language plpgsql;
@@ -127,7 +127,7 @@ def initialize_db_structure():
             declare _user_template_id int;
         begin
             insert into user_template (name, account_id) select _template_name, account_id from comparison where id = _comparison_id returning id into _user_template_id;
-            insert into user_template_attribute (name, type_id, user_template_id, weight) select name, type_id, _user_template_id, weight from comparison_attribute where comparison_id = _comparison_id;
+            insert into user_template_attribute (name, type_id, user_template_id, weight, position) select name, type_id, _user_template_id, weight, position from comparison_attribute where comparison_id = _comparison_id;
             return _user_template_id;
         end;
     $$ language plpgsql;
@@ -137,7 +137,7 @@ def initialize_db_structure():
             declare _comparison_id int;
         begin
             insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
-            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from user_template_attribute where user_template_id = _template_id;
+            insert into comparison_attribute (name, type_id, comparison_id, weight, position) select name, type_id, _comparison_id, weight, position from user_template_attribute where user_template_id = _template_id;
             return _comparison_id;
         end;
     $$ language plpgsql;
@@ -145,7 +145,7 @@ def initialize_db_structure():
     create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1, out attribute_id int) returns int
         as $$
         begin
-            insert into user_template_attribute (name, type_id, user_template_id, weight) values (_attribute_name, _type_id, _user_template_id, _weight) returning id into attribute_id;
+            insert into user_template_attribute (name, type_id, user_template_id, weight, position) select _attribute_name, _type_id, _user_template_id, _weight, coalesce(max(position), -1) + 1 from user_template_attribute where user_template_id = _user_template_id returning id into attribute_id;
             update user_template set date_modified = current_timestamp where id = _user_template_id;
         end;
     $$ language plpgsql;
@@ -158,7 +158,7 @@ def initialize_db_structure():
         begin
             insert into user_template (name, account_id) values (_template_name, (select id from account where username = 'admin')) returning id into _template_id;
             for i in 1..cardinality(_type_ids) loop
-                insert into user_template_attribute (name, type_id, user_template_id, weight) values (_type_names[i], _type_ids[i], _template_id, _weights[i]);
+                insert into user_template_attribute (name, type_id, user_template_id, weight, position) values (_type_names[i], _type_ids[i], _template_id, _weights[i], i - 1);
             end loop;
             return _template_id;
         end;
@@ -172,20 +172,21 @@ def initialize_db_structure():
         begin
             insert into user_template (name, account_id) values (_template_name, (select id from account where username = 'admin')) returning id into _template_id;
             for i in 1..cardinality(_type_ids) loop
-                insert into user_template_attribute (name, type_id, user_template_id) values (_type_names[i], _type_ids[i], _template_id);
+                insert into user_template_attribute (name, type_id, user_template_id, position) values (_type_names[i], _type_ids[i], _template_id, i - 1);
             end loop;
             return _template_id;
         end;
     $$ language plpgsql;
 
-    create or replace function get_template (_template_id int) returns table(id int, type_id smallint, name varchar)
+    create or replace function get_template (_template_id int) returns table(id int, type_id smallint, name varchar, "position" int)
         as $$
         begin
             return query
-                select user_template_attribute.id, user_template_attribute.type_id, user_template_attribute.name from user_template
+                select user_template_attribute.id, user_template_attribute.type_id, user_template_attribute.name, user_template_attribute.position from user_template
                     inner join user_template_attribute
                     on user_template.id = user_template_attribute.user_template_id
-                    where user_template.id = _template_id;
+                    where user_template.id = _template_id
+                    order by user_template_attribute.position;
         end;
     $$ language plpgsql;
 
@@ -196,13 +197,13 @@ def initialize_db_structure():
             insert into comparison (name, comment, account_id) select name || ' (copy)', comment, account_id from comparison where id = _account_id returning id into new_comparison_id;
 
             with attribute_ids as (
-            select id as attribute_id, name, type_id, weight, row_number() over () from comparison_attribute where comparison_id = _comparison_id
+            select id as attribute_id, name, type_id, weight, position, row_number() over () from comparison_attribute where comparison_id = _comparison_id
             ),
             item_ids as (
                 select id as item_id, position, row_number() over () from comparison_item where comparison_id = _comparison_id
             ),
             ins1 as (
-                insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, new_comparison_id, weight from attribute_ids returning id as attribute_ins_id
+                insert into comparison_attribute (name, type_id, comparison_id, weight, position) select name, type_id, new_comparison_id, weight, position from attribute_ids returning id as attribute_ins_id
             ),
             ins2 as (
                 insert into comparison_item (position, comparison_id) select position, new_comparison_id from item_ids returning id as item_ins_id
@@ -228,7 +229,7 @@ def initialize_db_structure():
             declare _new_template_id int;
         begin
             insert into user_template (name, comment, account_id) select name || ' (copy)', comment, _account_id from user_template where id = _template_id returning id into _new_template_id;
-            insert into user_template_attribute (name, type_id, user_template_id, weight) select name, type_id, _new_template_id, weight from user_template_attribute where user_template_id = _template_id;
+            insert into user_template_attribute (name, type_id, user_template_id, weight, position) select name, type_id, _new_template_id, weight, position from user_template_attribute where user_template_id = _template_id;
             return _new_template_id;
         end;
     $$ language plpgsql;
@@ -704,5 +705,6 @@ if __name__ == '__main__':
     initialize_db_values()
 
 # TODO: improve documentation
-# TODO: keep track of sort order of attributes
+# TODO: test attribute ordering more
+# TODO: consider changing schema so that both attributes inherit from common table to reduce redundant functions
 # TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly

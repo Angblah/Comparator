@@ -42,6 +42,7 @@ class ComparisonAttribute(db.Model):
     type_id = db.Column(ForeignKey('data_type.id'), nullable=False)
     comparison_id = db.Column(ForeignKey('comparison.id', ondelete='CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
+    position = db.Column(Integer, nullable=False)
     UniqueConstraint(comparison_id, name)
 
     comparison = relationship('Comparison')
@@ -95,6 +96,7 @@ class UserTemplateAttribute(db.Model):
     type_id = db.Column(ForeignKey('data_type.id'), nullable=False)
     user_template_id = db.Column(ForeignKey('user_template.id', ondelete='CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
+    position = db.Column(Integer, nullable=False)
     UniqueConstraint(user_template_id, name)
 
     user_template = relationship('UserTemplate')
