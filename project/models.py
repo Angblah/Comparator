@@ -26,7 +26,6 @@ class Comparison(db.Model):
 
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255), nullable=False)
-    last_position = db.Column(Integer, nullable=False, server_default=text("'-1'::integer"))
     account_id = db.Column(ForeignKey('account.id', ondelete='CASCADE'), nullable=False)
     date_modified = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))
     date_created = db.Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("current_timestamp"))

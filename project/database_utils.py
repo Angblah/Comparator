@@ -18,7 +18,7 @@ def initialize_db_structure():
     
           update comparison_item set position = position + 1 where comparison_id = table_comparison_id and position >= table_position;
           insert into comparison_item (position, comparison_id) values (table_position, table_comparison_id);
-          update comparison set last_position = last_position + 1, date_modified = current_timestamp where id = table_comparison_id;
+          update comparison set date_modified = current_timestamp where id = table_comparison_id;
       end;
     $$ language plpgsql;
 
@@ -30,20 +30,19 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    -- adds specified number of items to comparison table
     create or replace function add_comparison_item_back (_comparison_id int, _num_items int) returns void
         as $$
         -- NOTE: sequence is not used as item position may start from 0
         declare _position int;
         begin
-            select last_position from comparison where id = _comparison_id into _position;
+            select coalesce(max(position), -1) from comparison_item where comparison_id = _comparison_id into _position;
 
             for i in 1.._num_items loop
                 _position = _position + 1;
                 insert into comparison_item (position, comparison_id) values (_position, _comparison_id);
             end loop;
 
-            update comparison set last_position = last_position + _num_items, date_modified = current_timestamp where id = _comparison_id;
+            update comparison set date_modified = current_timestamp where id = _comparison_id;
 
         end;
     $$ language plpgsql;
@@ -66,7 +65,7 @@ def initialize_db_structure():
     create or replace function delete_comparison_item (_comparison_id int, _position int) returns void
         as $$
         begin
-            update comparison set last_position = last_position - 1, date_modified = current_timestamp where id = _comparison_id;
+            update comparison set date_modified = current_timestamp where id = _comparison_id;
             delete from comparison_item where comparison_id = _comparison_id and position = _position;
             update comparison_item set position = position - 1 where comparison_id = _comparison_id and position > _position;
         end;
@@ -78,7 +77,7 @@ def initialize_db_structure():
             with delete_1 as (
                 delete from comparison_item where id = _item_id returning position, comparison_id
                 ), update_1 as (
-                  update comparison set last_position = last_position - 1, date_modified = current_timestamp where id = (select comparison_id from delete_1)
+                  update comparison set date_modified = current_timestamp where id = (select comparison_id from delete_1)
                 ) update comparison_item set position = position - 1 where comparison_id = (select comparison_id from delete_1) and position > (select position from delete_1);
         end;
     $$ language plpgsql;
@@ -194,7 +193,7 @@ def initialize_db_structure():
         as $$
             declare new_comparison_id int;
         begin
-            insert into comparison (name, last_position, comment, account_id) select name || ' (copy)', last_position, comment, account_id from comparison where id = _account_id returning id into new_comparison_id;
+            insert into comparison (name, comment, account_id) select name || ' (copy)', comment, account_id from comparison where id = _account_id returning id into new_comparison_id;
 
             with attribute_ids as (
             select id as attribute_id, name, type_id, weight, row_number() over () from comparison_attribute where comparison_id = _comparison_id
@@ -289,7 +288,7 @@ def initialize_db_structure():
         EXECUTE format(
          $$SELECT string_agg(quote_literal(x.cat), '), (')
                 , string_agg(quote_ident  (x.cat), %L)
-           FROM  (SELECT generate_series::text AS cat FROM generate_series(0, (SELECT last_position FROM comparison where id = %s))) x$$
+           FROM  (SELECT generate_series::text AS cat FROM generate_series(0, (SELECT coalesce(max(position), -1) FROM comparison_item where comparison_id = %s))) x$$
          , ' ' || 'varchar(255)' || ', ', table_comparison_id)
         INTO  _cat_list, _col_list;
 
