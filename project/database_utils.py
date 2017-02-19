@@ -328,6 +328,7 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
+    -- TODO: consider using generate_series to speed up
     -- NOTE: all arrays must be of same length, though this will NOT be checked by stored function
     -- NOTE: 1st index of array is "1", NOT "0"
     create or replace function make_template (_template_name varchar, _type_ids smallint[], _type_names varchar[], _weights int[]) returns int
@@ -549,7 +550,7 @@ def initialize_db_structure():
     create or replace function populate_database() returns void as
     $$
         begin
-            insert into data_type (id, sort_type, type_name) values (0, 'vachar', 'varchar'), (1, 'decimal', 'decimal'), (2, 'timestamptz', 'timestamptz'), (3, 'varchar', 'image'), (4, 'interval', 'duration');
+            insert into data_type (id, sort_type, type_name) values (0, 'varchar', 'varchar'), (1, 'decimal', 'decimal'), (2, 'timestamptz', 'timestamptz'), (3, 'varchar', 'image'), (4, 'interval', 'duration');
         end;
     $$ language plpgsql;
 
@@ -565,14 +566,17 @@ def initialize_db_structure():
         declare comp_2 int;
         declare comp_3 int;
 
+        declare temp_1 int;
+        declare temp_2 int;
+        declare washer_comparison int;
+        declare laptop_comparison int;
+
         begin
 
-            select register_user('a@a.com', 'admin', 'password') into _account_id;
-            perform register_user('b@b.com', 'a', 'a');
-            perform register_user('awu68@gatech.edu', 'awu68', 'a');
-            perform register_user('honeychawla96@gmail.com', 'honey', 'police');
-
+            perform register_user('a@a.com', 'admin', 'password');
             insert into comparison (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
+            _account_id = 1;
+            -- TODO: have all add items return id of inserted item
 
             perform add_comparison_item_back(_comparison_id);
             perform add_comparison_item_back(_comparison_id);
@@ -580,7 +584,7 @@ def initialize_db_structure():
             perform add_comparison_item(_comparison_id, 1);
             perform delete_comparison_item(_comparison_id, 2);
 
-            perform add_comparison_attribute(_comparison_id, 'name', 0::smallint);
+            --perform add_comparison_attribute(_comparison_id, 'name', 0::smallint);
             perform add_comparison_attribute(_comparison_id, 'size', 0::smallint);
             perform add_comparison_attribute(_comparison_id, 'color', 0::smallint);
             perform add_comparison_attribute(_comparison_id, 'number', 1::smallint);
@@ -589,24 +593,23 @@ def initialize_db_structure():
             select id from comparison_item where position = 1 into item_1;
             select id from comparison_item where position = 2 into item_2;
 
-
-            perform set_comparison_attribute_value(item_0, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 2');
+            update comparison_item set name = 'balls 1' where position = 0 and comparison_id = _comparison_id;
+            update comparison_item set name = 'balls 2' where position = 1 and comparison_id = _comparison_id;
+            update comparison_item set name = 'balls 3' where position = 2 and comparison_id = _comparison_id;
             perform set_comparison_attribute_value(item_0, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'large');
             perform set_comparison_attribute_value(item_0, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'red');
             perform set_comparison_attribute_value(item_0, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-1.32');
 
-            perform set_comparison_attribute_value(item_1, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 3');
             perform set_comparison_attribute_value(item_1, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'small');
             perform set_comparison_attribute_value(item_1, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'blue');
             perform set_comparison_attribute_value(item_1, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '3');
 
-            perform set_comparison_attribute_value(item_2, (select id from comparison_attribute where name = 'name' and comparison_id = _comparison_id), 'ball 4');
             perform set_comparison_attribute_value(item_2, (select id from comparison_attribute where name = 'size' and comparison_id = _comparison_id), 'medium');
             perform set_comparison_attribute_value(item_2, (select id from comparison_attribute where name = 'color' and comparison_id = _comparison_id), 'green');
             perform set_comparison_attribute_value(item_2, (select id from comparison_attribute where name = 'number' and comparison_id = _comparison_id), '-8.221');
 
-            perform add_comparison_item(_comparison_id, 2);
-            perform add_comparison_item_back(_comparison_id);
+            --perform add_comparison_item(_comparison_id, 2);
+            --perform add_comparison_item_back(_comparison_id);
 
 
             perform save_comparison_as_template(_comparison_id, 'balls template 1');
@@ -616,21 +619,34 @@ def initialize_db_structure():
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 2') into comp_1;
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 3') into comp_2;
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 4') into comp_3;
+            perform create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 4', 2);
 
             perform add_comparison_item_back(comp_1, 3);
             perform add_comparison_item_back(comp_2, 4);
             perform add_comparison_item_back(comp_3, 5);
 
-            perform make_template('Top Load Washers', Array[0, 1, 1, 0, 4, 1, 1, 0]::smallint[],
-                                  Array['name', 'price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']);
-            perform make_template('Laptops', Array[0, 1, 0, 1, 1, 1, 1, 0, 4]::smallint[],
-                                  Array['Name', 'Price', 'Operating System', 'Memory', 'Hard Drive', 'Graphics Card', 'Weight', 'Size', 'Battery Life']);
-            perform make_template('Cameras', Array[0, 1, 1, 1, 4, 4, 1, 0, 1, 4]::smallint[],
-                                  Array['Name', 'Price', 'Megapixels', 'Image Quality','Shutter Lag', 'Startup Time', 'Weight', 'Size', 'Storage Space', 'Battery Life']);
+            select make_template('Top Load Washers', Array[1, 1, 0, 4, 1, 1, 0]::smallint[],
+                                  Array['price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']) into temp_1;
+            select make_template('Laptops', Array[1, 0, 1, 1, 1, 1, 0, 4]::smallint[],
+                                  Array['Price', 'Operating System', 'Memory', 'Hard Drive', 'Graphics Card', 'Weight', 'Size', 'Battery Life']) into temp_2;
+            perform make_template('Cameras', Array[1, 1, 1, 4, 4, 1, 0, 1, 4]::smallint[],
+                                  Array['Price', 'Megapixels', 'Image Quality','Shutter Lag', 'Startup Time', 'Weight', 'Size', 'Storage Space', 'Battery Life']);
 
+            select create_comparison_from_user_template(_account_id, temp_1, 'Top Load Washers', 3) into washer_comparison;
+            update comparison_item set name = 'washer 1' where position = 0 and comparison_id = washer_comparison;
+            update comparison_item set name = 'washer 2' where position = 1 and comparison_id = washer_comparison;
+            update comparison_item set name = 'washer 3' where position = 2 and comparison_id = washer_comparison;
 
+            select create_comparison_from_user_template(_account_id, temp_2, 'Laptops', 3) into laptop_comparison;
+            update comparison_item set name = 'laptop 1' where position = 0 and comparison_id = laptop_comparison;
+            update comparison_item set name = 'laptop 2' where position = 1 and comparison_id = laptop_comparison;
+            update comparison_item set name = 'laptop 3' where position = 2 and comparison_id = laptop_comparison;
+            -- TODO: combine initialize and create comparison
+
+            -- TODO: create a few templates
         end;
     $$ language plpgsql;
+
 
 
     """)
@@ -675,9 +691,8 @@ def validate_login(username, password):
 
 # returns array of template ids for specified user
 def get_user_template_ids(user_id, get_json=True):
-    from models import UserTemplate
-    result = db.engine.execute((select([UserTemplate.id]).where(UserTemplate.account_id == user_id)))
-    output = [row[0] for row in result]
+    result = get_user_templates(user_id)
+    output = [row['id'] for row in result]
 
     if get_json:
         return json.dumps(output)
@@ -685,21 +700,28 @@ def get_user_template_ids(user_id, get_json=True):
 
 # returns array of all comparison ids of specified user
 def get_user_comparison_ids(user_id, get_json=True):
-    from models import Comparison
 
-    result = db.engine.execute((select([Comparison.id]).where(Comparison.account_id == user_id)))
-    output = [row[0] for row in result]
+    result = get_user_comparisons(user_id)
+    output = [row['id'] for row in result]
 
     if get_json:
         return json.dumps(output)
     return output
 
-# returns array of all comparison names of specified user
-def get_user_comparison_names(user_id, get_json=True):
+def get_user_comparisons(user_id):
     from models import Comparison
 
-    result = db.engine.execute((select([Comparison.name]).where(Comparison.account_id == user_id)))
-    output = [row[0] for row in result]
+    return db.engine.execute((select([Comparison]).where(Comparison.account_id == user_id)))
+
+def get_user_templates(user_id):
+    from models import UserTemplate
+
+    return db.engine.execute((select([UserTemplate]).where(UserTemplate.account_id == user_id)))
+# returns array of all comparison names of specified user
+def get_user_comparison_names(user_id, get_json=True):
+
+    result = get_user_comparisons(user_id)
+    output = [row['name'] for row in result]
 
     if get_json:
         return json.dumps(output)
@@ -889,5 +911,6 @@ if __name__ == '__main__':
         # queries slightly more complex
 # TODO: consider changing schema so that templates inherit from common table to reduce redundant functions
 # TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
-# TODO: consider making date_modified update on trigger
-# TODO: consider writing generic function to add multiple items/attributes to any position (add_to_back can call this)
+# TODO: write python functions encapsulating stored functions
+# TODO: try returning sqlalchemy objects for simple selects
+

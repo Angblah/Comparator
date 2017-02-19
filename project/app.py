@@ -31,7 +31,7 @@ def load_user(user_id):
 
 @app.route('/getComparisonData')
 def getComparisonData():
-    data = get_comparison(1)
+    data = get_comparison(6)
     return (data)
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
@@ -64,7 +64,6 @@ def index2():
 @app.route('/profile')
 @login_required
 def profile_page():
-    
     namelist = get_user_comparison_names(current_user.id)
 
     return render_template('profileHomePage.html', name_list=namelist)
