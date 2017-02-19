@@ -21,10 +21,15 @@
     "babel-runtime": "^6.22.0",
     "blueimp-file-upload": "^9.15.0",
     "cloudinary-jquery-file-upload": "^2.1.9",
+    "d3": "^4.5.0",
     "draft-js": "^0.9.1",
     "jquery": "^3.1.1",
     "react": "^15.4.2",
+    "react-art": "^0.15.1",
+    "react-dnd": "^2.2.3",
+    "react-dnd-html5-backend": "^2.2.3",
     "react-dom": "^15.4.2",
+    "react-dragula": "^1.1.17",
     "react-pan-zoom-element": "^2.0.1",
     "react-zoom": "^0.3.1"
   }

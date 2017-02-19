@@ -6,13 +6,51 @@
     width: 200px;
 }
 
-.empty-table {
-    background: transparent;
-}
-
 .btn-toolbar {
     background: #555;
     height: 3.5rem;
     padding: 10px;
     margin-bottom: 3.5rem;
+}
+
+.editable-input {
+    width: 100%;
+    background-color: transparent;
+    height: 100%;
+    color: white;
+    margin: 0px;
+}
+
+.editable-input:focus {
+    width: 100%;
+    background-color: transparent;
+    height: 100%;
+    color: white;
+    box-shadow: 0 0 5px ghostwhite;
+    border: 1px solid ghostwhite;
+    margin: 0px;
+}
+
+table {
+    table-layout: fixed;
+    word-wrap: break-word;
+    empty-cells: show;
+}
+
+td {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    height: 4rem;
+    vertical-align: center;
+    align-content: center;
+}
+
+td:hover {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+    vertical-align: center;
+    align-content: center;
 }
