@@ -46,6 +46,27 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
+    create or replace function create_empty_comparison (_name varchar, _account_id int, _num_items int default 2, _num_attributes int default 2) returns int
+        as $$
+            declare _comparison_id int;
+        begin
+            insert into comparison(name, account_id) values (_name, _account_id) returning id into _comparison_id;
+            perform add_comparison_item_back(_comparison_id, _num_items);
+            perform add_comparison_attribute_back(_comparison_id, _num_attributes);
+            return _comparison_id;
+        end;
+    $$ language plpgsql;
+
+    create or replace function create_empty_template (_name varchar, _account_id int, _num_attributes int default 2) returns int
+        as $$
+            declare _template_id int;
+        begin
+            insert into user_template(name, account_id) values (_name, _account_id) returning id into _template_id;
+            perform add_template_attribute_back(_template_id, _num_attributes);
+            return _template_id;
+        end;
+    $$ language plpgsql;
+
     create or replace function swap_comparison_item (_id1 int, _id2 int) returns void
         as $$
         begin
