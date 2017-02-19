@@ -34,6 +34,12 @@ def getComparisonData():
     data = get_comparison(6)
     return (data)
 
+@app.route('/saveComparisonAttributesData', methods=["POST"])
+def saveComparisonAttributesData():
+    data = request.form
+    set_comparison_attribute_field(data['id'], 'name', data['name'])
+    return ("Saved!")
+
 @app.route('/newComparison')
 def newComparison():
     return render_template('newComparison.html')
