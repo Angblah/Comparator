@@ -619,7 +619,7 @@ def initialize_db_structure():
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 2') into comp_1;
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 3') into comp_2;
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 4') into comp_3;
-            perform create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 4', 2);
+            perform create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 5', 2);
 
             perform add_comparison_item_back(comp_1, 3);
             perform add_comparison_item_back(comp_2, 4);
@@ -700,27 +700,32 @@ def get_user_template_ids(user_id, get_json=True):
 
 # returns array of all comparison ids of specified user
 def get_user_comparison_ids(user_id, get_json=True):
-
-    result = get_user_comparisons(user_id)
+    from models import Comparison
+    result = db.engine.execute((select([Comparison]).where(Comparison.account_id == user_id)))
     output = [row['id'] for row in result]
 
     if get_json:
         return json.dumps(output)
     return output
 
-def get_user_comparisons(user_id):
+# returns values of comparison table for specified user
+def get_user_comparisons(user_id, get_json=True):
     from models import Comparison
 
-    return db.engine.execute((select([Comparison]).where(Comparison.account_id == user_id)))
+    result = db.engine.execute((select([Comparison]).where(Comparison.account_id == user_id)))
+    if get_json:
+        return jsonify_table(result)
+    return result
 
 def get_user_templates(user_id):
     from models import UserTemplate
 
     return db.engine.execute((select([UserTemplate]).where(UserTemplate.account_id == user_id)))
+
 # returns array of all comparison names of specified user
 def get_user_comparison_names(user_id, get_json=True):
-
-    result = get_user_comparisons(user_id)
+    from models import Comparison
+    result = db.engine.execute((select([Comparison]).where(Comparison.account_id == user_id)))
     output = [row['name'] for row in result]
 
     if get_json:
@@ -888,15 +893,17 @@ def add_user_template_attribute (template_id, attribute_name, type_id, weight=1)
     """)
     return db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, attribute_name=attribute_name, type_id=type_id, weight=weight).scalar()
 
-# takes in ResultProxy from executed query, returns json mapping column names to arrays of values in order
+# TODO: change to return array of row dicts
+# takes in ResultProxy from executed query, returns json array of rows mapping column names to values
 def jsonify_table(result):
-    data = {}
+    data = []
     columns = result.keys()
-    for column in columns:
-        data[column] = []
+
     for row in result:
+        temp = {}
         for i in range(len(columns)):
-            data[columns[i]].append(row[i])
+            temp[columns[i]] = row[i]
+        data.append(temp)
     return json.dumps(data)
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
@@ -913,4 +920,6 @@ if __name__ == '__main__':
 # TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
 # TODO: write python functions encapsulating stored functions
 # TODO: try returning sqlalchemy objects for simple selects
+# TODO: change get user comparisons for recent comparisons to sort by date_modified
 
+# TODO: change get_user_comparison stuff to return json of all fields
