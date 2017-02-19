@@ -22,23 +22,30 @@ def initialize_db_structure():
       end;
     $$ language plpgsql;
 
-    -- adds one item to back of specified comparison table
-    create or replace function add_comparison_item_back (_comparison_id int) returns void
-        as $$
-        begin
-            perform add_comparison_item_back(_comparison_id, 1);
-        end;
-    $$ language plpgsql;
 
-    create or replace function add_comparison_item_back (_comparison_id int, _num_items int) returns void
+    -- adds specified number of items to comparison table
+    create or replace function add_comparison_item_back (_comparison_id int, _num_items int default 1) returns void
         as $$
         -- NOTE: sequence is not used as item position may start from 0
         declare start_position int;
         begin
             select coalesce(max(position) + 1, 0) from comparison_item where comparison_id = _comparison_id into start_position;
+            perform add_comparison_items(_comparison_id, _num_items, start_position);
+
+        end;
+    $$ language plpgsql;
+
+    -- adds empty items to specified location
+    -- WARNING: adding items to positions not between (including ends) a comparison's existing items may lead to strange behavior
+    create or replace function add_comparison_items (_comparison_id int, _num_items int, _position int) returns void
+        as $$
+        -- NOTE: sequence is not used as item position may start from 0
+        begin
+
+            update comparison_item set position = position + _num_items where position >= _position and comparison_id = _comparison_id;
 
             with positions as (
-                        select generate_series(start_position, start_position + _num_items - 1) as position
+                        select generate_series(_position, _position + _num_items - 1) as position
                     ) insert into comparison_item(name, comparison_id, position) select null, _comparison_id, position from positions;
 
             update comparison set date_modified = current_timestamp where id = _comparison_id;
@@ -228,24 +235,26 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function add_comparison_attribute_back (_comparison_id int, _num_attributes int) returns void
+    create or replace function add_comparison_attribute_back (_comparison_id int, _num_attributes int default 1) returns void
         as $$
             declare start_position int;
         begin
                 select coalesce(max(position) + 1, 0) from comparison_attribute where comparison_id = _comparison_id into start_position;
 
-                with positions as (
-                    select generate_series(start_position, start_position + _num_attributes - 1) as position
-                ) insert into comparison_attribute(name, comparison_id, position) select null, _comparison_id, position from positions;
-
-                update comparison set date_modified = current_timestamp where id = _comparison_id;
+                perform add_comparison_attributes(_comparison_id, _num_attributes, start_position);
         end;
     $$ language plpgsql;
 
-    create or replace function add_comparison_attribute_back (_comparison_id int) returns int
+    create or replace function add_comparison_attributes (_comparison_id int, _num_attributes int, _position int) returns void
         as $$
         begin
-            return (select * from add_comparison_attribute(_comparison_id, null, 0::smallint));
+                update comparison_attribute set position = position + _num_attributes where position >= _position and comparison_id = _comparison_id;
+
+                with positions as (
+                    select generate_series(_position, _position + _num_attributes - 1) as position
+                ) insert into comparison_attribute(name, comparison_id, position) select null, _comparison_id, position from positions;
+
+                update comparison set date_modified = current_timestamp where id = _comparison_id;
         end;
     $$ language plpgsql;
     
@@ -296,24 +305,26 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function add_template_attribute_back (_template_id int, _num_attributes int) returns void
+    create or replace function add_template_attribute_back (_template_id int, _num_attributes int default 1) returns void
         as $$
             declare start_position int;
         begin
                 select coalesce(max(position) + 1, 0) from user_template_attribute where user_template_id = _template_id into start_position;
 
-                with positions as (
-                    select generate_series(start_position, start_position + _num_attributes - 1) as position
-                ) insert into user_template_attribute(name, user_template_id, position) select null, _template_id, position from positions;
-
-                update user_template set date_modified = current_timestamp where id = _template_id;
+                perform add_template_attributes(_template_id, _num_attributes, start_position);
         end;
     $$ language plpgsql;
 
-    create or replace function add_template_attribute_back (_template_id int) returns int
+    create or replace function add_template_attributes (_template_id int, _num_attributes int, _position int) returns void
         as $$
         begin
-            return (select * from add_user_template_attribute(_template_id, null, 0::smallint));
+                update user_template_attribute set position = position + _num_attributes where user_template_id = _template_id and position >= _position;
+
+                with positions as (
+                    select generate_series(_position, _position + _num_attributes - 1) as position
+                ) insert into user_template_attribute(name, user_template_id, position) select null, _template_id, position from positions;
+
+                update user_template set date_modified = current_timestamp where id = _template_id;
         end;
     $$ language plpgsql;
 
@@ -873,9 +884,10 @@ if __name__ == '__main__':
 
 # TODO: improve documentation
 # TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
-    # single inheritance for attribute downside: unique constraint for (name, comparison_id) can't be enforced easily
+    # single inheritance for attribute downsides:
+        # unique constraint for (name, comparison_id) can't be enforced easily
+        # queries slightly more complex
 # TODO: consider changing schema so that templates inherit from common table to reduce redundant functions
-# TODO: change adding attributes to more closely follow item adding syntax (add_back, add multiple items, etc.)
 # TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
-# TODO: write functions for creating empty comparison/template taking in optional params of how many attributes/items to start with
 # TODO: consider making date_modified update on trigger
+# TODO: consider writing generic function to add multiple items/attributes to any position (add_to_back can call this)
