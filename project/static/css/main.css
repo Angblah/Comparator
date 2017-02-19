@@ -15,7 +15,7 @@ header img {
 body {
   background-color: #ddd;
   padding-top: 5em;
-  padding-bottom: 5em;
+  padding-bottom: 20em;
 }
 /*Footer*/
 footer {
@@ -96,6 +96,7 @@ div.col-sm-11 {
   margin: 1.5em;
   margin-top: 0;
   overflow: hidden !important;
+  padding-bottom: 2em;
 }
 #carousel {
   padding-top: 2em;
