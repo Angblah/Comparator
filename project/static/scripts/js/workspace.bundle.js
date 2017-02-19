@@ -33498,6 +33498,7 @@ var Workspace = function (_React$Component) {
         _this.handleAddEvent = _this.handleAddEvent.bind(_this);
 
         _this.getComparisonData = _this.getComparisonData.bind(_this);
+        _this.saveComparisonAttributesData = _this.saveComparisonAttributesData.bind(_this);
 
         //Set up state
         _this.state = {};
@@ -33533,6 +33534,23 @@ var Workspace = function (_React$Component) {
                 },
                 error: function error(xhr, status, err) {
                     console.error('/getComparisonData', status, err.toString());
+                }
+            });
+        }
+
+        //Save edited comparison attributes fields
+
+    }, {
+        key: 'saveComparisonAttributesData',
+        value: function saveComparisonAttributesData() {
+            var _this3 = this;
+
+            _jquery2.default.ajax({
+                type: 'POST',
+                url: '/saveComparisonAttributesData',
+                data: this.state.comparison_data.attributes,
+                success: function success(data) {
+                    _this3.state.message = data;
                 }
             });
         }
@@ -33617,6 +33635,12 @@ var Workspace = function (_React$Component) {
                     'button',
                     { id: 'getComparisonDataButton', onClick: this.getComparisonData, className: 'btn btn-primary' },
                     'Get Comparison Data'
+                ),
+                _react2.default.createElement('br', null),
+                _react2.default.createElement(
+                    'button',
+                    { id: 'saveComparisonAttributesData', onClick: this.saveComparisonAttributesData, className: 'btn btn-primary' },
+                    'Save Comparison Attributes'
                 )
             );
         }

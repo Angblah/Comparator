@@ -11,6 +11,7 @@ class Workspace extends React.Component {
         this.handleAddEvent = this.handleAddEvent.bind(this);
 
         this.getComparisonData = this.getComparisonData.bind(this);
+        this.saveComparisonAttributesData = this.saveComparisonAttributesData.bind(this);
 
         //Set up state
         this.state = {};
@@ -48,6 +49,18 @@ class Workspace extends React.Component {
           error: (xhr, status, err) => {
             console.error('/getComparisonData', status, err.toString());
           }
+        });
+    }
+
+    //Save edited comparison attributes fields
+    saveComparisonAttributesData() {
+    $.ajax({
+          type: 'POST',
+          url: '/saveComparisonAttributesData',
+          data: this.state.comparison_data.attributes,
+          success: (data) => {
+            this.state.message = data;
+          },
         });
     }
 
@@ -100,6 +113,8 @@ class Workspace extends React.Component {
                 <button id="saveButton" onClick={this.handleAddEvent} className="btn btn-primary"><i className="fa fa-plus" aria-hidden="true"></i></button>
                 <br/>
                 <button id="getComparisonDataButton" onClick={this.getComparisonData} className="btn btn-primary">Get Comparison Data</button>
+                <br/>
+                <button id="saveComparisonAttributesData" onClick={this.saveComparisonAttributesData} className="btn btn-primary">Save Comparison Attributes</button>
             </div>
         );
     }
