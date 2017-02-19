@@ -21781,13 +21781,14 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// RECENT COMPARISONS
 var RecentComparisons = _react2.default.createClass({
     displayName: 'RecentComparisons',
 
 
     render: function render() {
         var names = JSON.parse(this.props.feed);
-        // names = Array.isArray(names) ? names : [names];
+        names = names.slice(0, 5);
         console.log(names);
         if (names != undefined) {
             return _react2.default.createElement(
@@ -21819,6 +21820,45 @@ var RecentComparisons = _react2.default.createClass({
 
 var namedoc = document.getElementById('recent-comp');
 _reactDom2.default.render(_react2.default.createElement(RecentComparisons, namedoc.dataset), namedoc);
+
+// ALL COMPARISONS
+var Comparisons = _react2.default.createClass({
+    displayName: 'Comparisons',
+
+
+    render: function render() {
+        var names = JSON.parse(this.props.feed);
+        console.log(names);
+        if (names != undefined) {
+            return _react2.default.createElement(
+                'div',
+                null,
+                names.map(function (name) {
+                    return _react2.default.createElement(
+                        'div',
+                        { className: 'fixed-tile' },
+                        ' ',
+                        name,
+                        ' '
+                    );
+                })
+            );
+        } else {
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'div',
+                    { className: 'fixed-tile' },
+                    ' No Comparisons Yet '
+                )
+            );
+        }
+    }
+});
+
+var compName = document.getElementById('all-comp');
+_reactDom2.default.render(_react2.default.createElement(Comparisons, compName.dataset), compName);
 
 /***/ })
 /******/ ]);
