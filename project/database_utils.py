@@ -22,28 +22,55 @@ def initialize_db_structure():
       end;
     $$ language plpgsql;
 
-    -- adds one item to back of specified comparison table
-    create or replace function add_comparison_item_back (_comparison_id int) returns void
+
+    -- adds specified number of items to comparison table
+    create or replace function add_comparison_item_back (_comparison_id int, _num_items int default 1) returns void
         as $$
+        -- NOTE: sequence is not used as item position may start from 0
+        declare start_position int;
         begin
-            perform add_comparison_item_back(_comparison_id, 1);
+            select coalesce(max(position) + 1, 0) from comparison_item where comparison_id = _comparison_id into start_position;
+            perform add_comparison_items(_comparison_id, _num_items, start_position);
+
         end;
     $$ language plpgsql;
 
-    create or replace function add_comparison_item_back (_comparison_id int, _num_items int) returns void
+    -- adds empty items to specified location
+    -- WARNING: adding items to positions not between (including ends) a comparison's existing items may lead to strange behavior
+    create or replace function add_comparison_items (_comparison_id int, _num_items int, _position int) returns void
         as $$
         -- NOTE: sequence is not used as item position may start from 0
-        declare _position int;
         begin
-            select coalesce(max(position), -1) from comparison_item where comparison_id = _comparison_id into _position;
 
-            for i in 1.._num_items loop
-                _position = _position + 1;
-                insert into comparison_item (position, comparison_id) values (_position, _comparison_id);
-            end loop;
+            update comparison_item set position = position + _num_items where position >= _position and comparison_id = _comparison_id;
+
+            with positions as (
+                        select generate_series(_position, _position + _num_items - 1) as position
+                    ) insert into comparison_item(name, comparison_id, position) select null, _comparison_id, position from positions;
 
             update comparison set date_modified = current_timestamp where id = _comparison_id;
 
+        end;
+    $$ language plpgsql;
+
+    create or replace function create_empty_comparison (_name varchar, _account_id int, _num_items int default 2, _num_attributes int default 2) returns int
+        as $$
+            declare _comparison_id int;
+        begin
+            insert into comparison(name, account_id) values (_name, _account_id) returning id into _comparison_id;
+            perform add_comparison_item_back(_comparison_id, _num_items);
+            perform add_comparison_attribute_back(_comparison_id, _num_attributes);
+            return _comparison_id;
+        end;
+    $$ language plpgsql;
+
+    create or replace function create_empty_template (_name varchar, _account_id int, _num_attributes int default 2) returns int
+        as $$
+            declare _template_id int;
+        begin
+            insert into user_template(name, account_id) values (_name, _account_id) returning id into _template_id;
+            perform add_template_attribute_back(_template_id, _num_attributes);
+            return _template_id;
         end;
     $$ language plpgsql;
 
@@ -61,6 +88,110 @@ def initialize_db_structure():
                 ) update comparison set date_modified = current_timestamp where id = (select id from comparison_id limit 1);
         end;
     $$ language plpgsql;
+
+    create or replace function move_comparison_item (_item_id int, _position int) returns void
+        as $$
+            declare _comparison_id int;
+            declare _old_position int;
+        begin
+
+            update comparison_item t1
+            set position = _position
+            from comparison_item t2
+            where t2.id = _item_id and t1.id = _item_id
+            returning t2.comparison_id, t2.position
+            into _comparison_id, _old_position;
+
+            -- move forwards
+            if _position > _old_position then
+                update comparison_item set position = position - 1 where comparison_id = _comparison_id and position between _old_position and _position and id != _item_id;
+            -- move backwards
+            elsif _position < _old_position then
+                update comparison_item set position = position + 1 where comparison_id = _comparison_id and position between _position and _old_position and id != _item_id;
+            end if;
+            update comparison set date_modified = current_timestamp where id = _comparison_id;
+
+        end;
+    $$ language plpgsql;
+
+    create or replace function swap_comparison_attribute (_id1 int, _id2 int) returns void
+        as $$
+        begin
+            with comparison_id as(
+                    UPDATE comparison_attribute as t1
+                    SET position = t2.position
+                    FROM comparison_attribute as t2
+                    WHERE t1.id IN(_id1,_id2)
+                    AND t2.id IN(_id1,_id2)
+                    AND t1.id != t2.id
+                    RETURNING t1.comparison_id
+                ) update comparison set date_modified = current_timestamp where id = (select id from comparison_id limit 1);
+        end;
+    $$ language plpgsql;
+
+    create or replace function move_comparison_attribute (_attribute_id int, _position int) returns void
+        as $$
+            declare _comparison_id int;
+            declare _old_position int;
+        begin
+            update comparison_attribute t1
+            set position = _position
+            from comparison_attribute t2
+            where t2.id = _attribute_id and t1.id = t2.id
+            returning t2.comparison_id, t2.position
+            into _comparison_id, _old_position;
+
+            -- move forwards
+            if _position > _old_position then
+                update comparison_attribute set position = position - 1 where comparison_id = _comparison_id and position between _old_position and _position and id != _attribute_id;
+            -- move backwards
+            elsif _position < _old_position then
+                update comparison_attribute set position = position + 1 where comparison_id = _comparison_id and position between _position and _old_position and id != _attribute_id;
+            end if;
+            update comparison set date_modified = current_timestamp where id = _comparison_id;
+
+        end;
+    $$ language plpgsql;
+
+    create or replace function swap_template_attribute (_id1 int, _id2 int) returns void
+        as $$
+        begin
+            with user_template_id as(
+                    UPDATE user_template_attribute as t1
+                    SET position = t2.position
+                    FROM user_template_attribute as t2
+                    WHERE t1.id IN(_id1,_id2)
+                    AND t2.id IN(_id1,_id2)
+                    AND t1.id != t2.id
+                    RETURNING t1.user_template_id
+                ) update user_template set date_modified = current_timestamp where id = (select id from user_template_id limit 1);
+        end;
+    $$ language plpgsql;
+
+    create or replace function move_template_attribute (_attribute_id int, _position int) returns void
+        as $$
+            declare _template_id int;
+            declare _old_position int;
+        begin
+            update user_template_attribute t1
+            set position = _position
+            from user_template_attribute t2
+            where t2.id = _attribute_id and t1.id = t2.id
+            returning t2.user_template_id, t2.position
+            into _template_id, _old_position;
+
+            -- move forwards
+            if _position > _old_position then
+                update user_template_attribute set position = position - 1 where user_template_id = _template_id and position between _old_position and _position and id != _attribute_id;
+            -- move backwards
+            elsif _position < _old_position then
+                update user_template_attribute set position = position + 1 where user_template_id = _template_id and position between _position and _old_position and id != _attribute_id;
+            end if;
+            update user_template set date_modified = current_timestamp where id = _template_id;
+
+        end;
+    $$ language plpgsql;
+
 
     create or replace function delete_comparison_item (_comparison_id int, _position int) returns void
         as $$
@@ -91,7 +222,7 @@ def initialize_db_structure():
                 inner join comparison_item on comparison.id = comparison_item.comparison_id
                 left join attribute_value on comparison_item.id = attribute_value.item_id and comparison_attribute.id = attribute_value.attribute_id
                 where comparison.id = table_comparison_id
-                order by position, attribute_id;
+                order by comparison_item.position, comparison_attribute.position;
         end;
     $$ language plpgsql;
 
@@ -99,8 +230,31 @@ def initialize_db_structure():
     create or replace function add_comparison_attribute (table_comparison_id int, attribute_name varchar(255), attribute_type_id smallint, _weight int default 1, out attribute_id int) returns int
         as $$
         begin
-            insert into comparison_attribute (name, type_id, comparison_id, weight) values (attribute_name, attribute_type_id, table_comparison_id, _weight) returning id into attribute_id;
+            insert into comparison_attribute (name, type_id, comparison_id, weight, position) select attribute_name, attribute_type_id, table_comparison_id, _weight, coalesce(max(position), -1) + 1 from comparison_attribute where comparison_id = table_comparison_id returning id into attribute_id;
             update comparison set date_modified = current_timestamp where id = table_comparison_id;
+        end;
+    $$ language plpgsql;
+
+    create or replace function add_comparison_attribute_back (_comparison_id int, _num_attributes int default 1) returns void
+        as $$
+            declare start_position int;
+        begin
+                select coalesce(max(position) + 1, 0) from comparison_attribute where comparison_id = _comparison_id into start_position;
+
+                perform add_comparison_attributes(_comparison_id, _num_attributes, start_position);
+        end;
+    $$ language plpgsql;
+
+    create or replace function add_comparison_attributes (_comparison_id int, _num_attributes int, _position int) returns void
+        as $$
+        begin
+                update comparison_attribute set position = position + _num_attributes where position >= _position and comparison_id = _comparison_id;
+
+                with positions as (
+                    select generate_series(_position, _position + _num_attributes - 1) as position
+                ) insert into comparison_attribute(name, comparison_id, position) select null, _comparison_id, position from positions;
+
+                update comparison set date_modified = current_timestamp where id = _comparison_id;
         end;
     $$ language plpgsql;
     
@@ -127,17 +281,18 @@ def initialize_db_structure():
             declare _user_template_id int;
         begin
             insert into user_template (name, account_id) select _template_name, account_id from comparison where id = _comparison_id returning id into _user_template_id;
-            insert into user_template_attribute (name, type_id, user_template_id, weight) select name, type_id, _user_template_id, weight from comparison_attribute where comparison_id = _comparison_id;
+            insert into user_template_attribute (name, type_id, user_template_id, weight, position) select name, type_id, _user_template_id, weight, position from comparison_attribute where comparison_id = _comparison_id;
             return _user_template_id;
         end;
     $$ language plpgsql;
 
-    create or replace function create_comparison_from_user_template (_account_id int, _template_id int, _comparison_name varchar) returns int
+    create or replace function create_comparison_from_user_template (_account_id int, _template_id int, _comparison_name varchar, _num_items int default 2) returns int
         as $$
             declare _comparison_id int;
         begin
             insert into comparison (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
-            insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, _comparison_id, weight from user_template_attribute where user_template_id = _template_id;
+            insert into comparison_attribute (name, type_id, comparison_id, weight, position) select name, type_id, _comparison_id, weight, position from user_template_attribute where user_template_id = _template_id;
+            perform add_comparison_item_back(_comparison_id, _num_items);
             return _comparison_id;
         end;
     $$ language plpgsql;
@@ -145,8 +300,31 @@ def initialize_db_structure():
     create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1, out attribute_id int) returns int
         as $$
         begin
-            insert into user_template_attribute (name, type_id, user_template_id, weight) values (_attribute_name, _type_id, _user_template_id, _weight) returning id into attribute_id;
+            insert into user_template_attribute (name, type_id, user_template_id, weight, position) select _attribute_name, _type_id, _user_template_id, _weight, coalesce(max(position), -1) + 1 from user_template_attribute where user_template_id = _user_template_id returning id into attribute_id;
             update user_template set date_modified = current_timestamp where id = _user_template_id;
+        end;
+    $$ language plpgsql;
+
+    create or replace function add_template_attribute_back (_template_id int, _num_attributes int default 1) returns void
+        as $$
+            declare start_position int;
+        begin
+                select coalesce(max(position) + 1, 0) from user_template_attribute where user_template_id = _template_id into start_position;
+
+                perform add_template_attributes(_template_id, _num_attributes, start_position);
+        end;
+    $$ language plpgsql;
+
+    create or replace function add_template_attributes (_template_id int, _num_attributes int, _position int) returns void
+        as $$
+        begin
+                update user_template_attribute set position = position + _num_attributes where user_template_id = _template_id and position >= _position;
+
+                with positions as (
+                    select generate_series(_position, _position + _num_attributes - 1) as position
+                ) insert into user_template_attribute(name, user_template_id, position) select null, _template_id, position from positions;
+
+                update user_template set date_modified = current_timestamp where id = _template_id;
         end;
     $$ language plpgsql;
 
@@ -158,7 +336,7 @@ def initialize_db_structure():
         begin
             insert into user_template (name, account_id) values (_template_name, (select id from account where username = 'admin')) returning id into _template_id;
             for i in 1..cardinality(_type_ids) loop
-                insert into user_template_attribute (name, type_id, user_template_id, weight) values (_type_names[i], _type_ids[i], _template_id, _weights[i]);
+                insert into user_template_attribute (name, type_id, user_template_id, weight, position) values (_type_names[i], _type_ids[i], _template_id, _weights[i], i - 1);
             end loop;
             return _template_id;
         end;
@@ -172,20 +350,21 @@ def initialize_db_structure():
         begin
             insert into user_template (name, account_id) values (_template_name, (select id from account where username = 'admin')) returning id into _template_id;
             for i in 1..cardinality(_type_ids) loop
-                insert into user_template_attribute (name, type_id, user_template_id) values (_type_names[i], _type_ids[i], _template_id);
+                insert into user_template_attribute (name, type_id, user_template_id, position) values (_type_names[i], _type_ids[i], _template_id, i - 1);
             end loop;
             return _template_id;
         end;
     $$ language plpgsql;
 
-    create or replace function get_template (_template_id int) returns table(id int, type_id smallint, name varchar)
+    create or replace function get_template (_template_id int) returns table(id int, type_id smallint, name varchar, "position" int)
         as $$
         begin
             return query
-                select user_template_attribute.id, user_template_attribute.type_id, user_template_attribute.name from user_template
+                select user_template_attribute.id, user_template_attribute.type_id, user_template_attribute.name, user_template_attribute.position from user_template
                     inner join user_template_attribute
                     on user_template.id = user_template_attribute.user_template_id
-                    where user_template.id = _template_id;
+                    where user_template.id = _template_id
+                    order by user_template_attribute.position;
         end;
     $$ language plpgsql;
 
@@ -196,13 +375,13 @@ def initialize_db_structure():
             insert into comparison (name, comment, account_id) select name || ' (copy)', comment, account_id from comparison where id = _account_id returning id into new_comparison_id;
 
             with attribute_ids as (
-            select id as attribute_id, name, type_id, weight, row_number() over () from comparison_attribute where comparison_id = _comparison_id
+            select id as attribute_id, name, type_id, weight, position, row_number() over () from comparison_attribute where comparison_id = _comparison_id
             ),
             item_ids as (
                 select id as item_id, position, row_number() over () from comparison_item where comparison_id = _comparison_id
             ),
             ins1 as (
-                insert into comparison_attribute (name, type_id, comparison_id, weight) select name, type_id, new_comparison_id, weight from attribute_ids returning id as attribute_ins_id
+                insert into comparison_attribute (name, type_id, comparison_id, weight, position) select name, type_id, new_comparison_id, weight, position from attribute_ids returning id as attribute_ins_id
             ),
             ins2 as (
                 insert into comparison_item (position, comparison_id) select position, new_comparison_id from item_ids returning id as item_ins_id
@@ -228,7 +407,7 @@ def initialize_db_structure():
             declare _new_template_id int;
         begin
             insert into user_template (name, comment, account_id) select name || ' (copy)', comment, _account_id from user_template where id = _template_id returning id into _new_template_id;
-            insert into user_template_attribute (name, type_id, user_template_id, weight) select name, type_id, _new_template_id, weight from user_template_attribute where user_template_id = _template_id;
+            insert into user_template_attribute (name, type_id, user_template_id, weight, position) select name, type_id, _new_template_id, weight, position from user_template_attribute where user_template_id = _template_id;
             return _new_template_id;
         end;
     $$ language plpgsql;
@@ -625,11 +804,11 @@ def get_comparison (table_comparison_id, get_json=True):
         return json.dumps(data)
     return result
 
-def create_comparison_from_user_template (account_id, template_id, comparison_name):
+def create_comparison_from_user_template (account_id, template_id, comparison_name, num_items=2):
     query = text("""
-    select create_comparison_from_user_template(:account_id, :template_id, :comparison_name);
+    select create_comparison_from_user_template(:account_id, :template_id, :comparison_name, :num_items);
     """)
-    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name).scalar()
+    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name, num_items=num_items).scalar()
 
 def sort_by_attribute(comparison_id, attribute_id):
     query = text("""
@@ -704,5 +883,11 @@ if __name__ == '__main__':
     initialize_db_values()
 
 # TODO: improve documentation
-# TODO: keep track of sort order of attributes
+# TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
+    # single inheritance for attribute downsides:
+        # unique constraint for (name, comparison_id) can't be enforced easily
+        # queries slightly more complex
+# TODO: consider changing schema so that templates inherit from common table to reduce redundant functions
 # TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
+# TODO: consider making date_modified update on trigger
+# TODO: consider writing generic function to add multiple items/attributes to any position (add_to_back can call this)

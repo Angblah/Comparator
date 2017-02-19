@@ -38,10 +38,11 @@ class ComparisonAttribute(db.Model):
     __tablename__ = 'comparison_attribute'
 
     id = db.Column(Integer, primary_key=True,)
-    name = db.Column(String(255), nullable=False)
-    type_id = db.Column(ForeignKey('data_type.id'), nullable=False)
+    name = db.Column(String(255), nullable=True)
+    type_id = db.Column(ForeignKey('data_type.id'), nullable=False, server_default=text("0"))
     comparison_id = db.Column(ForeignKey('comparison.id', ondelete='CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
+    position = db.Column(Integer, nullable=False)
     UniqueConstraint(comparison_id, name)
 
     comparison = relationship('Comparison')
@@ -91,10 +92,11 @@ class UserTemplateAttribute(db.Model):
     __tablename__ = 'user_template_attribute'
 
     id = db.Column(Integer, primary_key=True)
-    name = db.Column(String(255), nullable=False)
-    type_id = db.Column(ForeignKey('data_type.id'), nullable=False)
+    name = db.Column(String(255), nullable=True)
+    type_id = db.Column(ForeignKey('data_type.id'), nullable=False, server_default=text("0"))
     user_template_id = db.Column(ForeignKey('user_template.id', ondelete='CASCADE'), nullable=False)
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
+    position = db.Column(Integer, nullable=False)
     UniqueConstraint(user_template_id, name)
 
     user_template = relationship('UserTemplate')
