@@ -47,7 +47,7 @@ ul.tab li a:focus,
 /*END TABS*/
 /*RECENT COMPARISONS*/
 #recent-comp-extra {
-  height: 10px;
+  height: 2em;
   clear: both;
 }
 #recent-comp {
@@ -56,9 +56,9 @@ ul.tab li a:focus,
 .tile {
   width: 5em;
   height: 5em;
-  border: 2px solid #ff9900;
+  /*border: 2px solid @secondary-col;*/
   background-color: #5fa4eb;
-  padding: 1em;
+  padding-top: 5em;
   box-sizing: border-box;
   transition: 1s transform;
   transform-origin: top left;
@@ -70,13 +70,15 @@ ul.tab li a:focus,
 }
 .tile:hover {
   transform: scale(2);
+  /*border: 2px solid @primary-col;*/
+  background-color: #ff9900;
 }
 .tile:hover ~ .tile {
-  transform: translate3d(2em, 0, 0);
+  transform: translate3d(4.5em, 0, 0);
 }
 #recent-comp:hover + #recent-comp-extra {
-  height: 6em;
-  max-height: 500px;
-  transition: max-height 0.25s ease-in;
+  height: 8em;
+  /*    max-height: 500px;
+    transition: max-height 0.25s ease-in;*/
 }
 /*END RECENT COMPARISONS*/

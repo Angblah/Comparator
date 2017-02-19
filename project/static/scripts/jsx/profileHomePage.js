@@ -7,10 +7,11 @@ var RecentComparisons = React.createClass({
     render: function() {
     	var names = JSON.parse(this.props.feed);
         // names = Array.isArray(names) ? names : [names];
+        console.log(names);
         if (names != undefined) {            
             return (
             	<div>
-            		{names.items.map(function(name){ return <div className="tile"> {name} </div>}) }
+            		{names.map(function(name){ return <div className="tile"> {name} </div>}) }
         		</div>
         	)
         } else {
