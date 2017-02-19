@@ -116,6 +116,18 @@ class Workspace extends React.Component {
         });
     }
 
+    //Save edited comparison info fields
+    saveComparisonData(item_id, attr_id, value) {
+        $.ajax({
+            type: 'POST',
+            url: '/saveComparisonData',
+            data: {itemId: item_id, attrId: attr_id, value: value},
+            success: (data) => {
+                this.state.message = data;
+            },
+        });
+    }
+
     // Handle adding attr to template by adding to the state object
     handleAddEvent(evt) {
         var attribute = {

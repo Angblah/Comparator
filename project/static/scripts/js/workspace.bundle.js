@@ -33719,6 +33719,23 @@ var Workspace = function (_React$Component) {
             });
         }
 
+        //Save edited comparison info fields
+
+    }, {
+        key: 'saveComparisonData',
+        value: function saveComparisonData(item_id, attr_id, value) {
+            var _this5 = this;
+
+            _jquery2.default.ajax({
+                type: 'POST',
+                url: '/saveComparisonData',
+                data: { itemId: item_id, attrId: attr_id, value: value },
+                success: function success(data) {
+                    _this5.state.message = data;
+                }
+            });
+        }
+
         // Handle adding attr to template by adding to the state object
 
     }, {
