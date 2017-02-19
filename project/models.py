@@ -44,6 +44,7 @@ class ComparisonAttribute(db.Model):
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
     position = db.Column(Integer, nullable=False)
     UniqueConstraint(comparison_id, name)
+    UniqueConstraint(comparison_id, position)
 
     comparison = relationship('Comparison')
 
@@ -98,6 +99,7 @@ class UserTemplateAttribute(db.Model):
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
     position = db.Column(Integer, nullable=False)
     UniqueConstraint(user_template_id, name)
+    UniqueConstraint(user_template_id, position)
 
     user_template = relationship('UserTemplate')
 
