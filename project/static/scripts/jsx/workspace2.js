@@ -9,6 +9,7 @@ class Workspace extends React.Component {
 
         // Bind the add attribute handle method
         this.handleAddEvent = this.handleAddEvent.bind(this);
+        this.toggleEditing = this.toggleEditing.bind(this);
 
         this.getComparisonData = this.getComparisonData.bind(this);
         this.saveComparisonAttributesData = this.saveComparisonAttributesData.bind(this);
@@ -22,18 +23,69 @@ class Workspace extends React.Component {
         //     {id: 3, name: "number", type_id: 1}
         // ];
 
-        //this.state.comparison_data = JSON.parse(this.props.comparison);
-         this.state.comparison_data = {
-             attributes: [
-                 {id: 1, name: "size", type_id: 0},
-                 {id: 2, name: "color", type_id: 0},
-                 {id: 3, name: "number", type_id: 1}
-             ],
-             items: [
-                 {name: "ball 2", "1": "large", "2": "red", "3": -1.32},
-                 {name: "ball 3", "1": "small", "2": "blue", "3": 3},
-                 {name: "ball 4", "1": "medium", "2": "green", "3": 8.22}
-         ]};
+        this.state.comparison_data = JSON.parse(this.props.comparison);
+        //  this.state.comparison_data = {
+        //      attributes: [
+        //          {id: 1, name: "size", type_id: 0},
+        //          {id: 2, name: "color", type_id: 0},
+        //          {id: 3, name: "number", type_id: 1}
+        //      ],
+        //      items: [
+        //          {name: "ball 2", "1": "large", "2": "red", "3": -1.32},
+        //          {name: "ball 3", "1": "small", "2": "blue", "3": 3},
+        //          {name: "ball 4", "1": "medium", "2": "green", "3": 8.22}
+        //  ]};
+    }
+
+    handleEditEvent(itemID, event) {
+        var attr;
+        var newComp = this.state.comparison_data;
+        for (attr of newComp.attributes) {
+            if (attr.id === itemID) {
+                attr.name = event.target.value;
+            }
+        }
+
+        this.setState({comparison_data: newComp});
+        this.saveComparisonAttributesData(itemID, event.target.value);
+        this.setState({editing: null});
+    }
+
+    handleAddEvent(event) {
+        var attribute = {
+            id: this.state.template_data.length + 1,
+            name: "",
+            type_id: 0
+        }
+        this.state.comparison_data.attributes.push(attribute);
+        this.state.template_data.push(attribute);
+        this.setState(this.state.template_data);
+        this.setState(this.state.comparison_data);
+    }
+
+    toggleEditing(itemID) {
+        this.setState({editing: itemID});
+    }
+
+    renderAttributeOrEditField(item) {
+        if (this.state.editing === item.id) {
+            return(
+                <td>
+                    <input 
+                    className="form-control"
+                    defaultValue={item.name}
+                    onBlur={(evt) => this.handleEditEvent(item.id, evt)}
+                    />
+                </td>
+            );
+        } else {
+            return(
+                <td
+                onClick={() => this.toggleEditing(item.id)}
+                key={item.id}
+                >{item.name}</td>
+            );
+        }
     }
 
     //Fetch data from the server
@@ -53,14 +105,14 @@ class Workspace extends React.Component {
     }
 
     //Save edited comparison attributes fields
-    saveComparisonAttributesData() {
-    $.ajax({
-          type: 'POST',
-          url: '/saveComparisonAttributesData',
-          data: this.state.comparison_data.attributes,
-          success: (data) => {
-            this.state.message = data;
-          },
+    saveComparisonAttributesData(id, name) {
+        $.ajax({
+            type: 'POST',
+            url: '/saveComparisonAttributesData',
+            data: {id: id, name: name},
+            success: (data) => {
+                this.state.message = data;
+            },
         });
     }
 
@@ -87,24 +139,26 @@ class Workspace extends React.Component {
                     <thead>
                         <tr>
                             <th></th>
-                            {comparison.items.map(item =>
-                                <th contentEditable='true'>
+                            {this.state.comparison_data.items.map(item =>
+                                <th>
                                     {item.name}
                                 </th>
                             )}
                         </tr>
                     </thead>
                     <tbody>
-                        {comparison.attributes.map(function(attr) {
+                        {this.state.comparison_data.attributes.map(function(attr) {
                             // Generate <td> column elements in each row
-                            var rowCells = comparison.items.map(item =>
-                                <td contentEditable='true'>{item[attr.id]}</td>
+                            var rowCells = this.state.comparison_data.items.map(item =>
+                                <td>{item[attr.id]}</td>
                             );
+
+                            var attr = this.renderAttributeOrEditField(attr);
 
                             // Set each row to be attribute name, then generated column cells
                             return(
                                 <tr>
-                                    <td contentEditable='true'>{attr.name}</td>
+                                    {attr}
                                     {rowCells}
                                 </tr>);
                         }, this)}
@@ -114,7 +168,6 @@ class Workspace extends React.Component {
                 <br/>
                 <button id="getComparisonDataButton" onClick={this.getComparisonData} className="btn btn-primary">Get Comparison Data</button>
                 <br/>
-                <button id="saveComparisonAttributesData" onClick={this.saveComparisonAttributesData} className="btn btn-primary">Save Comparison Attributes</button>
             </div>
         );
     }
