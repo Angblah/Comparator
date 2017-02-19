@@ -22,7 +22,7 @@ ul.tab li {
 ul.tab li a {
   display: inline-block;
   color: #fff;
-  text-align: center;
+  /*text-align: center;*/
   padding: 1em 1em;
   text-decoration: none;
   transition: 0.3s;
@@ -64,6 +64,7 @@ ul.tab li a:focus,
   transform-origin: top left;
   float: left;
   margin-right: 1em;
+  margin-bottom: 2em;
 }
 #recentComp:hover {
   transform: translate3d(-2em, 0, 0);
@@ -72,13 +73,29 @@ ul.tab li a:focus,
   transform: scale(2);
   /*border: 2px solid @primary-col;*/
   background-color: #ff9900;
+  margin-bottom: 6em;
 }
 .tile:hover ~ .tile {
   transform: translate3d(4.5em, 0, 0);
 }
-#recent-comp:hover + #recent-comp-extra {
-  height: 8em;
-  /*    max-height: 500px;
-    transition: max-height 0.25s ease-in;*/
-}
 /*END RECENT COMPARISONS*/
+/*COMPARISONS*/
+div.col-sm-11 {
+  padding-left: 5.5em;
+}
+.fixed-tile {
+  width: 8em;
+  height: 8em;
+  background-color: #5fa4eb;
+  padding-top: 8em;
+  box-sizing: border-box;
+  transition: 1s transform;
+  transform-origin: top left;
+  float: left;
+  margin-right: 2em;
+  margin-bottom: 3em;
+}
+.fixed-tile:hover {
+  background-color: #ff9900;
+}
+/*END COMPARISONS*/
