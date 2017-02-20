@@ -717,10 +717,13 @@ def get_user_comparisons(user_id, get_json=True):
         return jsonify_table(result)
     return result
 
-def get_user_templates(user_id):
+def get_user_templates(user_id, get_json=True):
     from models import UserTemplate
 
-    return db.engine.execute((select([UserTemplate]).where(UserTemplate.account_id == user_id)))
+    result = db.engine.execute((select([UserTemplate]).where(UserTemplate.account_id == user_id)))
+    if get_json:
+        return jsonify_table(result)
+    return result
 
 # returns array of all comparison names of specified user
 def get_user_comparison_names(user_id, get_json=True):
@@ -919,7 +922,4 @@ if __name__ == '__main__':
 # TODO: consider changing schema so that templates inherit from common table to reduce redundant functions
 # TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
 # TODO: write python functions encapsulating stored functions
-# TODO: try returning sqlalchemy objects for simple selects
 # TODO: change get user comparisons for recent comparisons to sort by date_modified
-
-# TODO: change get_user_comparison stuff to return json of all fields
