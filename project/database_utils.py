@@ -708,6 +708,14 @@ def get_user_comparison_ids(user_id, get_json=True):
         return json.dumps(output)
     return output
 
+def get_recent_user_comparisons(user_id, number, get_json=True):
+    from models import Comparison
+
+    result = db.engine.execute((select([Comparison]).where(Comparison.account_id == user_id)).limit(number).order_by(Comparison.date_modified.desc()))
+    if get_json:
+        return jsonify_table(result)
+    return result
+
 # returns values of comparison table for specified user
 def get_user_comparisons(user_id, get_json=True):
     from models import Comparison
@@ -721,6 +729,14 @@ def get_user_templates(user_id, get_json=True):
     from models import UserTemplate
 
     result = db.engine.execute((select([UserTemplate]).where(UserTemplate.account_id == user_id)))
+    if get_json:
+        return jsonify_table(result)
+    return result
+
+def get_recent_user_templates(user_id, number, get_json=True):
+    from models import UserTemplate
+
+    result = db.engine.execute((select([UserTemplate]).where(UserTemplate.account_id == user_id)).limit(number).order_by(UserTemplate.date_modified.desc()))
     if get_json:
         return jsonify_table(result)
     return result
