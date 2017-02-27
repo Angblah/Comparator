@@ -33566,7 +33566,8 @@ var Workspace = function (_React$Component) {
         // Bind the add attribute handle method
         var _this = (0, _possibleConstructorReturn3.default)(this, (Workspace.__proto__ || (0, _getPrototypeOf2.default)(Workspace)).call(this, props));
 
-        _this.handleAddEvent = _this.handleAddEvent.bind(_this);
+        _this.handleAddEventAttr = _this.handleAddEventAttr.bind(_this);
+        _this.handleAddEventItem = _this.handleAddEventItem.bind(_this);
         _this.toggleEditing = _this.toggleEditing.bind(_this);
 
         _this.getComparisonData = _this.getComparisonData.bind(_this);
@@ -33726,8 +33727,8 @@ var Workspace = function (_React$Component) {
         // Handle adding attr to template by adding to the state object
 
     }, {
-        key: 'handleAddEvent',
-        value: function handleAddEvent(evt) {
+        key: 'handleAddEventAttr',
+        value: function handleAddEventAttr(evt) {
             var attribute = {
                 id: this.state.template_data.length + 1,
                 name: "",
@@ -33736,6 +33737,23 @@ var Workspace = function (_React$Component) {
             this.state.comparison_data.attributes.push(attribute);
             this.state.template_data.push(attribute);
             this.setState(this.state.template_data);
+            this.setState(this.state.comparison_data);
+        }
+
+        // Handle adding item to template by adding to the state object
+
+    }, {
+        key: 'handleAddEventItem',
+        value: function handleAddEventItem(evt) {
+            var item = {
+                name: ""
+            };
+            var i;
+            console.log(this.state);
+            for (i = 0; i < this.state.comparison_data.attributes.length; i++) {
+                item[this.state.comparison_data.attributes[i].id] = "";
+            }
+            this.state.comparison_data.items.push(item);
             this.setState(this.state.comparison_data);
         }
     }, {
@@ -33793,7 +33811,13 @@ var Workspace = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     'button',
-                    { id: 'saveButton', onClick: this.handleAddEvent, className: 'btn btn-primary' },
+                    { id: 'addAttrButton', onClick: this.handleAddEventAttr, className: 'btn btn-primary' },
+                    _react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
+                ),
+                _react2.default.createElement('br', null),
+                _react2.default.createElement(
+                    'button',
+                    { id: 'addItemButton', onClick: this.handleAddEventItem, className: 'btn btn-primary' },
                     _react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
                 ),
                 _react2.default.createElement('br', null),

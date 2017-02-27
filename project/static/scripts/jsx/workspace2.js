@@ -8,7 +8,8 @@ class Workspace extends React.Component {
         super(props);
 
         // Bind the add attribute handle method
-        this.handleAddEvent = this.handleAddEvent.bind(this);
+        this.handleAddEventAttr = this.handleAddEventAttr.bind(this);
+        this.handleAddEventItem = this.handleAddEventItem.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
 
         this.getComparisonData = this.getComparisonData.bind(this);
@@ -117,7 +118,7 @@ class Workspace extends React.Component {
     }
 
     // Handle adding attr to template by adding to the state object
-    handleAddEvent(evt) {
+    handleAddEventAttr(evt) {
         var attribute = {
             id: this.state.template_data.length + 1,
             name: "",
@@ -126,6 +127,20 @@ class Workspace extends React.Component {
         this.state.comparison_data.attributes.push(attribute);
         this.state.template_data.push(attribute);
         this.setState(this.state.template_data);
+        this.setState(this.state.comparison_data);
+    }
+
+    // Handle adding item to template by adding to the state object
+    handleAddEventItem(evt) {
+        var item = {
+            name: ""
+        }
+        var i;
+        console.log(this.state);
+        for (i = 0; i < this.state.comparison_data.attributes.length ; i++) {
+            item[(this.state.comparison_data.attributes[i]).id] = "";
+        }
+        this.state.comparison_data.items.push(item);
         this.setState(this.state.comparison_data);
     }
 
@@ -164,7 +179,9 @@ class Workspace extends React.Component {
                         }, this)}
                     </tbody>
                 </table>
-                <button id="saveButton" onClick={this.handleAddEvent} className="btn btn-primary"><i className="fa fa-plus" aria-hidden="true"></i></button>
+                <button id="addAttrButton" onClick={this.handleAddEventAttr} className="btn btn-primary"><i className="fa fa-plus" aria-hidden="true"></i></button>
+                <br/>
+                <button id="addItemButton" onClick={this.handleAddEventItem} className="btn btn-primary"><i className="fa fa-plus" aria-hidden="true"></i></button>
                 <br/>
                 <button id="getComparisonDataButton" onClick={this.getComparisonData} className="btn btn-primary">Get Comparison Data</button>
                 <br/>
