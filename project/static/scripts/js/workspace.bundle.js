@@ -33733,7 +33733,7 @@ var Workspace = function (_React$Component) {
 
             var attribute = {
                 id: this.state.template_data.length + 1,
-                name: "",
+                name: null,
                 type_id: 0
             };
             this.state.comparison_data.attributes.push(attribute);

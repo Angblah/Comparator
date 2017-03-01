@@ -49,7 +49,7 @@ def saveComparisonData():
 @app.route('/addComparisonAttr', methods=["POST"])
 def addComparisonAttr():
     data = request.form
-    add_comparison_attribute(data['compId'], data['attrName'], data['typeId'])
+    add_comparison_attribute(data['compId'], None, data['typeId'])
     return ("success!")
 
 @app.route('/addComparisonItem', methods=["POST"])
