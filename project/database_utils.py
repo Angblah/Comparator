@@ -12,43 +12,40 @@ def initialize_db_structure():
     CREATE EXTENSION IF NOT EXISTS tablefunc;
     CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-    create or replace function add_comparison_item (table_comparison_id int, table_position int) returns void
-    as $$
+    create or replace function add_comparison_item (table_comparison_id int, table_position int, out _id int) returns int
+      as $$
       begin
-    
+
           update comparison_item set position = position + 1 where comparison_id = table_comparison_id and position >= table_position;
-          insert into comparison_item (position, comparison_id) values (table_position, table_comparison_id);
+          insert into comparison_item (position, comparison_id) values (table_position, table_comparison_id) returning id into _id;
           update comparison set date_modified = current_timestamp where id = table_comparison_id;
       end;
     $$ language plpgsql;
 
 
-    -- adds specified number of items to comparison table
-    create or replace function add_comparison_item_back (_comparison_id int, _num_items int default 1) returns void
+    create or replace function add_comparison_item_back (_comparison_id int, _num_items int default 1) returns table(_id int)
         as $$
         -- NOTE: sequence is not used as item position may start from 0
         declare start_position int;
         begin
             select coalesce(max(position) + 1, 0) from comparison_item where comparison_id = _comparison_id into start_position;
-            perform add_comparison_items(_comparison_id, _num_items, start_position);
+            return query select * from add_comparison_items(_comparison_id, _num_items, start_position);
 
         end;
     $$ language plpgsql;
 
     -- adds empty items to specified location
     -- WARNING: adding items to positions not between (including ends) a comparison's existing items may lead to strange behavior
-    create or replace function add_comparison_items (_comparison_id int, _num_items int, _position int) returns void
+    create or replace function add_comparison_items (_comparison_id int, _num_items int, _position int) returns table(_id int)
         as $$
-        -- NOTE: sequence is not used as item position may start from 0
         begin
 
             update comparison_item set position = position + _num_items where position >= _position and comparison_id = _comparison_id;
-
-            with positions as (
-                        select generate_series(_position, _position + _num_items - 1) as position
-                    ) insert into comparison_item(name, comparison_id, position) select null, _comparison_id, position from positions;
-
             update comparison set date_modified = current_timestamp where id = _comparison_id;
+
+            return query insert into comparison_item(name, comparison_id, position) select null, _comparison_id, position from
+                (select generate_series(_position, _position + _num_items - 1) as position) as positions returning id;
+
 
         end;
     $$ language plpgsql;
@@ -235,26 +232,25 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function add_comparison_attribute_back (_comparison_id int, _num_attributes int default 1) returns void
+    create or replace function add_comparison_attribute_back (_comparison_id int, _num_attributes int default 1) returns table(_id int)
         as $$
             declare start_position int;
         begin
                 select coalesce(max(position) + 1, 0) from comparison_attribute where comparison_id = _comparison_id into start_position;
 
-                perform add_comparison_attributes(_comparison_id, _num_attributes, start_position);
+                return query select * from add_comparison_attributes(_comparison_id, _num_attributes, start_position);
         end;
     $$ language plpgsql;
 
-    create or replace function add_comparison_attributes (_comparison_id int, _num_attributes int, _position int) returns void
+    create or replace function add_comparison_attributes (_comparison_id int, _num_attributes int, _position int) returns table(_id int)
         as $$
         begin
                 update comparison_attribute set position = position + _num_attributes where position >= _position and comparison_id = _comparison_id;
-
-                with positions as (
-                    select generate_series(_position, _position + _num_attributes - 1) as position
-                ) insert into comparison_attribute(name, comparison_id, position) select null, _comparison_id, position from positions;
-
                 update comparison set date_modified = current_timestamp where id = _comparison_id;
+
+                insert into comparison_attribute(name, comparison_id, position) select null, _comparison_id, position from
+                    (select generate_series(_position, _position + _num_attributes - 1) as position) as positions;
+
         end;
     $$ language plpgsql;
     
@@ -297,34 +293,32 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function add_user_template_attribute (_user_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1, out attribute_id int) returns int
+    create or replace function add_template_attribute (_template_id int, _attribute_name varchar, _type_id smallint, _weight int default 1, out attribute_id int) returns int
         as $$
         begin
-            insert into user_template_attribute (name, type_id, user_template_id, weight, position) select _attribute_name, _type_id, _user_template_id, _weight, coalesce(max(position), -1) + 1 from user_template_attribute where user_template_id = _user_template_id returning id into attribute_id;
-            update user_template set date_modified = current_timestamp where id = _user_template_id;
+            insert into user_template_attribute (name, type_id, _template_id, weight, position) select _attribute_name, _type_id, _template_id, _weight, coalesce(max(position), -1) + 1 from user_template_attribute where user_template_id = _template_id returning id into attribute_id;
+            update user_template set date_modified = current_timestamp where id = _template_id;
         end;
     $$ language plpgsql;
 
-    create or replace function add_template_attribute_back (_template_id int, _num_attributes int default 1) returns void
+    create or replace function add_template_attribute_back (_template_id int, _num_attributes int default 1) returns table(_id int)
         as $$
             declare start_position int;
         begin
                 select coalesce(max(position) + 1, 0) from user_template_attribute where user_template_id = _template_id into start_position;
 
-                perform add_template_attributes(_template_id, _num_attributes, start_position);
+                return query select * from add_template_attributes(_template_id, _num_attributes, start_position);
         end;
     $$ language plpgsql;
 
-    create or replace function add_template_attributes (_template_id int, _num_attributes int, _position int) returns void
+    create or replace function add_template_attributes (_template_id int, _num_attributes int, _position int) returns table(_id int)
         as $$
         begin
                 update user_template_attribute set position = position + _num_attributes where user_template_id = _template_id and position >= _position;
-
-                with positions as (
-                    select generate_series(_position, _position + _num_attributes - 1) as position
-                ) insert into user_template_attribute(name, user_template_id, position) select null, _template_id, position from positions;
-
                 update user_template set date_modified = current_timestamp where id = _template_id;
+
+                return query insert into user_template_attribute(name, user_template_id, position) select null, _template_id, position from (select generate_series(_position, _position + _num_attributes - 1) as position) as positions returning id;
+
         end;
     $$ language plpgsql;
 
@@ -757,6 +751,26 @@ def add_comparison_attribute(comparison_id, attribute_name, attribute_type_id, w
     """)
     return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, attribute_name=attribute_name, attribute_type_id=attribute_type_id, weight=weight).scalar()
 
+
+def add_comparison_attribute_back (comparison_id, num_attributes=1, get_json=True):
+    query = text("""
+    select add_comparison_attribute_back (:comparison_id, :num_attributes)
+    """)
+    result = db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, num_attributes=num_attributes)
+    if get_json:
+        return jsonify_column(result)
+    return result
+
+
+def add_comparison_attributes(comparison_id, num_attributes, position, get_json=True):
+    query = text("""
+    select add_comparison_attributes (:comparison_id, :num_attributes, :position)
+    """)
+    result = db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, num_attributes=num_attributes, position=position)
+    if get_json:
+        return jsonify_column(result)
+    return result
+
 def set_comparison_attribute_value(item_id, item_attribute_id, new_value):
     query = text("""
     select set_comparison_attribute_value(:item_id, :item_attribute_id, :new_value);
@@ -775,19 +789,25 @@ def add_comparison_item(table_comparison_id, table_position):
     query = text("""
     select add_comparison_item(:table_comparison_id, :table_position);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), table_comparison_id=table_comparison_id, table_position=table_position)
+    return db.engine.execute(query.execution_options(autocommit=True), table_comparison_id=table_comparison_id, table_position=table_position).scalar()
 
-def add_comparison_item_back (comparison_id):
-    query = text("""
-    select add_comparison_item_back(:comparison_id)
-    """)
-    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id)
-
-def add_comparison_items_back (comparison_id, num_items):
+def add_comparison_item_back (comparison_id, num_items=1, get_json=True):
     query = text("""
     select add_comparison_item_back(:comparison_id, :num_items);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, num_items=num_items)
+    result = db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, num_items=num_items)
+    if get_json:
+        return jsonify_column(result)
+    return result
+
+def add_comparison_items (comparison_id, position, num_items=1, get_json=True):
+    query = text("""
+    select add_comparison_items (:comparison_id, :num_items, :position)
+    """)
+    result = db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position, num_items=num_items)
+    if get_json:
+        return jsonify_column(result)
+    return result
 
 def swap_comparison_item (id1, id2):
     query = text("""
@@ -906,11 +926,29 @@ def copy_comparison (comparison_id, account_id):
     """)
     return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, account_id=account_id).scalar()
 
-def add_user_template_attribute (template_id, attribute_name, type_id, weight=1):
+def add_template_attribute (template_id, attribute_name, type_id, weight=1):
     query = text("""
-    select * from add_user_template_attribute(:template_id, :attribute_name, cast(:type_id AS SMALLINT), :weight);
+    select * from add_template_attribute(:template_id, :attribute_name, cast(:type_id AS SMALLINT), :weight);
     """)
     return db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, attribute_name=attribute_name, type_id=type_id, weight=weight).scalar()
+
+def add_template_attribute_back (template_id, num_attributes=1, get_json=True):
+    query = text("""
+    select * from add_template_attribute_back(:template_id, :num_attributes);
+    """)
+    result = db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, num_attributes=num_attributes)
+    if get_json:
+        return jsonify_column(result)
+    return result
+
+def add_template_attributes (template_id, position, num_attributes=1, get_json=True):
+    query = text("""
+    select * from add_template_attributes(:template_id, :num_attributes, :position);
+    """)
+    result = db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, num_attributes=num_attributes, position=position)
+    if get_json:
+        return jsonify_column(result)
+    return result
 
 # TODO: change to return array of row dicts
 # takes in ResultProxy from executed query, returns json array of rows mapping column names to values
@@ -925,10 +963,18 @@ def jsonify_table(result):
         data.append(temp)
     return json.dumps(data)
 
+# returns simple json array for single column result
+def jsonify_column(result):
+    data = []
+    for row in result:
+        data.append(row[0])
+    return json.dumps(data)
+
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
+
 
 # TODO: improve documentation
 # TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
@@ -939,3 +985,6 @@ if __name__ == '__main__':
 # TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
 # TODO: write python functions encapsulating stored functions
 # TODO: change get user comparisons for recent comparisons to sort by date_modified
+# TODO: make adding attribute/items return list of ids
+# TODO: write set attribute value function for templates
+# TODO: make adding multiple items/attributes return list of ids
