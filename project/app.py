@@ -46,6 +46,18 @@ def saveComparisonData():
     set_comparison_attribute_value(data['itemId'], data['attrId'], data['value'])
     return ("success!")
 
+@app.route('/addComparisonAttr', methods=["POST"])
+def addComparisonAttr():
+    data = request.form
+    add_comparison_attribute(data['compId'], data['attrName'], data['typeId'])
+    return ("success!")
+
+@app.route('/addComparisonItem', methods=["POST"])
+def addComparisonItem():
+    data = request.form
+    add_comparison_item_back(data['compId'])
+    return ("success!")
+
 @app.route('/newComparison')
 def newComparison():
     return render_template('newComparison.html')

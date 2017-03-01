@@ -128,6 +128,15 @@ class Workspace extends React.Component {
         this.state.template_data.push(attribute);
         this.setState(this.state.template_data);
         this.setState(this.state.comparison_data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/addComparisonAttr',
+            data: {compId: "6", attrName: attribute.name, typeId: attribute.type_id},
+            success: (data) => {
+                this.state.message = data;
+            },
+        });
     }
 
     // Handle adding item to template by adding to the state object
@@ -142,6 +151,15 @@ class Workspace extends React.Component {
         }
         this.state.comparison_data.items.push(item);
         this.setState(this.state.comparison_data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/addComparisonItem',
+            data: {compId: value},
+            success: (data) => {
+                this.state.message = data;
+            },
+        });
     }
 
     render() {
