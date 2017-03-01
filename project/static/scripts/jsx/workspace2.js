@@ -145,7 +145,6 @@ class Workspace extends React.Component {
             name: ""
         }
         var i;
-        console.log(this.state);
         for (i = 0; i < this.state.comparison_data.attributes.length ; i++) {
             item[(this.state.comparison_data.attributes[i]).id] = "";
         }
@@ -155,7 +154,7 @@ class Workspace extends React.Component {
         $.ajax({
             type: 'POST',
             url: '/addComparisonItem',
-            data: {compId: value},
+            data: {compId: "6"},
             success: (data) => {
                 this.state.message = data;
             },
