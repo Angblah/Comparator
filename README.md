@@ -9,4 +9,5 @@ To install packages:
   4. run "npm install"
   5. run "npm i webpack -g"
     - To compile the .jsx into the bundles, run "webpack" from the root directory
-  
+  6. run "npm install -g less"
+    - To compile the .less into .css files, run "lessc [filename].less [filename].css" from css folder
