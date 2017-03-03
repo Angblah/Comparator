@@ -15,7 +15,7 @@ module.exports = {
         // Options to configure babel wisth
         query: {
           plugins: ['transform-runtime'],
-          presets: ['es2015', 'react'],
+          presets: ['es2015', 'react', 'stage-2'],
         }
       }
     ]
@@ -28,6 +28,7 @@ module.exports = {
       trial: './project/static/scripts/jsx/main.js',
       workspace: './project/static/scripts/jsx/workspace2.js',
       dashboard: './project/static/scripts/jsx/profileHomePage.js',
-      testbed: './project/static/scripts/jsx/workspace3.js'
+      testbed: './project/static/scripts/jsx/workspace3.js',
+      testbed2: './project/static/scripts/jsx/containers/workspace.js'
   }
 };

@@ -20,18 +20,18 @@ class Workspace extends React.Component {
             {id: 3, name: "number", type_id: 1}
         ];
 
-        // this.state.comparison_data = JSON.parse(this.props.comparison);
-        this.state.comparison_data = {
-            attributes: [
-                {id: 1, name: "size", type_id: 0},
-                {id: 2, name: "color", type_id: 0},
-                {id: 3, name: "number", type_id: 1}
-            ],
-            items: [
-                {name: "ball 2", "1": "large", "2": "red", "3": -1.32},
-                {name: "ball 3", "1": "small", "2": "blue", "3": 3},
-                {name: "ball 4", "1": "medium", "2": "green", "3": 8.22}
-        ]};
+        this.state.comparison_data = JSON.parse(this.props.comparison);
+        // this.state.comparison_data = {
+        //     attributes: [
+        //         {id: 1, name: "size", type_id: 0},
+        //         {id: 2, name: "color", type_id: 0},
+        //         {id: 3, name: "number", type_id: 1}
+        //     ],
+        //     items: [
+        //         {name: "ball 2", "1": "large", "2": "red", "3": -1.32},
+        //         {name: "ball 3", "1": "small", "2": "blue", "3": 3},
+        //         {name: "ball 4", "1": "medium", "2": "green", "3": 8.22}
+        // ]};
     }
 
     handleEditEvent(itemID, event) {
