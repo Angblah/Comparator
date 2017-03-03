@@ -8,6 +8,7 @@ from sendgrid.helpers.mail import *
 from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
+app.secret_key = os.urandom(12)
 app.config[
     'SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.debug = True
@@ -100,6 +101,7 @@ def reset_password():
             return jsonify(data)
 
     #User is populated at this point, grab email to send email to
+
     token = ts.dumps(user.email, salt='recover-key')
     recover_url = url_for('reset_with_token', token=token, _external=True)
 
@@ -240,5 +242,5 @@ def upload_file():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.secret_key = os.urandom(12)
     app.run(host='0.0.0.0', port=port, debug=True)
+    # TODO: change secret key so that it's secret and consistent across sessions (currently should change on every run of app.py)
