@@ -121,13 +121,22 @@ class Workspace extends React.Component {
     handleAddEventAttr(evt) {
         var attribute = {
             id: this.state.template_data.length + 1,
-            name: "",
+            name: null,
             type_id: 0
         }
         this.state.comparison_data.attributes.push(attribute);
         this.state.template_data.push(attribute);
         this.setState(this.state.template_data);
         this.setState(this.state.comparison_data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/addComparisonAttr',
+            data: {compId: "6", attrName: attribute.name, typeId: attribute.type_id},
+            success: (data) => {
+                this.state.message = data;
+            },
+        });
     }
 
     // Handle adding item to template by adding to the state object
@@ -136,12 +145,20 @@ class Workspace extends React.Component {
             name: ""
         }
         var i;
-        console.log(this.state);
         for (i = 0; i < this.state.comparison_data.attributes.length ; i++) {
             item[(this.state.comparison_data.attributes[i]).id] = "";
         }
         this.state.comparison_data.items.push(item);
         this.setState(this.state.comparison_data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/addComparisonItem',
+            data: {compId: "6"},
+            success: (data) => {
+                this.state.message = data;
+            },
+        });
     }
 
     render() {

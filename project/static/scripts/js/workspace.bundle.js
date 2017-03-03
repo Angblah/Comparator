@@ -33729,15 +33729,26 @@ var Workspace = function (_React$Component) {
     }, {
         key: 'handleAddEventAttr',
         value: function handleAddEventAttr(evt) {
+            var _this6 = this;
+
             var attribute = {
                 id: this.state.template_data.length + 1,
-                name: "",
+                name: null,
                 type_id: 0
             };
             this.state.comparison_data.attributes.push(attribute);
             this.state.template_data.push(attribute);
             this.setState(this.state.template_data);
             this.setState(this.state.comparison_data);
+
+            _jquery2.default.ajax({
+                type: 'POST',
+                url: '/addComparisonAttr',
+                data: { compId: "6", attrName: attribute.name, typeId: attribute.type_id },
+                success: function success(data) {
+                    _this6.state.message = data;
+                }
+            });
         }
 
         // Handle adding item to template by adding to the state object
@@ -33745,16 +33756,26 @@ var Workspace = function (_React$Component) {
     }, {
         key: 'handleAddEventItem',
         value: function handleAddEventItem(evt) {
+            var _this7 = this;
+
             var item = {
                 name: ""
             };
             var i;
-            console.log(this.state);
             for (i = 0; i < this.state.comparison_data.attributes.length; i++) {
                 item[this.state.comparison_data.attributes[i].id] = "";
             }
             this.state.comparison_data.items.push(item);
             this.setState(this.state.comparison_data);
+
+            _jquery2.default.ajax({
+                type: 'POST',
+                url: '/addComparisonItem',
+                data: { compId: "6" },
+                success: function success(data) {
+                    _this7.state.message = data;
+                }
+            });
         }
     }, {
         key: 'render',
