@@ -123,7 +123,7 @@ def reset_with_token(token):
     password_valid = True
     try:
         # link expires after 24 hours (86400 seconds)
-        email = ts.loads(token, salt="recover-key", max_age=86400)
+        email = ts.loads(token, salt='recover-key', max_age=86400)
         valid_link = True
     except:
         valid_link = False
