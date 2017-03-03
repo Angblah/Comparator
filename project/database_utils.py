@@ -512,6 +512,45 @@ def initialize_db_structure():
     end;
     $$ language plpgsql;
 
+    -- updates comparison item ordering by ordered array of comparison_item id's
+    create or replace function sort_by_item_ordering(_ordering int[]) returns void as
+    $$
+    begin
+        with new_order as (
+        select row_number() over (), "unnest" as "id" from unnest(_ordering)
+        ) update comparison_item as c
+            set position = row_number - 1
+            from new_order as n
+            where c.id = n.id;
+    end;
+    $$ language plpgsql;
+
+    -- updates comparison attribute ordering by ordered array of comparison_attribute id's
+    create or replace function sort_comparison_by_attribute_ordering(_ordering int[]) returns void as
+    $$
+    begin
+        with new_order as (
+        select row_number() over (), "unnest" as "id" from unnest(_ordering)
+        ) update comparison_attribute as c
+            set position = row_number - 1
+            from new_order as n
+            where c.id = n.id;
+    end;
+    $$ language plpgsql;
+
+    -- updates template attribute ordering by ordered array of template_attribute id's
+    create or replace function sort_template_by_attribute_ordering(_ordering int[]) returns void as
+    $$
+    begin
+        with new_order as (
+        select row_number() over (), "unnest" as "id" from unnest(_ordering)
+        ) update user_template_attribute as c
+            set position = row_number - 1
+            from new_order as n
+            where c.id = n.id;
+    end;
+    $$ language plpgsql;
+
     create or replace function register_user(_email varchar, _username varchar, _password varchar, out _account_id int) returns int as
     $$
         begin
@@ -876,12 +915,35 @@ def create_comparison_from_user_template (account_id, template_id, comparison_na
     """)
     return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name, num_items=num_items).scalar()
 
+# sorts comparison by specified attribute (ascending)
 def sort_by_attribute(comparison_id, attribute_id):
     query = text("""
     select sort_by_attribute(:comparison_id, :attribute_id);
     """)
     db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, attribute_id=attribute_id)
 
+# sorts comparison items by ordering determined by inputted list of ordered comparison_item id's
+def sort_by_item_ordering(ordering):
+    query = text("""
+    select sort_by_item_ordering(:ordering);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
+
+# sorts comparison attributes by ordering (list of attribute id's)
+def sort_comparison_by_attribute_ordering(ordering):
+    query = text("""
+    select sort_comparison_by_attribute_ordering(:ordering);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
+
+# sorts comparison attributes by ordering (list of template id's)
+def sort_template_by_attribute_orering(ordering):
+    query = text("""
+    select sort_template_by_attribute_ordering(:ordering);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
+
+# WARNING: vulnerable to sql injection if users given access (as field string not checked)
 # valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
 def set_template_attribute_field(attribute_id, field, field_value):
     query = text("""
@@ -889,6 +951,7 @@ def set_template_attribute_field(attribute_id, field, field_value):
     """)
     db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
 
+#WARNING: vulnerable to sql injection if users given access (as field string not checked)
 # valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
 def set_comparison_attribute_field(attribute_id, field, field_value):
     query = text("""
@@ -975,7 +1038,6 @@ if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
 
-
 # TODO: improve documentation
 # TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
     # single inheritance for attribute downsides:
@@ -983,8 +1045,5 @@ if __name__ == '__main__':
         # queries slightly more complex
 # TODO: consider changing schema so that templates inherit from common table to reduce redundant functions
 # TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
-# TODO: write python functions encapsulating stored functions
-# TODO: change get user comparisons for recent comparisons to sort by date_modified
-# TODO: make adding attribute/items return list of ids
-# TODO: write set attribute value function for templates
-# TODO: make adding multiple items/attributes return list of ids
+# TODO: export and share (csv, png, xlsx), encrypt by encrypting by user id + secret id
+# TODO: set_comment function for tables

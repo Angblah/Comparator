@@ -102,12 +102,13 @@ div.col-sm-11 {
   padding-top: 2em;
   padding-bottom: 2em;
 }
-/*
-#home-car-cont, #home-data-cont {
-    position: fixed;
-    top: 50%;
-    transform: translate(0%, -50%);
-}*/
+#home-data-cont {
+  position: fixed;
+  top: 20%;
+  left: 55%;
+  width: 33%;
+  background-color: #ffffff;
+}
 /*navbar
 
 primary color

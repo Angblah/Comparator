@@ -1,7 +1,9 @@
 /*CSS Specific for User Dashboard*/
 /*Global Variables*/
 #dash-username {
-  background-color: rgba(0, 0, 0, 0.5);
+  /*background-color: rgba(0, 0, 0, 0.5);*/
+  background-image: url('../img/default-user-back.jpg');
+  filter: blur(30);
   height: 8em;
 }
 #dash-username h1 {
