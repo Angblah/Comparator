@@ -248,8 +248,8 @@ def initialize_db_structure():
                 update comparison_attribute set position = position + _num_attributes where position >= _position and comparison_id = _comparison_id;
                 update comparison set date_modified = current_timestamp where id = _comparison_id;
 
-                insert into comparison_attribute(name, comparison_id, position) select null, _comparison_id, position from
-                    (select generate_series(_position, _position + _num_attributes - 1) as position) as positions;
+                return query insert into comparison_attribute(name, comparison_id, position) select null, _comparison_id, position from
+                    (select generate_series(_position, _position + _num_attributes - 1) as position) as positions returning id;
 
         end;
     $$ language plpgsql;
@@ -1037,6 +1037,7 @@ def jsonify_column(result):
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
+
 
 # TODO: improve documentation
 # TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
