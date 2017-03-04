@@ -23351,7 +23351,70 @@ __webpack_require__(108)('asyncIterator');
 __webpack_require__(108)('observable');
 
 /***/ }),
+<<<<<<< HEAD
 /* 266 */,
+=======
+/* 265 */,
+/* 266 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var ADD_ATTR = exports.ADD_ATTR = 'ADD_ATTR';
+var EDIT_ATTR = exports.EDIT_ATTR = 'EDIT_ATTR';
+var ADD_ITEM = exports.ADD_ITEM = 'ADD_ITEM';
+var EDIT_ITEM = exports.EDIT_ITEM = 'EDIT_ITEM';
+var EDIT_ITEM_NAME = exports.EDIT_ITEM_NAME = 'EDIT_ITEM_NAME';
+var CHANGE_VIEW = exports.CHANGE_VIEW = 'CHANGE_VIEW';
+
+var addAttr = exports.addAttr = function addAttr(id) {
+    //AJAX to get next id
+    return {
+        type: 'ADD_ATTR'
+        //ID then goes here
+    };
+};
+
+var editAttr = exports.editAttr = function editAttr(id, name) {
+    return {
+        type: 'EDIT_ATTR',
+        id: id,
+        name: name
+    };
+};
+
+var addItem = exports.addItem = function addItem() {
+    return {
+        type: 'ADD_ITEM'
+    };
+};
+
+var editItem = exports.editItem = function editItem() {
+    return {
+        type: 'EDIT_ITEM'
+    };
+};
+
+var editItemName = exports.editItemName = function editItemName(name) {
+    return {
+        type: 'EDIT_ITEM_NAME',
+        name: name
+    };
+};
+
+var changeView = exports.changeView = function changeView(view) {
+    return {
+        type: 'CHANGE_VIEW',
+        view: view
+    };
+};
+
+/***/ }),
+>>>>>>> 01628add013934b9bbc71c442eb4cff9b3759611
 /* 267 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -24393,7 +24456,7 @@ var ViewContainer = function (_React$Component) {
         key: 'render',
         value: function render() {
             //TODO: Create ViewContainer toggle based on view of state.
-            return _react2.default.createElement(_chartView2.default, { items: this.props.items, attributes: this.props.attributes, addAttr: this.props.addAttr });
+            return _react2.default.createElement(_chartView2.default, { items: this.props.items, attributes: this.props.attributes, addAttr: this.props.addAttr, addItem: this.props.addItem });
         }
     }]);
     return ViewContainer;
@@ -24410,6 +24473,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
     return {
         addAttr: function addAttr() {
             dispatch((0, _actions.addAttr)());
+        },
+        addItem: function addItem() {
+            dispatch((0, _actions.addItem)());
         }
     };
 };
@@ -24759,7 +24825,12 @@ var ChartView = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     "button",
-                    { id: "addButton", className: "btn btn-primary", onClick: this.props.addAttr },
+                    { id: "addAttrButton", className: "btn btn-primary", onClick: this.props.addAttr },
+                    _react2.default.createElement("i", { className: "fa fa-plus", "aria-hidden": "true" })
+                ),
+                _react2.default.createElement(
+                    "button",
+                    { id: "addItemButton", className: "btn btn-primary", onClick: this.props.addItem },
                     _react2.default.createElement("i", { className: "fa fa-plus", "aria-hidden": "true" })
                 )
             );
@@ -24848,9 +24919,8 @@ var items = function items() {
 
     switch (action.type) {
         case _actions.ADD_ITEM:
-            return [].concat((0, _toConsumableArray3.default)(state), [{ id: action.id,
-                name: "",
-                type_id: 0 }]);
+            console.log(action);
+            return [].concat((0, _toConsumableArray3.default)(state), [{ name: "" }]);
         case _actions.EDIT_ITEM:
             return state;
         case _actions.LOAD_ITEMS:

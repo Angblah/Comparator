@@ -7,7 +7,10 @@ import {
 const attributes = (state = [], action) => {
     switch(action.type) {
         case ADD_ATTR:
+<<<<<<< HEAD
             // TODO: Deal with IDs
+=======
+>>>>>>> 01628add013934b9bbc71c442eb4cff9b3759611
             return [
                 ...state,
                 {name: "",

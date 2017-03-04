@@ -9,10 +9,8 @@ const items = (state = [], action) => {
         case ADD_ITEM:
             return [
                 ...state,
-                {id: action.id,
-                name: "",
-                type_id: 0}
-            ]
+                {name: ""}
+            ];
         case EDIT_ITEM:
             return state;
         case LOAD_ITEMS:
