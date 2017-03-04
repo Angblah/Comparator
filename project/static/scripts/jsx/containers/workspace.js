@@ -33,7 +33,6 @@ class Workspace extends React.Component {
     }
 }
 
-
 // ========================================
 
 var workspaceElem = document.getElementById("workspace");

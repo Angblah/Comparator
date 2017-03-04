@@ -81,7 +81,9 @@ class ChartView extends React.Component {
                         }, this)}
                     </tbody>
                 </table>
-                <button id="addButton" className="btn btn-primary" onClick={this.props.addAttr}><i className="fa fa-plus" aria-hidden="true"></i></button> 
+                <button id="addAttrButton" className="btn btn-primary" onClick={this.props.addAttr}><i className="fa fa-plus" aria-hidden="true"></i></button>
+                <button id="addItemButton" className="btn btn-primary" onClick={this.props.addItem}><i className="fa fa-plus" aria-hidden="true"></i></button>
+
             </div>
         );
     }

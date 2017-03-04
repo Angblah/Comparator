@@ -6,7 +6,6 @@ import {
 const attributes = (state = [], action) => {
     switch(action.type) {
         case ADD_ATTR:
-            console.log(action);
             return [
                 ...state,
                 {name: "",
