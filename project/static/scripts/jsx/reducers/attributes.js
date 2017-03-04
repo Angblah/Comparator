@@ -6,10 +6,13 @@ import {
 const attributes = (state = [], action) => {
     switch(action.type) {
         case ADD_ATTR:
+            console.log(action);
             return [
                 ...state,
-                {name: ""}
-            ]
+                {name: "",
+                id: 1000,
+                type_id: 0}
+            ];
         case EDIT_ATTR:
             let array = [...state];
             return array.map((item, index) => {

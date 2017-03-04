@@ -10,7 +10,7 @@ class ViewContainer extends React.Component {
     render() {
         //TODO: Create ViewContainer toggle based on view of state.
         return (
-            <ChartView items={this.props.items} attributes={this.props.attributes}/>
+            <ChartView items={this.props.items} attributes={this.props.attributes} addAttr={this.props.addAttr}/>
         );
     }
 }
@@ -25,10 +25,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        addAttr: addAttr,
-        editAttr: editAttr,
-        addItem: addItem
+        addAttr: () => {
+            dispatch(addAttr())
+        }
     }
 }
 
-export default connect(mapStateToProps)(ViewContainer)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ViewContainer)

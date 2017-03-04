@@ -23277,13 +23277,13 @@ var CHANGE_VIEW = exports.CHANGE_VIEW = 'CHANGE_VIEW';
 
 var addAttr = exports.addAttr = function addAttr() {
   return {
-    type: ADD_ATTR
+    type: 'ADD_ATTR'
   };
 };
 
 var editAttr = exports.editAttr = function editAttr(id, name) {
   return {
-    type: EDIT_ATTR,
+    type: 'EDIT_ATTR',
     id: id,
     name: name
   };
@@ -23291,25 +23291,26 @@ var editAttr = exports.editAttr = function editAttr(id, name) {
 
 var addItem = exports.addItem = function addItem() {
   return {
-    type: ADD_ITEM
+    type: 'ADD_ITEM'
   };
 };
 
 var editItem = exports.editItem = function editItem() {
   return {
-    type: EDIT_ITEM
+    type: 'EDIT_ITEM'
   };
 };
 
 var editItemName = exports.editItemName = function editItemName(name) {
   return {
-    type: EDIT_ITEM_NAME,
+    type: 'EDIT_ITEM_NAME',
     name: name
   };
 };
 
 var changeView = exports.changeView = function changeView(view) {
   return {
+    type: 'CHANGE_VIEW',
     view: view
   };
 };
@@ -24331,7 +24332,7 @@ var ViewContainer = function (_React$Component) {
         key: 'render',
         value: function render() {
             //TODO: Create ViewContainer toggle based on view of state.
-            return _react2.default.createElement(_chartView2.default, { items: this.props.items, attributes: this.props.attributes });
+            return _react2.default.createElement(_chartView2.default, { items: this.props.items, attributes: this.props.attributes, addAttr: this.props.addAttr });
         }
     }]);
     return ViewContainer;
@@ -24346,13 +24347,13 @@ var mapStateToProps = function mapStateToProps(state) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
     return {
-        addAttr: _actions.addAttr,
-        editAttr: _actions.editAttr,
-        addItem: _actions.addItem
+        addAttr: function addAttr() {
+            dispatch((0, _actions.addAttr)());
+        }
     };
 };
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(ViewContainer);
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ViewContainer);
 
 /***/ }),
 /* 284 */
@@ -24487,56 +24488,56 @@ var ChartView = function (_React$Component) {
         value: function render() {
 
             return _react2.default.createElement(
-                "table",
-                { className: "table table-bordered table-inverse" },
+                "div",
+                null,
                 _react2.default.createElement(
-                    "thead",
-                    null,
+                    "table",
+                    { className: "table table-bordered table-inverse" },
                     _react2.default.createElement(
-                        "tr",
+                        "thead",
                         null,
-                        _react2.default.createElement("th", null),
-                        this.props.items.map(function (item) {
+                        _react2.default.createElement(
+                            "tr",
+                            null,
+                            _react2.default.createElement("th", null),
+                            this.props.items.map(function (item) {
+                                return _react2.default.createElement(
+                                    "th",
+                                    null,
+                                    item.name
+                                );
+                            })
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "tbody",
+                        null,
+                        this.props.attributes.map(function (attr) {
+                            // Generate <td> column elements in each row
+                            var rowCells = this.props.items.map(function (item) {
+                                return _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    item[attr.id]
+                                );
+                            });
+
+                            var attr = this.renderAttributeOrEditField(attr);
+
+                            // Set each row to be attribute name, then generated column cells
                             return _react2.default.createElement(
-                                "th",
+                                "tr",
                                 null,
-                                item.name
+                                attr,
+                                rowCells
                             );
-                        })
+                        }, this)
                     )
                 ),
                 _react2.default.createElement(
-                    "tbody",
-                    null,
-                    this.props.attributes.map(function (attr) {
-                        // Generate <td> column elements in each row
-                        var rowCells = this.props.items.map(function (item) {
-                            return _react2.default.createElement(
-                                "td",
-                                null,
-                                item[attr.id]
-                            );
-                        });
-
-                        var attr = this.renderAttributeOrEditField(attr);
-
-                        // Set each row to be attribute name, then generated column cells
-                        return _react2.default.createElement(
-                            "tr",
-                            null,
-                            attr,
-                            rowCells
-                        );
-                    }, this),
-                    _react2.default.createElement(
-                        "tr",
-                        null,
-                        _react2.default.createElement(
-                            "button",
-                            { id: "addButton", className: "btn btn-primary" },
-                            _react2.default.createElement("i", { className: "fa fa-plus", "aria-hidden": "true" })
-                        )
-                    )
+                    "button",
+                    { id: "addButton", className: "btn btn-primary", onClick: this.props.addAttr },
+                    _react2.default.createElement("i", { className: "fa fa-plus", "aria-hidden": "true" })
                 )
             );
         }
@@ -24576,7 +24577,10 @@ var attributes = function attributes() {
 
     switch (action.type) {
         case _actions.ADD_ATTR:
-            return [].concat((0, _toConsumableArray3.default)(state), [{ name: "" }]);
+            console.log(action);
+            return [].concat((0, _toConsumableArray3.default)(state), [{ name: "",
+                id: 1000,
+                type_id: 0 }]);
         case _actions.EDIT_ATTR:
             var array = [].concat((0, _toConsumableArray3.default)(state));
             return array.map(function (item, index) {

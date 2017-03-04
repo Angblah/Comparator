@@ -51,38 +51,38 @@ class ChartView extends React.Component {
     render () {
 
         return (
-            <table className="table table-bordered table-inverse">
-                <thead>
-                    <tr>
-                        <th></th>
-                        {this.props.items.map(item =>
-                            <th>
-                                {item.name}
-                            </th>
-                        )}
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.props.attributes.map(function(attr) {
-                        // Generate <td> column elements in each row
-                        var rowCells = this.props.items.map(item =>
-                            <td>{item[attr.id]}</td>
-                        );
+            <div>
+                <table className="table table-bordered table-inverse">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            {this.props.items.map(item =>
+                                <th>
+                                    {item.name}
+                                </th>
+                            )}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.props.attributes.map(function(attr) {
+                            // Generate <td> column elements in each row
+                            var rowCells = this.props.items.map(item =>
+                                <td>{item[attr.id]}</td>
+                            );
 
-                        var attr = this.renderAttributeOrEditField(attr);
+                            var attr = this.renderAttributeOrEditField(attr);
 
-                        // Set each row to be attribute name, then generated column cells
-                        return(
-                            <tr>
-                                {attr}
-                                {rowCells}
-                            </tr>);
-                    }, this)}
-                    <tr>
-                        <button id="addButton" className="btn btn-primary"><i className="fa fa-plus" aria-hidden="true"></i></button> 
-                    </tr>
-                </tbody>
-            </table>
+                            // Set each row to be attribute name, then generated column cells
+                            return(
+                                <tr>
+                                    {attr}
+                                    {rowCells}
+                                </tr>);
+                        }, this)}
+                    </tbody>
+                </table>
+                <button id="addButton" className="btn btn-primary" onClick={this.props.addAttr}><i className="fa fa-plus" aria-hidden="true"></i></button> 
+            </div>
         );
     }
 }

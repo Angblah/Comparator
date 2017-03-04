@@ -5,41 +5,44 @@ export const EDIT_ITEM = 'EDIT_ITEM'
 export const EDIT_ITEM_NAME = 'EDIT_ITEM_NAME'
 export const CHANGE_VIEW = 'CHANGE_VIEW'
 
-export const addAttr = () => {
-  return {
-    type: ADD_ATTR
-  }
+export const addAttr = (id) => {
+    //AJAX to get next id
+    return {
+        type: 'ADD_ATTR'
+        //ID then goes here
+    }
 }
 
 export const editAttr = (id, name) => {
-  return {
-    type: EDIT_ATTR,
-    id,
-    name
-  }
+    return {
+        type: 'EDIT_ATTR',
+        id,
+        name
+    }
 }
 
 export const addItem = () => {
-  return {
-    type: ADD_ITEM
-  }
+    return {
+        type: 'ADD_ITEM'
+    }
 }
 
 export const editItem = () => {
-  return {
-    type: EDIT_ITEM
-  }
+    return {
+        type: 'EDIT_ITEM'
+    }
 }
 
 export const editItemName = (name) => {
     return {
-        type: EDIT_ITEM_NAME,
+        type: 'EDIT_ITEM_NAME',
         name
     }
 }
 
 export const changeView = (view) => {
     return {
+        type: 'CHANGE_VIEW',
         view
     }
 }
