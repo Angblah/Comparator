@@ -1,3 +1,5 @@
+//ES6 Syntax
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 

@@ -14,6 +14,7 @@
     "babel-plugin-transform-runtime": "^6.22.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.22.0",
+    "babel-preset-stage-2": "^6.22.0",
     "webpack": "^2.2.1"
   },
   "dependencies": {
@@ -31,6 +32,8 @@
     "react-dom": "^15.4.2",
     "react-dragula": "^1.1.17",
     "react-pan-zoom-element": "^2.0.1",
-    "react-zoom": "^0.3.1"
+    "react-redux": "^5.0.3",
+    "react-zoom": "^0.3.1",
+    "redux": "^3.6.0"
   }
 }

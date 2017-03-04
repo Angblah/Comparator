@@ -76,6 +76,10 @@ def workspace():
 def testbed():
     return render_template('testbed.html')
 
+@app.route('/testbed2')
+def testbed2():
+    return render_template('testbed2.html')
+
 @app.route('/index')
 def index2():
     return render_template('index.html')
