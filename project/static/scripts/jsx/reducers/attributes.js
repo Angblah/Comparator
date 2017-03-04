@@ -1,12 +1,13 @@
 import {
     ADD_ATTR,
-    EDIT_ATTR
+    EDIT_ATTR,
+    LOAD_ATTR
 } from '../actions/actions'
 
 const attributes = (state = [], action) => {
     switch(action.type) {
         case ADD_ATTR:
-            console.log(action);
+            // TODO: Deal with IDs
             return [
                 ...state,
                 {name: "",
@@ -25,6 +26,8 @@ const attributes = (state = [], action) => {
                     ...action.item.name
                 }
             });
+        case LOAD_ATTR:
+            return action.json;
         default:
             return state;
     }

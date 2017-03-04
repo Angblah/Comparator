@@ -1,6 +1,7 @@
 import {
     ADD_ITEM,
-    EDIT_ITEM
+    EDIT_ITEM,
+    LOAD_ITEMS
 } from '../actions/actions'
 
 const items = (state = [], action) => {
@@ -14,6 +15,8 @@ const items = (state = [], action) => {
             ]
         case EDIT_ITEM:
             return state;
+        case LOAD_ITEMS:
+            return action.json;
         default:
             return state;
     }

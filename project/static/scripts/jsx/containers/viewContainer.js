@@ -4,8 +4,6 @@ import {addAttr, editAttr, addItem, editItem} from '../actions/actions'
 
 import ChartView from '../components/chartView'
 
-
-
 class ViewContainer extends React.Component {
     render() {
         //TODO: Create ViewContainer toggle based on view of state.
@@ -14,7 +12,6 @@ class ViewContainer extends React.Component {
         );
     }
 }
-
 
 const mapStateToProps = (state) => {
     return {

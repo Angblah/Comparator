@@ -34,6 +34,8 @@
     "react-pan-zoom-element": "^2.0.1",
     "react-redux": "^5.0.3",
     "react-zoom": "^0.3.1",
-    "redux": "^3.6.0"
+    "redux": "^3.6.0",
+    "redux-logger": "^2.8.2",
+    "redux-thunk": "^2.2.0"
   }
 }
