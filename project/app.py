@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, jsonify
+from flask import Flask, render_template, request, url_for, jsonify, json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
@@ -49,8 +49,10 @@ def saveComparisonData():
 
 @app.route('/addComparisonAttr', methods=["POST"])
 def addComparisonAttr():
-    data = request.get_json()
-    return add_comparison_attribute_back(data['compId'])
+    attrId = {}
+    data = json.loads(request.data)
+    attrId['attrId'] = (add_comparison_attribute_back(data['compId']))
+    return jsonify(attrId)
 
 @app.route('/addComparisonItem', methods=["POST"])
 def addComparisonItem():

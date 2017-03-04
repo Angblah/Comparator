@@ -7,17 +7,18 @@ export const CHANGE_VIEW = 'CHANGE_VIEW'
 export const LOAD_ATTR = 'LOAD_ATTR'
 export const LOAD_ITEMS = 'LOAD_ITEMS'
 
-import axios from 'axios';
-
 // ATTRIBUTE ACTIONS
 // ================================
 export function addAttr(compId) {
-    console.log("Clicked addAttr");
     return function (dispatch) {
-        return axios.post('/addComparisonAttr', {
-            compId : compId
+        return fetch('/addComparisonAttr', {
+            method: 'POST',
+            body: JSON.stringify({
+                compId : compId
+            })
         })
-        .then(response => dispatch(routeToAddAttr(response.data)))
+        .then(response => response.json())
+        .then(json => dispatch(routeToAddAttr(json.attrId)))
     }
 }
 
