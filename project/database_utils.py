@@ -264,6 +264,20 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
+    create or replace function set_comparison_comment (_comparison_id int, _comment text) returns void
+        as $$
+        begin
+            update comparison set comment = _comment where id = _comparison_id;
+        end;
+    $$ language plpgsql;
+
+    create or replace function set_template_comment (_template_id int, _comment text) returns void
+        as $$
+        begin
+            update user_template set comment = _comment where id = _template_id;
+        end;
+    $$ language plpgsql;
+
     
     create or replace function get_user_comparisons (_account_id int) returns table(_id int, _name varchar)
         as $$
@@ -958,6 +972,19 @@ def set_comparison_attribute_field(attribute_id, field, field_value):
     update comparison_attribute set """ + field + """ = :field_value where id = :attribute_id;
     """)
     db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
+
+def set_comparison_comment(comparison_id, comment):
+    query = text("""
+    select set_comparison_comment(:comparison_id, :comment);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, comment=comment)
+
+def set_template_comment(template_id, comment):
+    query = text("""
+    select set_template_comment(:template_id, :comment);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, comment=comment)
+
 
 def get_template(id, get_json=True):
     query = text("""
