@@ -22518,6 +22518,8 @@ var CHANGE_VIEW = exports.CHANGE_VIEW = 'CHANGE_VIEW';
 var LOAD_ATTR = exports.LOAD_ATTR = 'LOAD_ATTR';
 var LOAD_ITEMS = exports.LOAD_ITEMS = 'LOAD_ITEMS';
 
+// ATTRIBUTE ACTIONS
+// ================================
 var addAttr = exports.addAttr = function addAttr(id) {
     //AJAX to get next id
     return {
@@ -22534,6 +22536,8 @@ var editAttr = exports.editAttr = function editAttr(id, name) {
     };
 };
 
+// ITEM ACTIONS
+// ================================
 var addItem = exports.addItem = function addItem() {
     return {
         type: 'ADD_ITEM'
@@ -22553,12 +22557,17 @@ var editItemName = exports.editItemName = function editItemName(name) {
     };
 };
 
+// WORKSPACE/STATE ACTIONS
+// ================================
 var changeView = exports.changeView = function changeView(view) {
     return {
         type: 'CHANGE_VIEW',
         view: view
     };
 };
+
+// THUNKS FOR COMPARISON LOAD
+// ================================
 
 var loadAttr = exports.loadAttr = function loadAttr(json) {
     return {
@@ -23351,70 +23360,7 @@ __webpack_require__(108)('asyncIterator');
 __webpack_require__(108)('observable');
 
 /***/ }),
-<<<<<<< HEAD
 /* 266 */,
-=======
-/* 265 */,
-/* 266 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var ADD_ATTR = exports.ADD_ATTR = 'ADD_ATTR';
-var EDIT_ATTR = exports.EDIT_ATTR = 'EDIT_ATTR';
-var ADD_ITEM = exports.ADD_ITEM = 'ADD_ITEM';
-var EDIT_ITEM = exports.EDIT_ITEM = 'EDIT_ITEM';
-var EDIT_ITEM_NAME = exports.EDIT_ITEM_NAME = 'EDIT_ITEM_NAME';
-var CHANGE_VIEW = exports.CHANGE_VIEW = 'CHANGE_VIEW';
-
-var addAttr = exports.addAttr = function addAttr(id) {
-    //AJAX to get next id
-    return {
-        type: 'ADD_ATTR'
-        //ID then goes here
-    };
-};
-
-var editAttr = exports.editAttr = function editAttr(id, name) {
-    return {
-        type: 'EDIT_ATTR',
-        id: id,
-        name: name
-    };
-};
-
-var addItem = exports.addItem = function addItem() {
-    return {
-        type: 'ADD_ITEM'
-    };
-};
-
-var editItem = exports.editItem = function editItem() {
-    return {
-        type: 'EDIT_ITEM'
-    };
-};
-
-var editItemName = exports.editItemName = function editItemName(name) {
-    return {
-        type: 'EDIT_ITEM_NAME',
-        name: name
-    };
-};
-
-var changeView = exports.changeView = function changeView(view) {
-    return {
-        type: 'CHANGE_VIEW',
-        view: view
-    };
-};
-
-/***/ }),
->>>>>>> 01628add013934b9bbc71c442eb4cff9b3759611
 /* 267 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -24871,7 +24817,7 @@ var attributes = function attributes() {
 
     switch (action.type) {
         case _actions.ADD_ATTR:
-            console.log(action);
+            // TODO: Deal with IDs
             return [].concat((0, _toConsumableArray3.default)(state), [{ name: "",
                 id: 1000,
                 type_id: 0 }]);
@@ -24885,7 +24831,6 @@ var attributes = function attributes() {
                 return (0, _extends3.default)({}, item, action.item.name);
             });
         case _actions.LOAD_ATTR:
-            console.log(action.json);
             return action.json;
         default:
             return state;
@@ -24919,12 +24864,10 @@ var items = function items() {
 
     switch (action.type) {
         case _actions.ADD_ITEM:
-            console.log(action);
             return [].concat((0, _toConsumableArray3.default)(state), [{ name: "" }]);
         case _actions.EDIT_ITEM:
             return state;
         case _actions.LOAD_ITEMS:
-            console.log(action.json);
             return action.json;
         default:
             return state;
@@ -24947,7 +24890,7 @@ Object.defineProperty(exports, "__esModule", {
 var _actions = __webpack_require__(227);
 
 var view = function view() {
-    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { view: 'CHART' };
     var action = arguments[1];
 
     switch (action.type) {
@@ -27240,28 +27183,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //     ]
 // }
 
-var initialState; //COMPONENTS
-
+// Set up logger
 var loggerMiddleware = (0, _reduxLogger2.default)();
 
-// getComparisonData() {
-//     $.ajax({
-//         url: '/getComparisonData',
-//         dataType: 'json',
-//         success: (data) => {
-//             initialState = data;
-//             console.log(initialState);
-//         },
-//         error: (xhr, status, err) => {
-//             console.error('/getComparisonData', status, err.toString());
-//         }
-//     });
-// }
+// Make store and reducers along with Middleware setup
+//COMPONENTS
+var store = (0, _redux.createStore)(_rootReducer2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware));
 
-// console.log(initialState);
-
-var store = (0, _redux.createStore)(_rootReducer2.default, initialState, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware));
-
+// Dispatch action to fetch the comparison
 store.dispatch((0, _actions.fetchComparison)());
 
 var Workspace = function (_React$Component) {
