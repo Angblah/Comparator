@@ -22837,16 +22837,21 @@ var LOAD_ITEMS = exports.LOAD_ITEMS = 'LOAD_ITEMS';
 // ATTRIBUTE ACTIONS
 // ================================
 function addAttr(compId) {
+    console.log("Clicked addAttr");
     return function (dispatch) {
         return _axios2.default.post('/addComparisonAttr', {
             compId: compId
-        }).then(dispatch(routeToAddAttr()));
+        }).then(function (response) {
+            return dispatch(routeToAddAttr(response.data));
+        });
     };
 }
 
-function routeToAddAttr() {
+function routeToAddAttr(attrId) {
+    console.log(attrId);
     return {
-        type: 'ADD_ATTR'
+        type: 'ADD_ATTR',
+        attrId: attrId
     };
 }
 

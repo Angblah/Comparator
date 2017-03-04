@@ -12,17 +12,20 @@ import axios from 'axios';
 // ATTRIBUTE ACTIONS
 // ================================
 export function addAttr(compId) {
+    console.log("Clicked addAttr");
     return function (dispatch) {
         return axios.post('/addComparisonAttr', {
             compId : compId
         })
-        .then(dispatch(routeToAddAttr()))
+        .then(response => dispatch(routeToAddAttr(response.data)))
     }
 }
 
-export function routeToAddAttr() {
+export function routeToAddAttr(attrId) {
+    console.log(attrId);
     return {
-        type: 'ADD_ATTR'
+        type: 'ADD_ATTR',
+        attrId
     }
 }
 

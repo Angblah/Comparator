@@ -49,10 +49,8 @@ def saveComparisonData():
 
 @app.route('/addComparisonAttr', methods=["POST"])
 def addComparisonAttr():
-    # TODO:: return ID
     data = request.get_json()
-    add_comparison_attribute(data['compId'], None, '0')
-    return ("success!")
+    return add_comparison_attribute_back(data['compId'])
 
 @app.route('/addComparisonItem', methods=["POST"])
 def addComparisonItem():
