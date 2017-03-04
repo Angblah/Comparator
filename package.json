@@ -18,6 +18,7 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
+    "axios": "^0.15.3",
     "babel-polyfill": "^6.22.0",
     "babel-runtime": "^6.22.0",
     "blueimp-file-upload": "^9.15.0",
@@ -34,6 +35,8 @@
     "react-pan-zoom-element": "^2.0.1",
     "react-redux": "^5.0.3",
     "react-zoom": "^0.3.1",
-    "redux": "^3.6.0"
+    "redux": "^3.6.0",
+    "redux-logger": "^2.8.2",
+    "redux-thunk": "^2.2.0"
   }
 }
