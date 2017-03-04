@@ -8,7 +8,7 @@ from sendgrid.helpers.mail import *
 from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
-app.secret_key = os.urandom(12)
+app.secret_key = os.environ['SECRET_KEY']
 app.config[
     'SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.debug = True
@@ -251,6 +251,24 @@ def upload_file():
     return render_template('upload_form.html', upload_result=upload_result, thumbnail_url1=thumbnail_url1,
                            thumbnail_url2=thumbnail_url2)
 
+# returns url for guest access to specified comparison
+def share_comparison(id):
+    token = ts.dumps(id, salt='comparison-id')
+    return url_for('view_comparison_guest', token=token, _external=True)
+
+def share_template(id):
+    token = ts.dumps(id, salt='template-id')
+    return url_for('view_template_guest', token=token, _external=True)
+
+@app.route('/comparison/<token>')
+def view_comparison_guest(token):
+    comparison_id = ts.loads(token, salt='comparison-id')
+    # TODO: check if user is logged in or not, change redirect appropriately
+
+app.route('/template/<token>')
+def view_template_guest(token):
+    template_id = ts.loads(token, salt='template-id')
+    # TODO: check if user is logged in or not, change redirect appropriately
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
