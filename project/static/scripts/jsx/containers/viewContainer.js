@@ -21,8 +21,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        addAttr: () => {
-            dispatch(addAttr())
+        addAttr: (compId) => {
+            dispatch(addAttr(compId))
         },
         addItem: () => {
             dispatch(addItem())

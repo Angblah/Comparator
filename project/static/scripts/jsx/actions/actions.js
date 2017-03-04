@@ -7,13 +7,22 @@ export const CHANGE_VIEW = 'CHANGE_VIEW'
 export const LOAD_ATTR = 'LOAD_ATTR'
 export const LOAD_ITEMS = 'LOAD_ITEMS'
 
+import axios from 'axios';
+
 // ATTRIBUTE ACTIONS
 // ================================
-export const addAttr = (id) => {
-    //AJAX to get next id
+export function addAttr(compId) {
+    return function (dispatch) {
+        return axios.post('/addComparisonAttr', {
+            compId : compId
+        })
+        .then(dispatch(routeToAddAttr()))
+    }
+}
+
+export function routeToAddAttr() {
     return {
         type: 'ADD_ATTR'
-        //ID then goes here
     }
 }
 
