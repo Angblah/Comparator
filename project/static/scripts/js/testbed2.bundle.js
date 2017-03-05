@@ -22549,6 +22549,7 @@ function addAttr(compId) {
 }
 
 function routeToAddAttr(attrId) {
+    attrId = attrId.substring(1, attrId.length - 1);
     return {
         type: 'ADD_ATTR',
         attrId: attrId
@@ -22575,12 +22576,13 @@ function addItem(compId) {
         }).then(function (response) {
             return response.json();
         }).then(function (json) {
-            return dispatch(routeToAddItem(json.attrId));
+            return dispatch(routeToAddItem(json.itemId));
         });
     };
 }
 
 function routeToAddItem(itemId) {
+    itemId = itemId.substring(1, itemId.length - 1);
     return {
         type: 'ADD_ITEM',
         itemId: itemId
