@@ -11,7 +11,8 @@ class ViewContainer extends React.Component {
                        attributes={this.props.attributes}
                        addAttr={this.props.addAttr}
                        editAttr={this.props.editAttr}
-                       addItem={this.props.addItem}/>
+                       addItem={this.props.addItem}
+                       editItem={this.props.editItem}/>
         );
     }
 }
@@ -33,6 +34,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         addItem: (compId) => {
             dispatch(addItem(compId))
+        },
+        editItem: (itemId, attrId, value) => {
+            dispatch(editItem(itemId, attrId, value))
         }
     }
 }

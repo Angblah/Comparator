@@ -22519,6 +22519,8 @@ exports.routeToAddAttr = routeToAddAttr;
 exports.editAttr = editAttr;
 exports.addItem = addItem;
 exports.routeToAddItem = routeToAddItem;
+exports.editItem = editItem;
+exports.routeToEditItem = routeToEditItem;
 exports.fetchComparison = fetchComparison;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22602,6 +22604,33 @@ function routeToAddItem(itemId) {
     itemId = itemId.substring(1, itemId.length - 1);
     return {
         type: 'ADD_ITEM',
+        itemId: itemId
+    };
+}
+
+function editItem(itemId, attrId, value) {
+    return function (dispatch) {
+        return fetch('/saveComparisonData', {
+            method: 'POST',
+            body: (0, _stringify2.default)({
+                itemId: itemId,
+                attrId: attrId,
+                value: value
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(routeToEditItem(json.itemId, json.attrId, json.value));
+        });
+    };
+}
+
+function routeToEditItem(itemId, attrId, value) {
+    console.log(itemId);
+    console.log(attrId);
+    console.log(value);
+    return {
+        type: 'EDIT_ITEM',
         itemId: itemId
     };
 }
@@ -24462,7 +24491,8 @@ var ViewContainer = function (_React$Component) {
                 attributes: this.props.attributes,
                 addAttr: this.props.addAttr,
                 editAttr: this.props.editAttr,
-                addItem: this.props.addItem });
+                addItem: this.props.addItem,
+                editItem: this.props.editItem });
         }
     }]);
     return ViewContainer;
@@ -24485,6 +24515,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         addItem: function addItem(compId) {
             dispatch((0, _actions.addItem)(compId));
+        },
+        editItem: function editItem(itemId, attrId, value) {
+            dispatch((0, _actions.editItem)(itemId, attrId, value));
         }
     };
 };

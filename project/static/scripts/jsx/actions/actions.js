@@ -75,6 +75,31 @@ export function routeToAddItem(itemId) {
     }
 }
 
+export function editItem(itemId, attrId, value) {
+    return function (dispatch) {
+        return fetch('/saveComparisonData', {
+            method: 'POST',
+            body: JSON.stringify({
+                itemId : itemId,
+                attrId : attrId,
+                value : value
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToEditItem(json.itemId, json.attrId, json.value)))
+    }
+}
+
+export function routeToEditItem(itemId, attrId, value) {
+    console.log(itemId);
+    console.log(attrId);
+    console.log(value);
+    return {
+        type: 'EDIT_ITEM',
+        itemId
+    }
+}
+
 export const editItemName = (name) => {
     return {
         type: 'EDIT_ITEM_NAME',
