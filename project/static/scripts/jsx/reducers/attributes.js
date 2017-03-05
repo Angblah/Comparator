@@ -7,11 +7,10 @@ import {
 const attributes = (state = [], action) => {
     switch(action.type) {
         case ADD_ATTR:
-            // TODO: Deal with IDs
             return [
                 ...state,
                 {name: "",
-                id: 1000,
+                id: action.attrId,
                 type_id: 0}
             ];
         case EDIT_ATTR:

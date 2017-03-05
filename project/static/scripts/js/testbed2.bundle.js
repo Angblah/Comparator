@@ -22547,7 +22547,6 @@ function addAttr(compId) {
 }
 
 function routeToAddAttr(attrId) {
-    console.log(attrId);
     return {
         type: 'ADD_ATTR',
         attrId: attrId
@@ -24846,9 +24845,8 @@ var attributes = function attributes() {
 
     switch (action.type) {
         case _actions.ADD_ATTR:
-            // TODO: Deal with IDs
             return [].concat((0, _toConsumableArray3.default)(state), [{ name: "",
-                id: 1000,
+                id: action.attrId,
                 type_id: 0 }]);
         case _actions.EDIT_ATTR:
             var array = [].concat((0, _toConsumableArray3.default)(state));

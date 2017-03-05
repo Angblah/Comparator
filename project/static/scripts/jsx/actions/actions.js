@@ -23,7 +23,6 @@ export function addAttr(compId) {
 }
 
 export function routeToAddAttr(attrId) {
-    console.log(attrId);
     return {
         type: 'ADD_ATTR',
         attrId
