@@ -37,9 +37,12 @@ def getComparisonData():
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():
-    data = request.form
+    message = {}
+    data = json.loads(request.data)
+    message['id'] = data['id']
+    message['name'] = data['name']
     set_comparison_attribute_field(data['id'], 'name', data['name'])
-    return ("success")
+    return jsonify(message)
 
 @app.route('/saveComparisonData', methods=["POST"])
 def saveComparisonData():

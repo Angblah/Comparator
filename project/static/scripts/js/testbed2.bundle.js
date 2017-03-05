@@ -22508,7 +22508,7 @@ module.exports = function(it){
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.loadItems = exports.loadAttr = exports.changeView = exports.editItemName = exports.editAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
+exports.loadItems = exports.loadAttr = exports.changeView = exports.editItemName = exports.routeToEditAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
 
 var _stringify = __webpack_require__(294);
 
@@ -22516,6 +22516,7 @@ var _stringify2 = _interopRequireDefault(_stringify);
 
 exports.addAttr = addAttr;
 exports.routeToAddAttr = routeToAddAttr;
+exports.editAttr = editAttr;
 exports.addItem = addItem;
 exports.routeToAddItem = routeToAddItem;
 exports.fetchComparison = fetchComparison;
@@ -22556,7 +22557,23 @@ function routeToAddAttr(attrId) {
     };
 }
 
-var editAttr = exports.editAttr = function editAttr(id, name) {
+function editAttr(id, name) {
+    return function (dispatch) {
+        return fetch('/saveComparisonAttributesData', {
+            method: 'POST',
+            body: (0, _stringify2.default)({
+                id: id,
+                name: name
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(routeToEditAttr(json.id, json.name));
+        });
+    };
+}
+
+var routeToEditAttr = exports.routeToEditAttr = function routeToEditAttr(id, name) {
     return {
         type: 'EDIT_ATTR',
         id: id,
@@ -24441,7 +24458,11 @@ var ViewContainer = function (_React$Component) {
         key: 'render',
         value: function render() {
             //TODO: Create ViewContainer toggle based on view of state.
-            return _react2.default.createElement(_chartView2.default, { items: this.props.items, attributes: this.props.attributes, addAttr: this.props.addAttr, addItem: this.props.addItem });
+            return _react2.default.createElement(_chartView2.default, { items: this.props.items,
+                attributes: this.props.attributes,
+                addAttr: this.props.addAttr,
+                editAttr: this.props.editAttr,
+                addItem: this.props.addItem });
         }
     }]);
     return ViewContainer;
@@ -24458,6 +24479,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
     return {
         addAttr: function addAttr(compId) {
             dispatch((0, _actions.addAttr)(compId));
+        },
+        editAttr: function editAttr(id, name) {
+            dispatch((0, _actions.editAttr)(id, name));
         },
         addItem: function addItem(compId) {
             dispatch((0, _actions.addItem)(compId));
@@ -24745,6 +24769,7 @@ var ChartView = function (_React$Component) {
                     _react2.default.createElement("input", {
                         className: "form-control",
                         defaultValue: item.name
+                        //onBlur={(evt) => this.props.editAttr(item.id, "testName")}
                     })
                 );
             } else {
@@ -24871,7 +24896,7 @@ var attributes = function attributes() {
                     return item;
                 }
 
-                return (0, _extends3.default)({}, item, action.item.name);
+                return (0, _extends3.default)({}, item, action.name);
             });
         case _actions.LOAD_ATTR:
             return action.json;

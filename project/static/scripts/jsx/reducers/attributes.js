@@ -22,7 +22,7 @@ const attributes = (state = [], action) => {
 
                 return {
                     ...item,
-                    ...action.item.name
+                    ...action.name
                 }
             });
         case LOAD_ATTR:

@@ -30,7 +30,21 @@ export function routeToAddAttr(attrId) {
     }
 }
 
-export const editAttr = (id, name) => {
+export function editAttr(id, name) {
+    return function (dispatch) {
+        return fetch('/saveComparisonAttributesData', {
+            method: 'POST',
+            body: JSON.stringify({
+                id : id,
+                name : name
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToEditAttr(json.id, json.name)))
+    }
+}
+
+export const routeToEditAttr = (id, name) => {
     return {
         type: 'EDIT_ATTR',
         id,
