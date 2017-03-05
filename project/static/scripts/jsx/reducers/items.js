@@ -7,6 +7,7 @@ import {
 const items = (state = [], action) => {
     switch(action.type) {
         case ADD_ITEM:
+            //TODO:: Anything need to be done with item ID?
             return [
                 ...state,
                 {name: ""}

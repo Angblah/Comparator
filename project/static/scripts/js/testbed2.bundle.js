@@ -22508,7 +22508,7 @@ module.exports = function(it){
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.loadItems = exports.loadAttr = exports.changeView = exports.editItemName = exports.editItem = exports.addItem = exports.editAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
+exports.loadItems = exports.loadAttr = exports.changeView = exports.editItemName = exports.editAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
 
 var _stringify = __webpack_require__(294);
 
@@ -22516,6 +22516,8 @@ var _stringify2 = _interopRequireDefault(_stringify);
 
 exports.addAttr = addAttr;
 exports.routeToAddAttr = routeToAddAttr;
+exports.addItem = addItem;
+exports.routeToAddItem = routeToAddItem;
 exports.fetchComparison = fetchComparison;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22563,17 +22565,27 @@ var editAttr = exports.editAttr = function editAttr(id, name) {
 
 // ITEM ACTIONS
 // ================================
-var addItem = exports.addItem = function addItem() {
-    return {
-        type: 'ADD_ITEM'
+function addItem(compId) {
+    return function (dispatch) {
+        return fetch('/addComparisonItem', {
+            method: 'POST',
+            body: (0, _stringify2.default)({
+                compId: compId
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(routeToAddItem(json.attrId));
+        });
     };
-};
+}
 
-var editItem = exports.editItem = function editItem() {
+function routeToAddItem(itemId) {
     return {
-        type: 'EDIT_ITEM'
+        type: 'ADD_ITEM',
+        itemId: itemId
     };
-};
+}
 
 var editItemName = exports.editItemName = function editItemName(name) {
     return {
@@ -24445,8 +24457,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         addAttr: function addAttr(compId) {
             dispatch((0, _actions.addAttr)(compId));
         },
-        addItem: function addItem() {
-            dispatch((0, _actions.addItem)());
+        addItem: function addItem(compId) {
+            dispatch((0, _actions.addItem)(compId));
         }
     };
 };
@@ -24804,7 +24816,9 @@ var ChartView = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     "button",
-                    { id: "addItemButton", className: "btn btn-primary", onClick: this.props.addItem },
+                    { id: "addItemButton", className: "btn btn-primary", onClick: function onClick() {
+                            return _this2.props.addItem(6);
+                        } },
                     _react2.default.createElement("i", { className: "fa fa-plus", "aria-hidden": "true" })
                 )
             );
@@ -24891,6 +24905,7 @@ var items = function items() {
 
     switch (action.type) {
         case _actions.ADD_ITEM:
+            //TODO:: Anything need to be done with item ID?
             return [].concat((0, _toConsumableArray3.default)(state), [{ name: "" }]);
         case _actions.EDIT_ITEM:
             return state;

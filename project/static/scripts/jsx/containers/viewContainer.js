@@ -24,8 +24,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         addAttr: (compId) => {
             dispatch(addAttr(compId))
         },
-        addItem: () => {
-            dispatch(addItem())
+        addItem: (compId) => {
+            dispatch(addItem(compId))
         }
     }
 }

@@ -56,9 +56,10 @@ def addComparisonAttr():
 
 @app.route('/addComparisonItem', methods=["POST"])
 def addComparisonItem():
-    data = request.form
-    add_comparison_item_back(data['compId'])
-    return ("success!")
+    itemId = {}
+    data = json.loads(request.data)
+    itemId['itemId'] = (add_comparison_item_back(data['compId']))
+    return jsonify(itemId)
 
 @app.route('/newComparison')
 def newComparison():

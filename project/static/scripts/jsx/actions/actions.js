@@ -39,15 +39,23 @@ export const editAttr = (id, name) => {
 
 // ITEM ACTIONS
 // ================================
-export const addItem = () => {
-    return {
-        type: 'ADD_ITEM'
+export function addItem(compId) {
+    return function (dispatch) {
+        return fetch('/addComparisonItem', {
+            method: 'POST',
+            body: JSON.stringify({
+                compId : compId
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToAddItem(json.attrId)))
     }
 }
 
-export const editItem = () => {
+export function routeToAddItem(itemId) {
     return {
-        type: 'EDIT_ITEM'
+        type: 'ADD_ITEM',
+        itemId
     }
 }
 
