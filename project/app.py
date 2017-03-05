@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, jsonify, json
+from flask import Flask, render_template, request, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
@@ -89,7 +89,6 @@ def index2():
 @login_required
 def profile_page():
     namelist = get_user_comparison_names(current_user.id)
-
     return render_template('profileHomePage.html', name_list=namelist)
 
 @app.route('/myProfile')
@@ -163,7 +162,6 @@ def add_user():
     registerEmail = request.args.get('registerEmail')
     registerUsername = request.args.get('registerUsername')
     registerPassword = request.args.get('registerPassword')
-    registerPasswordConfirm = request.args.get('registerPasswordConfirm')
 
     #Make sure the username and email are available
     emailCheck = ""
@@ -189,7 +187,7 @@ def add_user():
     if data:
         return jsonify(data)
     else:
-        # data is empty, no duplicate usernames/emails
+        # data is empty, no duplicate username/emails
         register_user(registerEmail, registerUsername, registerPassword)
         return login_helper(registerUsername, registerPassword)
 
@@ -232,7 +230,6 @@ def login_helper(loginUsername, loginPassword):
 def logout():
     logout_user()
     return render_template('home.html')
-
 
 # TODO: integrate into workspace once that's set up
 # Taken from https://github.com/cloudinary/pycloudinary/tree/master/samples/basic_flask (remove/adapt later for workspace)
