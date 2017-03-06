@@ -6,17 +6,16 @@ import {
 
 const attributes = (state = [], action) => {
     switch(action.type) {
+        // Add an empty attribute
         case ADD_ATTR:
-<<<<<<< HEAD
             // TODO: Deal with IDs
-=======
->>>>>>> 01628add013934b9bbc71c442eb4cff9b3759611
             return [
                 ...state,
                 {name: "",
                 id: 1000,
                 type_id: 0}
             ];
+        // Edit a single attribute
         case EDIT_ATTR:
             let array = [...state];
             return array.map((item, index) => {
@@ -29,6 +28,7 @@ const attributes = (state = [], action) => {
                     ...action.item.name
                 }
             });
+        // Load the attributes
         case LOAD_ATTR:
             return action.json;
         default:

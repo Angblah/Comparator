@@ -2,10 +2,10 @@ import {
     CHANGE_VIEW
 } from '../actions/actions'
 
-const view = (state = {view: 'CHART'}, action) => {
+const view = (state = 'CHART', action) => {
     switch(action.type) {
         case CHANGE_VIEW:
-            return {view: action.view};
+            return action.view;
         default:
             return state;
     }
