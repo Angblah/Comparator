@@ -10,7 +10,12 @@ class ViewContainer extends React.Component {
         if (this.props.view === 'CHART') {
             return (
                 <div>
-                    <ChartView items={this.props.items} attributes={this.props.attributes} addAttr={this.props.addAttr} addItem={this.props.addItem}/>
+                    <ChartView items={this.props.items}
+                       attributes={this.props.attributes}
+                       addAttr={this.props.addAttr}
+                       editAttr={this.props.editAttr}
+                       addItem={this.props.addItem}
+                       editItem={this.props.editItem}/>
                     <span/>
                     <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('SPIDER')}>Toggle View</button>
                 </div>
@@ -37,11 +42,17 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        addAttr: () => {
-            dispatch(addAttr())
+        addAttr: (compId) => {
+            dispatch(addAttr(compId))
         },
-        addItem: () => {
-            dispatch(addItem())
+        editAttr: (id, name) => {
+            dispatch(editAttr(id, name))
+        },
+        addItem: (compId) => {
+            dispatch(addItem(compId))
+        },
+        editItem: (itemId, attrId, value) => {
+            dispatch(editItem(itemId, attrId, value))
         },
         changeView: (view) => {
             dispatch(changeView(view))

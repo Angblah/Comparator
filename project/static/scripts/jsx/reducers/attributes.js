@@ -8,11 +8,10 @@ const attributes = (state = [], action) => {
     switch(action.type) {
         // Add an empty attribute
         case ADD_ATTR:
-            // TODO: Deal with IDs
             return [
                 ...state,
                 {name: "",
-                id: 1000,
+                id: action.attrId,
                 type_id: 0}
             ];
         // Edit a single attribute
@@ -25,7 +24,7 @@ const attributes = (state = [], action) => {
 
                 return {
                     ...item,
-                    ...action.item.name
+                    ...action.name
                 }
             });
         // Load the attributes

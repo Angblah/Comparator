@@ -9,15 +9,42 @@ export const LOAD_ITEMS = 'LOAD_ITEMS'
 
 // ATTRIBUTE ACTIONS
 // ================================
-export const addAttr = (id) => {
-    //AJAX to get next id
-    return {
-        type: 'ADD_ATTR'
-        //ID then goes here
+export function addAttr(compId) {
+    return function (dispatch) {
+        return fetch('/addComparisonAttr', {
+            method: 'POST',
+            body: JSON.stringify({
+                compId : compId
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToAddAttr(json.attrId)))
     }
 }
 
-export const editAttr = (id, name) => {
+export function routeToAddAttr(attrId) {
+    attrId = attrId.substring(1, attrId.length - 1);
+    return {
+        type: 'ADD_ATTR',
+        attrId
+    }
+}
+
+export function editAttr(id, name) {
+    return function (dispatch) {
+        return fetch('/saveComparisonAttributesData', {
+            method: 'POST',
+            body: JSON.stringify({
+                id : id,
+                name : name
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToEditAttr(json.id, json.name)))
+    }
+}
+
+export const routeToEditAttr = (id, name) => {
     return {
         type: 'EDIT_ATTR',
         id,
@@ -27,15 +54,49 @@ export const editAttr = (id, name) => {
 
 // ITEM ACTIONS
 // ================================
-export const addItem = () => {
-    return {
-        type: 'ADD_ITEM'
+export function addItem(compId) {
+    return function (dispatch) {
+        return fetch('/addComparisonItem', {
+            method: 'POST',
+            body: JSON.stringify({
+                compId : compId
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToAddItem(json.itemId)))
     }
 }
 
-export const editItem = () => {
+export function routeToAddItem(itemId) {
+    itemId = itemId.substring(1, itemId.length - 1);
     return {
-        type: 'EDIT_ITEM'
+        type: 'ADD_ITEM',
+        itemId
+    }
+}
+
+export function editItem(itemId, attrId, value) {
+    return function (dispatch) {
+        return fetch('/saveComparisonData', {
+            method: 'POST',
+            body: JSON.stringify({
+                itemId : itemId,
+                attrId : attrId,
+                value : value
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToEditItem(json.itemId, json.attrId, json.value)))
+    }
+}
+
+export function routeToEditItem(itemId, attrId, value) {
+    console.log(itemId);
+    console.log(attrId);
+    console.log(value);
+    return {
+        type: 'EDIT_ITEM',
+        itemId
     }
 }
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
@@ -37,27 +37,36 @@ def getComparisonData():
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():
-    data = request.form
+    message = {}
+    data = json.loads(request.data)
+    message['id'] = data['id']
+    message['name'] = data['name']
     set_comparison_attribute_field(data['id'], 'name', data['name'])
-    return ("success")
+    return jsonify(message)
 
 @app.route('/saveComparisonData', methods=["POST"])
 def saveComparisonData():
-    data = request.form
+    message = {}
+    data = json.loads(request.data)
+    message['itemId'] = data['itemId']
+    message['attrId'] = data['attrId']
+    message['value'] = data['value']
     set_comparison_attribute_value(data['itemId'], data['attrId'], data['value'])
-    return ("success!")
+    return jsonify(message)
 
 @app.route('/addComparisonAttr', methods=["POST"])
 def addComparisonAttr():
-    data = request.form
-    add_comparison_attribute(data['compId'], None, data['typeId'])
-    return ("success!")
+    attrId = {}
+    data = json.loads(request.data)
+    attrId['attrId'] = (add_comparison_attribute_back(data['compId']))
+    return jsonify(attrId)
 
 @app.route('/addComparisonItem', methods=["POST"])
 def addComparisonItem():
-    data = request.form
-    add_comparison_item_back(data['compId'])
-    return ("success!")
+    itemId = {}
+    data = json.loads(request.data)
+    itemId['itemId'] = (add_comparison_item_back(data['compId']))
+    return jsonify(itemId)
 
 @app.route('/newComparison')
 def newComparison():
@@ -88,7 +97,6 @@ def index2():
 @login_required
 def profile_page():
     namelist = get_user_comparison_names(current_user.id)
-
     return render_template('profileHomePage.html', name_list=namelist)
 
 @app.route('/myProfile')
@@ -162,7 +170,6 @@ def add_user():
     registerEmail = request.args.get('registerEmail')
     registerUsername = request.args.get('registerUsername')
     registerPassword = request.args.get('registerPassword')
-    registerPasswordConfirm = request.args.get('registerPasswordConfirm')
 
     #Make sure the username and email are available
     emailCheck = ""
@@ -188,7 +195,7 @@ def add_user():
     if data:
         return jsonify(data)
     else:
-        # data is empty, no duplicate usernames/emails
+        # data is empty, no duplicate username/emails
         register_user(registerEmail, registerUsername, registerPassword)
         return login_helper(registerUsername, registerPassword)
 
@@ -231,7 +238,6 @@ def login_helper(loginUsername, loginPassword):
 def logout():
     logout_user()
     return render_template('home.html')
-
 
 # TODO: integrate into workspace once that's set up
 # Taken from https://github.com/cloudinary/pycloudinary/tree/master/samples/basic_flask (remove/adapt later for workspace)

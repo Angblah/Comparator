@@ -248,8 +248,8 @@ def initialize_db_structure():
                 update comparison_attribute set position = position + _num_attributes where position >= _position and comparison_id = _comparison_id;
                 update comparison set date_modified = current_timestamp where id = _comparison_id;
 
-                insert into comparison_attribute(name, comparison_id, position) select null, _comparison_id, position from
-                    (select generate_series(_position, _position + _num_attributes - 1) as position) as positions;
+                return query insert into comparison_attribute(name, comparison_id, position) select null, _comparison_id, position from
+                    (select generate_series(_position, _position + _num_attributes - 1) as position) as positions returning id;
 
         end;
     $$ language plpgsql;
@@ -261,6 +261,20 @@ def initialize_db_structure():
                 on conflict (item_id, attribute_id) do update
                     set val = new_value;
             update comparison set date_modified = current_timestamp where id = (select comparison_id from comparison_item where comparison_item.id = comparison_item_id);
+        end;
+    $$ language plpgsql;
+
+    create or replace function set_comparison_comment (_comparison_id int, _comment text) returns void
+        as $$
+        begin
+            update comparison set comment = _comment where id = _comparison_id;
+        end;
+    $$ language plpgsql;
+
+    create or replace function set_template_comment (_template_id int, _comment text) returns void
+        as $$
+        begin
+            update user_template set comment = _comment where id = _template_id;
         end;
     $$ language plpgsql;
 
@@ -959,6 +973,19 @@ def set_comparison_attribute_field(attribute_id, field, field_value):
     """)
     db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
 
+def set_comparison_comment(comparison_id, comment):
+    query = text("""
+    select set_comparison_comment(:comparison_id, :comment);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, comment=comment)
+
+def set_template_comment(template_id, comment):
+    query = text("""
+    select set_template_comment(:template_id, :comment);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, comment=comment)
+
+
 def get_template(id, get_json=True):
     query = text("""
     select * from get_template(:id);
@@ -1037,6 +1064,7 @@ def jsonify_column(result):
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
+
 
 # TODO: improve documentation
 # TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
