@@ -660,8 +660,8 @@ def add_sheet_attribute_back (sheet_id, num_attributes=1, get_json=True):
     """)
     result = db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, num_attributes=num_attributes)
 
-    # if num_attributes == 1:
-    #     return result.scalar()
+    if num_attributes == 1:
+        return result.scalar()
 
     if get_json:
         return jsonify_column(result)
@@ -700,8 +700,8 @@ def add_comparison_item_back (comparison_id, num_items=1, get_json=True):
     select add_comparison_item_back(:comparison_id, :num_items);
     """)
     result = db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, num_items=num_items)
-    # if num_items == 1:
-    #     return result.scalar()
+    if num_items == 1:
+        return result.scalar()
 
     if get_json:
         return jsonify_column(result)

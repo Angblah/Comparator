@@ -22791,7 +22791,6 @@ function addAttr(compId) {
 }
 
 function routeToAddAttr(attrId) {
-    attrId = attrId.substring(1, attrId.length - 1);
     return {
         type: 'ADD_ATTR',
         attrId: attrId
@@ -22840,7 +22839,6 @@ function addItem(compId) {
 }
 
 function routeToAddItem(itemId) {
-    itemId = itemId.substring(1, itemId.length - 1);
     return {
         type: 'ADD_ITEM',
         itemId: itemId
@@ -28230,14 +28228,14 @@ var ChartView = function (_React$Component) {
                 _react2.default.createElement(
                     "button",
                     { id: "addAttrButton", className: "btn btn-primary", onClick: function onClick() {
-                            return _this2.props.addAttr(6);
+                            return _this2.props.addAttr(12);
                         } },
                     _react2.default.createElement("i", { className: "fa fa-plus", "aria-hidden": "true" })
                 ),
                 _react2.default.createElement(
                     "button",
                     { id: "addItemButton", className: "btn btn-primary", onClick: function onClick() {
-                            return _this2.props.addItem(6);
+                            return _this2.props.addItem(12);
                         } },
                     _react2.default.createElement("i", { className: "fa fa-plus", "aria-hidden": "true" })
                 )
