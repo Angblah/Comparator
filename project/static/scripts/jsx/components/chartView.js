@@ -5,46 +5,90 @@ class ChartView extends React.Component {
     constructor(props) {
         super(props);
         
-        // this.toggleEditing = this.toggleEditing.bind(this);
-        // this.handleAddEvent = this.handleAddEvent.bind(this);
+        this.toggleEditing = this.toggleEditing.bind(this);
+        this.handleEditEvent = this.handleEditEvent.bind(this);
 
         this.state = {};
-        this.state.editing = null;
+        // TODO: Should eventually extract editing into a reducer
+        this.state.editing = {attr: undefined, item: undefined};
     }
 
-    // handleEditEvent(itemID, event) {
-    //     var attr;
-    //     var newComp = this.state.comparison_data;
-    //     for (attr of newComp.attributes) {
-    //         if (attr.id === itemID) {
-    //             attr.name = event.target.value;
-    //         }
-    //     }
+    // TODO: Handle the onBlur event to manage the Redux state
+    handleEditEvent(itemID, event) {
+        var attr;
+        var newComp = this.state.comparison_data;
+        for (attr of newComp.attributes) {
+            if (attr.id === itemID) {
+                attr.name = event.target.value;
+            }
+        }
 
-    //     this.setState({comparison_data: newComp});
-    //     this.setState({editing: null});
-    // }
+        this.setState({comparison_data: newComp});
+        this.setState({editing: null});
+    }
 
-    // toggleEditing(itemID) {
-    //     this.setState({editing: itemID});
-    // }
+    toggleEditing(attrID, itemID) {
+        this.setState({editing: {attr: attrID, item: itemID}});
+        console.log({attr: attrID, item: itemID});
+    }
 
-    renderAttributeOrEditField(item) {
-        if (this.state.editing === item.id) {
+    renderAttributeOrEditField(attr) {
+        if (this.state.editing.attr === attr.id && this.state.editing.item === undefined) {
             return(
                 <td>
                     <input 
                     className="form-control"
-                    defaultValue={item.name}
-                    //onBlur={(evt) => this.props.editAttr(item.id, "testName")}
+                    defaultValue={attr.name}
+                    onBlur={(evt) => this.handleEditEvent(attr.id, evt)}
                     />
                 </td>
             );
         } else {
             return(
                 <td
+                onClick={() => this.toggleEditing(attr.id, undefined)}
+                key={attr.id}
+                >{attr.name}</td>
+            );
+        }
+    }
+
+    renderItemOrEditField(item, attrID) {
+        if (this.state.editing.attr === attrID && this.state.editing.item === item.id) {
+            return(
+                <td>
+                    <input 
+                    className="form-control"
+                    defaultValue={item[attrID]}
+                    />
+                </td>
+            );
+        } else {
+            return(
+                <td
+                onClick={() => this.toggleEditing(attrID, item.id)}
+                key={item.id+item.id}
+                >{item[attrID]}</td>
+            );
+        }
+    }
+
+    renderItemNameOrEditField(item) {
+        if (this.state.editing.item === item.id && this.state.editing.attr === undefined) {
+            return(
+                <th>
+                    <input 
+                    className="form-control"
+                    defaultValue={item.name}
+                    />
+                </th>
+            );
+        } else {
+            return(
+                <th
+                onClick={() => this.toggleEditing(undefined, item.id)}
                 key={item.id}
-                >{item.name}</td>
+                >{item.name}</th>
             );
         }
     }
@@ -55,12 +99,15 @@ class ChartView extends React.Component {
             <div>
                 <table className="table table-bordered table-inverse">
                     <thead>
+                        
                         <tr>
                             <th></th>
                             {this.props.items.map(item =>
-                                <th>
+                                this.renderItemNameOrEditField(item)
+
+                                /*<th>
                                     {item.name}
-                                </th>
+                                </th>*/
                             )}
                         </tr>
                     </thead>
@@ -68,7 +115,10 @@ class ChartView extends React.Component {
                         {this.props.attributes.map(function(attr) {
                             // Generate <td> column elements in each row
                             var rowCells = this.props.items.map(item =>
-                                <td>{item[attr.id]}</td>
+
+                                this.renderItemOrEditField(item, attr.id)
+
+                                //<td>{item[attr.id]}</td>
                             );
 
                             var attr = this.renderAttributeOrEditField(attr);
