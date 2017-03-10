@@ -22810,7 +22810,6 @@ function addAttr(compId) {
 }
 
 function routeToAddAttr(attrId) {
-    attrId = attrId.substring(1, attrId.length - 1);
     return {
         type: 'ADD_ATTR',
         attrId: attrId
@@ -22859,7 +22858,6 @@ function addItem(compId) {
 }
 
 function routeToAddItem(itemId) {
-    itemId = itemId.substring(1, itemId.length - 1);
     return {
         type: 'ADD_ITEM',
         itemId: itemId
@@ -28158,9 +28156,13 @@ var ChartView = function (_React$Component) {
         _this.handleEditEvent = _this.handleEditEvent.bind(_this);
 
         _this.state = {};
+        // TODO: Should eventually extract editing into a reducer
         _this.state.editing = { attr: undefined, item: undefined };
         return _this;
     }
+
+    // TODO: Handle the onBlur event to manage the Redux state
+
 
     (0, _createClass3.default)(ChartView, [{
         key: "handleEditEvent",
@@ -28344,14 +28346,14 @@ var ChartView = function (_React$Component) {
                 _react2.default.createElement(
                     "button",
                     { id: "addAttrButton", className: "btn btn-primary", onClick: function onClick() {
-                            return _this5.props.addAttr(6);
+                            return _this5.props.addAttr(12);
                         } },
                     _react2.default.createElement("i", { className: "fa fa-plus", "aria-hidden": "true" })
                 ),
                 _react2.default.createElement(
                     "button",
                     { id: "addItemButton", className: "btn btn-primary", onClick: function onClick() {
-                            return _this5.props.addItem(6);
+                            return _this5.props.addItem(12);
                         } },
                     _react2.default.createElement("i", { className: "fa fa-plus", "aria-hidden": "true" })
                 )
@@ -28510,15 +28512,6 @@ var ZoomDragCircle = function (_React$Component) {
                         width: 700,
                         height: 300
                     },
-                    _react2.default.createElement(
-                        'foreignObject',
-                        null,
-                        _react2.default.createElement(
-                            'input',
-                            null,
-                            'HELLO'
-                        )
-                    ),
                     _react2.default.createElement(
                         _reactArt.Group,
                         { x: this.state.x, y: this.state.y,

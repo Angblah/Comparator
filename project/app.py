@@ -32,7 +32,7 @@ def load_user(user_id):
 
 @app.route('/getComparisonData')
 def getComparisonData():
-    data = get_comparison(6)
+    data = get_comparison(12)
     return (data)
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
@@ -41,7 +41,7 @@ def saveComparisonAttributesData():
     data = json.loads(request.data)
     message['id'] = data['id']
     message['name'] = data['name']
-    set_comparison_attribute_field(data['id'], 'name', data['name'])
+    set_sheet_attribute_field(data['id'], 'name', data['name'])
     return jsonify(message)
 
 @app.route('/saveComparisonData', methods=["POST"])
@@ -58,7 +58,7 @@ def saveComparisonData():
 def addComparisonAttr():
     attrId = {}
     data = json.loads(request.data)
-    attrId['attrId'] = (add_comparison_attribute_back(data['compId']))
+    attrId['attrId'] = (add_sheet_attribute_back(data['compId']))
     return jsonify(attrId)
 
 @app.route('/addComparisonItem', methods=["POST"])
@@ -77,7 +77,7 @@ def newComparison():
 def workspace():
     # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
     template = get_template(4)
-    comparison = get_comparison(6)
+    comparison = get_comparison(12)
 
     return render_template('workspace.html', template=template, comparison=comparison)
     
@@ -275,7 +275,7 @@ def view_comparison_guest(token):
     comparison_id = ts.loads(token, salt='comparison-id')
     # TODO: check if user is logged in or not, change redirect appropriately
 
-app.route('/template/<token>')
+@app.route('/template/<token>')
 def view_template_guest(token):
     template_id = ts.loads(token, salt='template-id')
     # TODO: check if user is logged in or not, change redirect appropriately

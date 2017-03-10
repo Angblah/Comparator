@@ -23,7 +23,6 @@ export function addAttr(compId) {
 }
 
 export function routeToAddAttr(attrId) {
-    attrId = attrId.substring(1, attrId.length - 1);
     return {
         type: 'ADD_ATTR',
         attrId
@@ -68,7 +67,6 @@ export function addItem(compId) {
 }
 
 export function routeToAddItem(itemId) {
-    itemId = itemId.substring(1, itemId.length - 1);
     return {
         type: 'ADD_ITEM',
         itemId
