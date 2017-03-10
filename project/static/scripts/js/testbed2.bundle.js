@@ -28218,7 +28218,7 @@ var ChartView = function (_React$Component) {
                         className: "form-control",
                         defaultValue: attr.name,
                         onBlur: function onBlur(evt) {
-                            return _this2.handleEditEvent(attr.id, evt);
+                            return _this2.props.editAttr(attr.id, evt.target.value);
                         }
                     })
                 );

@@ -39,7 +39,7 @@ class ChartView extends React.Component {
                     <input 
                     className="form-control"
                     defaultValue={attr.name}
-                    onBlur={(evt) => this.handleEditEvent(attr.id, evt)}
+                    onBlur={(evt) => this.props.editAttr(attr.id, evt.target.value)}
                     />
                 </td>
             );
