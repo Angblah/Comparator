@@ -97,10 +97,25 @@ export function routeToEditItem(itemId, attrId, value) {
     }
 }
 
-export const editItemName = (name) => {
+export function editItemName(itemId, value) {
+    return function (dispatch) {
+        return fetch('/saveComparisonItemName', {
+            method: 'POST',
+            body: JSON.stringify({
+                itemId : itemId,
+                value : value
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToEditItemName(json.itemId, json.value)))
+    }
+}
+
+export const routeToEditItemName = (itemId, value) => {
     return {
         type: 'EDIT_ITEM_NAME',
-        name
+        itemId,
+        value
     }
 }
 
