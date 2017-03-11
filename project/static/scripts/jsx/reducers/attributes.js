@@ -1,7 +1,8 @@
 import {
     ADD_ATTR,
     EDIT_ATTR,
-    LOAD_ATTR
+    LOAD_ATTR,
+    EDIT_ITEM_NAME
 } from '../actions/actions'
 
 const attributes = (state = [], action) => {
@@ -16,15 +17,15 @@ const attributes = (state = [], action) => {
             ];
         // Edit a single attribute
         case EDIT_ATTR:
-            let array = [...state];
-            return array.map((item, index) => {
-                if (item.id !== action.id) {
-                    return item;
+            var newState = [...state];
+            return newState.map((attr, index) => {
+                if (attr.id !== action.id) {
+                    return attr;
                 }
 
                 return {
-                    ...item,
-                    ...action.name
+                    ...attr,
+                    name: action.name
                 }
             });
         // Load the attributes

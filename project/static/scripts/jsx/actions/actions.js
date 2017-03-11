@@ -113,11 +113,11 @@ export function editItemName(itemId, value) {
     }
 }
 
-export const routeToEditItemName = (itemId, value) => {
+export const routeToEditItemName = (itemId, name) => {
     return {
         type: 'EDIT_ITEM_NAME',
         itemId,
-        value
+        name
     }
 }
 
