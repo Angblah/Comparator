@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux'
-import {addAttr, editAttr, addItem, editItem, changeView} from '../actions/actions'
+import {addAttr, editAttr, addItem, editItem, editItemName, changeView} from '../actions/actions'
 import ChartView from '../components/chartView'
 import ZoomDragCircle from '../components/spiderView'
 
@@ -15,7 +15,8 @@ class ViewContainer extends React.Component {
                        addAttr={this.props.addAttr}
                        editAttr={this.props.editAttr}
                        addItem={this.props.addItem}
-                       editItem={this.props.editItem}/>
+                       editItem={this.props.editItem}
+                       editItemName={this.props.editItemName}/>
                     <span/>
                     <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('SPIDER')}>Toggle View</button>
                 </div>
@@ -53,6 +54,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         editItem: (itemId, attrId, value) => {
             dispatch(editItem(itemId, attrId, value))
+        },
+        editItemName: (itemId, value) => {
+            dispatch(editItemName(itemId, value))
         },
         changeView: (view) => {
             dispatch(changeView(view))

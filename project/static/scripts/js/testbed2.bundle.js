@@ -22766,7 +22766,7 @@ module.exports = __webpack_require__(17).getIteratorMethod = function(it){
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.loadItems = exports.loadAttr = exports.changeView = exports.editItemName = exports.routeToEditAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
+exports.loadItems = exports.loadAttr = exports.changeView = exports.routeToEditItemName = exports.routeToEditAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
 
 var _stringify = __webpack_require__(326);
 
@@ -22779,6 +22779,7 @@ exports.addItem = addItem;
 exports.routeToAddItem = routeToAddItem;
 exports.editItem = editItem;
 exports.routeToEditItem = routeToEditItem;
+exports.editItemName = editItemName;
 exports.fetchComparison = fetchComparison;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22890,10 +22891,27 @@ function routeToEditItem(itemId, attrId, value) {
     };
 }
 
-var editItemName = exports.editItemName = function editItemName(name) {
+function editItemName(itemId, value) {
+    return function (dispatch) {
+        return fetch('/saveComparisonItemName', {
+            method: 'POST',
+            body: (0, _stringify2.default)({
+                itemId: itemId,
+                value: value
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(routeToEditItemName(json.itemId, json.value));
+        });
+    };
+}
+
+var routeToEditItemName = exports.routeToEditItemName = function routeToEditItemName(itemId, value) {
     return {
         type: 'EDIT_ITEM_NAME',
-        name: name
+        itemId: itemId,
+        value: value
     };
 };
 
@@ -27001,7 +27019,8 @@ var ViewContainer = function (_React$Component) {
                         addAttr: this.props.addAttr,
                         editAttr: this.props.editAttr,
                         addItem: this.props.addItem,
-                        editItem: this.props.editItem }),
+                        editItem: this.props.editItem,
+                        editItemName: this.props.editItemName }),
                     _react2.default.createElement('span', null),
                     _react2.default.createElement(
                         'button',
@@ -27052,6 +27071,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         editItem: function editItem(itemId, attrId, value) {
             dispatch((0, _actions.editItem)(itemId, attrId, value));
+        },
+        editItemName: function editItemName(itemId, value) {
+            dispatch((0, _actions.editItemName)(itemId, value));
         },
         changeView: function changeView(view) {
             dispatch((0, _actions.changeView)(view));
@@ -28303,7 +28325,10 @@ var ChartView = function (_React$Component) {
                     null,
                     _react2.default.createElement("input", {
                         className: "form-control",
-                        defaultValue: item.name
+                        defaultValue: item.name,
+                        onBlur: function onBlur(evt) {
+                            return _this4.props.editItemName(item.id, evt.target.value);
+                        }
                     })
                 );
             } else {
