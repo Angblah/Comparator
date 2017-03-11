@@ -813,7 +813,7 @@ def set_sheet_attribute_field(attribute_id, field, field_value):
 
 def set_item_name(item_id, name):
     query = text("""
-    update comparison_item set name = :name where id = item_id;
+    update comparison_item set name = :name where id = :item_id;
     """)
     db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, name=name)
 
