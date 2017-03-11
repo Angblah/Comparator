@@ -8,13 +8,12 @@ var RecentComparisons = React.createClass({
 	
 
     render: function() {
-    	var names = JSON.parse(this.props.feed);
-        names = names.slice(0,5);
-        console.log(names);
-        if (names != undefined) {            
+    	var data = JSON.parse(this.props.feed);
+    	console.log(data);
+        if (data != undefined) {
             return (
             	<div>
-            		{names.map(function(name){ return <div className="tile"> {name} </div>}) }
+            		{data.map(function(data){ return <div className="tile"> {data['name']} </div>}) }
         		</div>
         	)
         } else {
@@ -22,7 +21,7 @@ var RecentComparisons = React.createClass({
                 <div>
                     <div className="tile"> No Comparisons Yet </div>
                 </div>
-            )   
+            )
         }
     }
 });
@@ -38,12 +37,12 @@ var Comparisons = React.createClass({
     
 
     render: function() {
-        var names = JSON.parse(this.props.feed);
-        console.log(names);
-        if (names != undefined) {            
+        var data = JSON.parse(this.props.feed);
+        console.log(data);
+        if (data != undefined) {
             return (
                 <div>
-                    {names.map(function(name){ return <div className="fixed-tile"> {name} </div>}) }
+                    {data.map(function(data){ return <div className="fixed-tile"> {data['name']} </div>}) }
                 </div>
             )
         } else {
@@ -51,7 +50,7 @@ var Comparisons = React.createClass({
                 <div>
                     <div className="fixed-tile"> No Comparisons Yet </div>
                 </div>
-            )   
+            )
         }
     }
 });
