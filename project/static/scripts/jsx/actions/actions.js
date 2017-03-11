@@ -66,10 +66,12 @@ export function addItem(compId) {
     }
 }
 
-export function routeToAddItem(itemId) {
+export function routeToAddItem(id) {
+    console.log("Route to add item")
+    console.log(id)
     return {
         type: 'ADD_ITEM',
-        itemId
+        id
     }
 }
 
