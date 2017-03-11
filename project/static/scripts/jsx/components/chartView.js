@@ -29,7 +29,6 @@ class ChartView extends React.Component {
 
     toggleEditing(attrID, itemID) {
         this.setState({editing: {attr: attrID, item: itemID}});
-        console.log({attr: attrID, item: itemID});
     }
 
     renderAttributeOrEditField(attr) {
@@ -39,7 +38,7 @@ class ChartView extends React.Component {
                     <input 
                     className="form-control"
                     defaultValue={attr.name}
-                    onBlur={(evt) => this.handleEditEvent(attr.id, evt)}
+                    onBlur={(evt) => this.props.editAttr(attr.id, evt.target.value)}
                     />
                 </td>
             );
@@ -60,6 +59,7 @@ class ChartView extends React.Component {
                     <input 
                     className="form-control"
                     defaultValue={item[attrID]}
+                    onBlur={(evt) => this.props.editItem(item.id, attrID, evt.target.value)}
                     />
                 </td>
             );

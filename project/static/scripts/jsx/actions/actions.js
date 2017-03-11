@@ -91,9 +91,6 @@ export function editItem(itemId, attrId, value) {
 }
 
 export function routeToEditItem(itemId, attrId, value) {
-    console.log(itemId);
-    console.log(attrId);
-    console.log(value);
     return {
         type: 'EDIT_ITEM',
         itemId

@@ -9,7 +9,6 @@
 
 
 #dash-username {
-    /*background-color: rgba(0, 0, 0, 0.5);*/
     background-image: url('../img/default-user-back.jpg');
     filter: blur(5px);
     -webkit-filter: blur(5px);
@@ -23,15 +22,14 @@
     -webkit-filter: blur(0px);
     -moz-filter: blur(0px);
     -o-filter: blur(0px);
-    -ms-filter: blur(5px);
+    -ms-filter: blur(0px);
 }
 #dash-username-content img {
     margin-top: 4em;
     max-width: 10%;
     max-height: 10%;
     border-radius: 50%;
-    border-color: @secondary-col;
-    border-width: 10px;
+    border: 2px solid @secondary-col;
 }
 #dash-username span {
     background-color: rgba(0, 0, 0, 0.1);
@@ -39,10 +37,10 @@
     -webkit-filter: blur(0px);
     -moz-filter: blur(0px);
     -o-filter: blur(0px);
-    -ms-filter: blur(5px);
+    -ms-filter: blur(0px);
 }
-#dash-username h1 {
-    color: @secondary-text;
+#dash-username > h1 {
+    color: @primary-text;
 }
 
 
@@ -91,17 +89,13 @@ ul.tab li a:focus, .active {
 
 
 /*RECENT COMPARISONS*/
-#recent-comp-extra {
-  height: 2em;
-  clear: both;
-}
 #recent-comp {
     transition: 1s transform;
 }
 .tile {
     width: 5em;
     height: 5em;
-    /*border: 2px solid @secondary-col;*/
+    border: 2px solid @secondary-col;
     background-color: @primary-col;
     padding-top: 5em;
     box-sizing: border-box;
@@ -144,6 +138,7 @@ div.col-sm-11 {
     background-color: @primary-col;
     padding-top: 8em;
     box-sizing: border-box;
+    border: 2px solid @secondary-col;
     transition: 1s transform;
     transform-origin: top left;
     float: left;

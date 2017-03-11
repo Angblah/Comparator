@@ -22884,9 +22884,6 @@ function editItem(itemId, attrId, value) {
 }
 
 function routeToEditItem(itemId, attrId, value) {
-    console.log(itemId);
-    console.log(attrId);
-    console.log(value);
     return {
         type: 'EDIT_ITEM',
         itemId: itemId
@@ -28234,7 +28231,6 @@ var ChartView = function (_React$Component) {
         key: "toggleEditing",
         value: function toggleEditing(attrID, itemID) {
             this.setState({ editing: { attr: attrID, item: itemID } });
-            console.log({ attr: attrID, item: itemID });
         }
     }, {
         key: "renderAttributeOrEditField",
@@ -28249,7 +28245,7 @@ var ChartView = function (_React$Component) {
                         className: "form-control",
                         defaultValue: attr.name,
                         onBlur: function onBlur(evt) {
-                            return _this2.handleEditEvent(attr.id, evt);
+                            return _this2.props.editAttr(attr.id, evt.target.value);
                         }
                     })
                 );
@@ -28277,7 +28273,10 @@ var ChartView = function (_React$Component) {
                     null,
                     _react2.default.createElement("input", {
                         className: "form-control",
-                        defaultValue: item[attrID]
+                        defaultValue: item[attrID],
+                        onBlur: function onBlur(evt) {
+                            return _this3.props.editItem(item.id, attrID, evt.target.value);
+                        }
                     })
                 );
             } else {

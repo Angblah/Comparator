@@ -1,7 +1,6 @@
 /*CSS Specific for User Dashboard*/
 /*Global Variables*/
 #dash-username {
-  /*background-color: rgba(0, 0, 0, 0.5);*/
   background-image: url('../img/default-user-back.jpg');
   filter: blur(5px);
   -webkit-filter: blur(5px);
@@ -15,15 +14,14 @@
   -webkit-filter: blur(0px);
   -moz-filter: blur(0px);
   -o-filter: blur(0px);
-  -ms-filter: blur(5px);
+  -ms-filter: blur(0px);
 }
 #dash-username-content img {
   margin-top: 4em;
   max-width: 10%;
   max-height: 10%;
   border-radius: 50%;
-  border-color: #ff9900;
-  border-width: 10px;
+  border: 2px solid #ff9900;
 }
 #dash-username span {
   background-color: rgba(0, 0, 0, 0.1);
@@ -31,10 +29,10 @@
   -webkit-filter: blur(0px);
   -moz-filter: blur(0px);
   -o-filter: blur(0px);
-  -ms-filter: blur(5px);
+  -ms-filter: blur(0px);
 }
-#dash-username h1 {
-  color: #fff;
+#dash-username > h1 {
+  color: #111;
 }
 /*COMPARISON-TEMPLATE TABS*/
 ul.tab {
@@ -75,17 +73,13 @@ ul.tab li a:focus,
 }
 /*END TABS*/
 /*RECENT COMPARISONS*/
-#recent-comp-extra {
-  height: 2em;
-  clear: both;
-}
 #recent-comp {
   transition: 1s transform;
 }
 .tile {
   width: 5em;
   height: 5em;
-  /*border: 2px solid @secondary-col;*/
+  border: 2px solid #ff9900;
   background-color: #5fa4eb;
   padding-top: 5em;
   box-sizing: border-box;
@@ -118,6 +112,7 @@ div.col-sm-11 {
   background-color: #5fa4eb;
   padding-top: 8em;
   box-sizing: border-box;
+  border: 2px solid #ff9900;
   transition: 1s transform;
   transform-origin: top left;
   float: left;
