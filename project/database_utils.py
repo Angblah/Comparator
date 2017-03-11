@@ -812,6 +812,12 @@ def set_sheet_attribute_field(attribute_id, field, field_value):
     """)
     db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
 
+def set_item_name(item_id, name):
+    query = text("""
+    update comparison_item set name = :name where id = item_id;
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, name=name)
+
 def set_sheet_comment(sheet_id, comment):
     query = text("""
     select set_sheet_comment(:sheet_id, :comment);
@@ -879,6 +885,5 @@ if __name__ == '__main__':
     # single inheritance for attribute downsides:
         # unique constraint for (name, comparison_id) can't be enforced easily
         # queries slightly more complex
-# TODO: consider changing schema so that templates inherit from common table to reduce redundant functions
-# TODO: add function taking in sorted list of ids (for both attributes and items) and orders accordingly
 # TODO: export and share (csv, png, xlsx), encrypt by encrypting by user id + secret id
+# TODO: update comparison_table_stacked to also return attribute weight
