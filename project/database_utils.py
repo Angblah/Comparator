@@ -621,19 +621,18 @@ def get_user_comparison_names(user_id, get_json=True):
 
 # returns values of comparison table for specified user
 def get_user_comparisons(user_id, get_json=True):
-    query = ("""
-    select * from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id;
-    """)
+    query = text("""
+        select * from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id;
+        """)
     result = db.engine.execute(query, user_id=user_id)
     if get_json:
         return jsonify_table(result)
     return result
 
 def get_user_templates(user_id, get_json=True):
-    query = ("""
-    select * from User_Template inner join Sheet using(id) where Sheet.account_id = :user_id;
-    """)
-
+    query = text("""
+            select * from User_Template inner join Sheet using(id) where Sheet.account_id = :user_id;
+            """)
     result = db.engine.execute(query, user_id=user_id)
     if get_json:
         return jsonify_table(result)
@@ -814,7 +813,7 @@ def set_sheet_attribute_field(attribute_id, field, field_value):
 
 def set_item_name(item_id, name):
     query = text("""
-    update comparison_item set name = :name where id = item_id;
+    update comparison_item set name = :name where id = :item_id;
     """)
     db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, name=name)
 

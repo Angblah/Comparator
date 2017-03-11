@@ -107,8 +107,11 @@ def index2():
 @app.route('/profile')
 @login_required
 def profile_page():
-    namelist = get_user_comparison_names(current_user.id)
-    return render_template('profileHomePage.html', name_list=namelist)
+    #namelist = get_user_comparison_names(current_user.id)
+    # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
+    recent_comp = get_recent_user_comparisons(current_user.id, 5)
+    all_comp = get_user_comparisons(current_user.id)
+    return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp)
 
 @app.route('/myProfile')
 @login_required
@@ -282,16 +285,15 @@ def share_template(id):
     return url_for('view_template_guest', token=token, _external=True)
 
 @app.route('/comparison/<token>')
-def view_comparison_guest(token):
+def view_comparison(token):
     comparison_id = ts.loads(token, salt='comparison-id')
     # TODO: check if user is logged in or not, change redirect appropriately
 
 @app.route('/template/<token>')
-def view_template_guest(token):
+def view_template(token):
     template_id = ts.loads(token, salt='template-id')
     # TODO: check if user is logged in or not, change redirect appropriately
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
-    # TODO: change secret key so that it's secret and consistent across sessions (currently should change on every run of app.py)
