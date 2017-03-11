@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {addAttr, editAttr, addItem, editItem, editItemName, changeView} from '../actions/actions'
 import ChartView from '../components/chartView'
 import ZoomDragCircle from '../components/spiderView'
+import ProgressChart from '../components/testView'
 
 class ViewContainer extends React.Component {
     render() {
@@ -25,6 +26,7 @@ class ViewContainer extends React.Component {
             return (
                 <div>
                     <ZoomDragCircle/>
+                    <ProgressChart/>
                     <span/>
                     <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('CHART')}>Toggle View</button>
                 </div>
