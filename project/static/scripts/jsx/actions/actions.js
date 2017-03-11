@@ -93,7 +93,9 @@ export function editItem(itemId, attrId, value) {
 export function routeToEditItem(itemId, attrId, value) {
     return {
         type: 'EDIT_ITEM',
-        itemId
+        itemId,
+        attrId,
+        value
     }
 }
 

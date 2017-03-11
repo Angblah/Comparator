@@ -15,8 +15,14 @@ const items = (state = [], action) => {
                 newItem
             ];
         case EDIT_ITEM:
-            // Pass it itemID, attrId, Value
-            return state;
+            console.log(action)
+            // Pass it itemID, attrId, Value.
+            var newState = [...state].forEach(function (item){
+                    if (item.id == action.itemId) {
+                        item[action.attrId] = action.value;
+                    }
+                });
+            return newState;
         case LOAD_ITEMS:
             return action.json;
         default:
