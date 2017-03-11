@@ -7,16 +7,18 @@ import {
 
 const items = (state = [], action) => {
     switch(action.type) {
+        // Add empty Item by copying an old item and updating name and id.
+        // TODO: May actually be unnecessary???? (slice not retaining attr id) Further testing needed
         case ADD_ITEM:
-            //TODO:: Anything need to be done with item ID?
-            // TODO: Apply the same item properties to new one.
             var newItem = {...state.slice(0,0), name: "", id: action.id}
             return [
                 ...state,
                 newItem
             ];
+
+        // Edit the item
         case EDIT_ITEM:
-            // Pass it itemID, attrId, Value.
+            // Pass it itemID, attrId, Value. (adds attrId if doesnt exist)
             var newState = [...state]
             return newState.map((item) => {
                 if (item.id !== action.itemId) {
@@ -28,6 +30,8 @@ const items = (state = [], action) => {
                     [action.attrId]: action.value
                 }
             });
+
+        // Edit the Item Name
         case EDIT_ITEM_NAME:
             var newState = [...state];
             return newState.map((item) => {
@@ -40,6 +44,8 @@ const items = (state = [], action) => {
                     name: action.name
                 }
             });
+
+        // Load the comparison items to store
         case LOAD_ITEMS:
             return action.json;
         default:
