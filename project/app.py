@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, jsonify
+from flask import Flask, render_template, request, url_for, jsonify, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
@@ -275,25 +275,30 @@ def upload_file():
     return render_template('upload_form.html', upload_result=upload_result, thumbnail_url1=thumbnail_url1,
                            thumbnail_url2=thumbnail_url2)
 
-# returns url for guest access to specified comparison
+# returns url encoding specified comparison id
 def share_comparison(id):
     token = ts.dumps(id, salt='comparison-id')
-    return url_for('view_comparison_guest', token=token, _external=True)
+    return url_for('view_comparison', token=token, _external=True)
 
+# returns url encoding specified template id
 def share_template(id):
     token = ts.dumps(id, salt='template-id')
-    return url_for('view_template_guest', token=token, _external=True)
+    return url_for('view_template', token=token, _external=True)
 
 @app.route('/comparison/<token>')
 def view_comparison(token):
     comparison_id = ts.loads(token, salt='comparison-id')
-    # TODO: check if user is logged in or not, change redirect appropriately
+    return render_template('testbed2.html', comparison=get_comparison(comparison_id))
+    # TODO: check if user is logged in or not, change redirect appropriately, also change redirect to workspace vs testbed2 when changed
 
 @app.route('/template/<token>')
 def view_template(token):
     template_id = ts.loads(token, salt='template-id')
-    # TODO: check if user is logged in or not, change redirect appropriately
+    return render_template('testbed2.html', template=get_template(template_id=template_id))
+    # TODO: check if user is logged in or not, change redirect appropriately, also change redirect to workspace vs testbed2 when changed
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+
+# TODO: change workspace/testbed2 so that it takes in jinja data passed in html directly instead of calling python again
