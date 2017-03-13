@@ -275,9 +275,9 @@ def upload_file():
     return render_template('upload_form.html', upload_result=upload_result, thumbnail_url1=thumbnail_url1,
                            thumbnail_url2=thumbnail_url2)
 
-@app.route('/<id>')
-def test(id):
-    return redirect(share_comparison(id))
+# @app.route('/test/<id>')
+# def test(id):
+#     return redirect(share_comparison(id))
 
 # returns url encoding specified comparison id
 @app.template_filter('share_comparison')
