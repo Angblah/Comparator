@@ -108,10 +108,9 @@ def index2():
 @app.route('/profile')
 @login_required
 def profile_page():
-    #namelist = get_user_comparison_names(current_user.id)
     # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
-    recent_comp = get_recent_user_comparisons(current_user.id, 5)
-    all_comp = get_user_comparisons(current_user.id)
+    recent_comp = get_recent_user_comparisons(current_user.id, 5, get_json=False)
+    all_comp = get_user_comparisons(current_user.id, get_json=False)
     return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp)
 
 @app.route('/myProfile')
@@ -281,11 +280,13 @@ def test(id):
     return redirect(share_comparison(id))
 
 # returns url encoding specified comparison id
+@app.template_filter('share_comparison')
 def share_comparison(id):
     token = ts.dumps(id, salt='comparison-id')
     return url_for('view_comparison', token=token, _external=True)
 
 # returns url encoding specified template id
+@app.template_filter('share_template')
 def share_template(id):
     token = ts.dumps(id, salt='template-id')
     return url_for('view_template', token=token, _external=True)
@@ -294,13 +295,13 @@ def share_template(id):
 def view_comparison(token):
     comparison_id = ts.loads(token, salt='comparison-id')
     return render_template('testbed2.html', comparison=get_comparison(comparison_id))
-    # TODO: check if user is logged in or not, change redirect appropriately, also change redirect to workspace vs testbed2 when changed
+    # TODO: check if user is logged in or not, pass if correct user, also change redirect to workspace vs testbed2 when changed
 
 @app.route('/template/<token>')
 def view_template(token):
     template_id = ts.loads(token, salt='template-id')
     return render_template('testbed2.html', template=get_template(template_id=template_id))
-    # TODO: check if user is logged in or not, change redirect appropriately, also change redirect to workspace vs testbed2 when changed
+    # TODO: check if user is logged in or not, pass if correct user, also change redirect to workspace vs testbed2 when changed
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

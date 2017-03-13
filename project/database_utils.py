@@ -597,10 +597,14 @@ def get_user_comparison_ids(user_id, get_json=True):
         return json.dumps(output)
     return output
 
-def get_recent_user_comparisons(user_id, number, get_json=True):
-    query = text("""
-    select * from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id order by date_modified desc limit :number;
-    """)
+def get_recent_user_comparisons(user_id, number=None, get_json=True):
+    query = """
+    select * from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id order by date_modified desc
+    """
+    if number is not None:
+        query += """limit :number"""
+
+    query = text(query)
     result = db.engine.execute(query, user_id=user_id, number=number)
     if get_json:
         return jsonify_table(result)
@@ -638,10 +642,15 @@ def get_user_templates(user_id, get_json=True):
         return jsonify_table(result)
     return result
 
-def get_recent_user_templates(user_id, number, get_json=True):
-    query = text("""
-        select * from User_Template inner join Sheet using(id) where Sheet.account_id = :user_id order by date_modified desc limit :number;
-        """)
+def get_recent_user_templates(user_id, number=None, get_json=True):
+    query = """
+        select * from User_Template inner join Sheet using(id) where Sheet.account_id = :user_id order by date_modified desc
+        """
+    if number is not None:
+        query += "limit :number"
+
+    query = text(query)
+
     result = db.engine.execute(query, user_id=user_id, number=number)
     if get_json:
         return jsonify_table(result)

@@ -40,7 +40,13 @@
                         <div class="heading text-left">
                             <h3>Recent Comparisons</h3>
                         </div>
-                        <div id="recent-comp" data-feed="{{recent_comp}}">
+                        <!--<div id="recent-comp" data-feed="{{recent_comp}}">-->
+                        {% for row in recent_comp %}
+                                <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
+                                    {{row['name']}}
+                                </button>
+                        {% endfor %}
+
                         </div>
                     </div>
 
@@ -69,7 +75,12 @@
             <div class="col-sm-11" align="center" style="margin-top: 0">
             <div id="comparisons" class="tabcontent">
                 <h3>Comparisons</h3>
-                <div id="all-comp" data-feed="{{all_comp}}">
+                <!--<div id="all-comp" data-feed="{{all_comp}}">-->
+                {% for row in all_comp %}
+                        <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
+                            {{row['name']}}
+                        </button>
+                {% endfor %}
                 </div>
             </div>
 
@@ -108,6 +119,6 @@
     <!-- Include the footer for things like copyright info and JS scripts -->
     {% include "partials/footer.html" %}
 </div>
-    <script src="../static/scripts/js/dashboard.bundle.js"></script>
+    <!--<script src="../static/scripts/js/dashboard.bundle.js"></script>-->
 </body>
 </html>
