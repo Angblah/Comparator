@@ -24,18 +24,24 @@ import {fetchComparison} from '../actions/actions';
 //     ]
 // }
 
+var workspaceElem = document.getElementById("workspace");
+var data = JSON.parse(workspaceElem.dataset.comparison);
+data = {...data, view: 'CHART'};
+
+console.log(data);
+
 // Set up logger
 const loggerMiddleware = createLogger();
 
 // Make store and reducers along with Middleware setup
-const store = createStore(workspaceState,
+const store = createStore(workspaceState, data,
     applyMiddleware(
         thunkMiddleware,
         loggerMiddleware
     ));
 
 // Dispatch action to fetch the comparison
-store.dispatch(fetchComparison());
+//store.dispatch(fetchComparison());
 
 class Workspace extends React.Component {
     render() {
@@ -49,11 +55,11 @@ class Workspace extends React.Component {
 
 // ========================================
 
-var workspaceElem = document.getElementById("workspace");
+
 
 ReactDOM.render(
     <Provider store={store}>
-        <Workspace />
+        <Workspace/>
     </Provider>,
     workspaceElem
 );
