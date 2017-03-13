@@ -47884,18 +47884,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //     ]
 // }
 
-var workspaceElem = document.getElementById("workspace"); //COMPONENTS
+// Grab DOM element to replace.
+var workspaceElem = document.getElementById("workspace");
 
-var data = JSON.parse(workspaceElem.dataset.comparison);
-data = (0, _extends3.default)({}, data, { view: 'CHART' });
+// Pull data from jinja injection and parse as JSON
+//COMPONENTS
+var initialState = JSON.parse(workspaceElem.dataset.comparison);
 
-console.log(data);
+// Load data into initial state for Redux
+initialState = { present: (0, _extends3.default)({}, initialState, { view: 'CHART' }) };
 
 // Set up logger
 var loggerMiddleware = (0, _reduxLogger2.default)();
 
 // Make store and reducers along with Middleware setup
-var store = (0, _redux.createStore)(_rootReducer2.default, data, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware));
+var store = (0, _redux.createStore)(_rootReducer2.default, initialState, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware));
 
 // Dispatch action to fetch the comparison
 //store.dispatch(fetchComparison());

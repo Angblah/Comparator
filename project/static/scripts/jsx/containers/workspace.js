@@ -24,17 +24,20 @@ import {fetchComparison} from '../actions/actions';
 //     ]
 // }
 
+// Grab DOM element to replace.
 var workspaceElem = document.getElementById("workspace");
-var data = JSON.parse(workspaceElem.dataset.comparison);
-data = {...data, view: 'CHART'};
 
-console.log(data);
+// Pull data from jinja injection and parse as JSON
+var initialState = JSON.parse(workspaceElem.dataset.comparison);
+
+// Load data into initial state for Redux
+initialState = {present: {...initialState, view: 'CHART'}};
 
 // Set up logger
 const loggerMiddleware = createLogger();
 
 // Make store and reducers along with Middleware setup
-const store = createStore(workspaceState, data,
+const store = createStore(workspaceState, initialState,
     applyMiddleware(
         thunkMiddleware,
         loggerMiddleware
