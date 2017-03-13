@@ -275,6 +275,10 @@ def upload_file():
     return render_template('upload_form.html', upload_result=upload_result, thumbnail_url1=thumbnail_url1,
                            thumbnail_url2=thumbnail_url2)
 
+@app.route('/<id>')
+def test(id):
+    return redirect(share_comparison(id))
+
 # returns url encoding specified comparison id
 def share_comparison(id):
     token = ts.dumps(id, salt='comparison-id')
