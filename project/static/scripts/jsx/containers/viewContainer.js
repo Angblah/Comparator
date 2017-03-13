@@ -1,4 +1,5 @@
 import React from 'react';
+import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import {connect} from 'react-redux'
 import {addAttr, editAttr, addItem, editItem, editItemName, changeView} from '../actions/actions'
 import ChartView from '../components/chartView'
@@ -20,6 +21,15 @@ class ViewContainer extends React.Component {
                        editItemName={this.props.editItemName}/>
                     <span/>
                     <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('SPIDER')}>Toggle View</button>
+
+                    <p>
+                        <button onClick={this.props.onUndo} disabled={!(this.props.canUndo)}>
+                          Undo
+                        </button>
+                        <button onClick={this.props.onRedo} disabled={!(this.props.canRedo)}>
+                          Redo
+                        </button>
+                      </p>
                 </div>
             );
         } else {
@@ -37,9 +47,11 @@ class ViewContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        attributes: state.attributes,
-        items: state.items,
-        view: state.view
+        attributes: state.present.attributes,
+        items: state.present.items,
+        view: state.present.view,
+        canUndo: state.past.length > 0,
+        canRedo: state.future.length > 0
     };
 }
 
@@ -62,7 +74,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         changeView: (view) => {
             dispatch(changeView(view))
-        }
+        },
+        onUndo: () => dispatch(UndoActionCreators.undo()),
+        onRedo: () => dispatch(UndoActionCreators.redo())
     }
 }
 
