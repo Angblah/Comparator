@@ -98,7 +98,8 @@ def testbed():
 
 @app.route('/testbed2')
 def testbed2():
-    return render_template('testbed2.html')
+    comparison = get_comparison(12)
+    return render_template('testbed2.html', comparison=comparison)
 
 @app.route('/index')
 def index2():
