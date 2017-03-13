@@ -886,3 +886,4 @@ if __name__ == '__main__':
         # queries slightly more complex
 # TODO: export and share (csv, png, xlsx), encrypt by encrypting by user id + secret id
 # TODO: update comparison_table_stacked to also return attribute weight
+# TODO: consider changing functions to return errors for invalid id's (like get_comparison and get_template)
