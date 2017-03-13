@@ -6,25 +6,15 @@ class ChartView extends React.Component {
         super(props);
         
         this.toggleEditing = this.toggleEditing.bind(this);
-        this.handleEditEvent = this.handleEditEvent.bind(this);
+        this.clearEditing = this.clearEditing.bind(this);
 
         this.state = {};
         // TODO: Should eventually extract editing into a reducer
         this.state.editing = {attr: undefined, item: undefined};
     }
 
-    // TODO: Handle the onBlur event to manage the Redux state
-    handleEditEvent(itemID, event) {
-        var attr;
-        var newComp = this.state.comparison_data;
-        for (attr of newComp.attributes) {
-            if (attr.id === itemID) {
-                attr.name = event.target.value;
-            }
-        }
-
-        this.setState({comparison_data: newComp});
-        this.setState({editing: null});
+    clearEditing() {
+        this.setState({editing: {attr: undefined, item: undefined}});
     }
 
     toggleEditing(attrID, itemID) {
@@ -38,7 +28,7 @@ class ChartView extends React.Component {
                     <input 
                     className="form-control"
                     defaultValue={attr.name}
-                    onBlur={(evt) => this.props.editAttr(attr.id, evt.target.value)}
+                    onBlur={(evt) => {this.props.editAttr(attr.id, evt.target.value); this.clearEditing();}}
                     />
                 </td>
             );
@@ -59,7 +49,7 @@ class ChartView extends React.Component {
                     <input 
                     className="form-control"
                     defaultValue={item[attrID]}
-                    onBlur={(evt) => this.props.editItem(item.id, attrID, evt.target.value)}
+                    onBlur={(evt) => {this.props.editItem(item.id, attrID, evt.target.value); this.clearEditing();}}
                     />
                 </td>
             );
@@ -80,7 +70,7 @@ class ChartView extends React.Component {
                     <input 
                     className="form-control"
                     defaultValue={item.name}
-                    onBlur={(evt) => this.props.editItemName(item.id, evt.target.value)}
+                    onBlur={(evt) => {this.props.editItemName(item.id, evt.target.value); this.clearEditing();}}
                     />
                 </th>
             );
