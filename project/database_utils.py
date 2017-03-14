@@ -1,4 +1,4 @@
-from app import db
+from app import db, app as _app
 from sqlalchemy import text, select
 from flask import json
 import sqlalchemy
@@ -861,6 +861,18 @@ def copy_comparison (comparison_id, account_id):
     select * from copy_comparison(:comparison_id, :account_id);
     """)
     return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, account_id=account_id).scalar()
+
+def create_empty_comparison(account_id, name='New Comparison', num_items=2, num_attributes=2):
+    query = text("""
+    select * from create_empty_comparison(:name, :account_id, :num_items, :num_attributes)
+    """)
+    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, name=name, num_items=num_items, num_attributes=num_attributes).scalar()
+
+def create_empty_template (account_id, name='New Template', num_attributes=2):
+    query = text("""
+    select * from create_empty_template(:name, :account_id, :num_attributes)
+    """)
+    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, name=name, num_attributes=num_attributes).scalar()
 
 # TODO: change to return array of row dicts
 # takes in ResultProxy from executed query, returns json array of rows mapping column names to values
