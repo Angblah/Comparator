@@ -27361,12 +27361,12 @@ var Toolbar = function (_React$Component) {
                             { className: 'btn-group mr-2', role: 'group', 'aria-label': 'Second group' },
                             _react2.default.createElement(
                                 'button',
-                                { onClick: this.props.onUndo, disabled: !this.props.canUndo },
+                                { type: 'button', className: 'btn btn-secondary', onClick: this.props.onUndo, disabled: !this.props.canUndo },
                                 'Undo'
                             ),
                             _react2.default.createElement(
                                 'button',
-                                { onClick: this.props.onRedo, disabled: !this.props.canRedo },
+                                { type: 'button', className: 'btn btn-secondary', onClick: this.props.onRedo, disabled: !this.props.canRedo },
                                 'Redo'
                             )
                         ),

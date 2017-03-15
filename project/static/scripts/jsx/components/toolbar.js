@@ -15,10 +15,10 @@ class Toolbar extends React.Component {
                         </div>
 
                         <div className="btn-group mr-2" role="group" aria-label="Second group">
-                            <button onClick={this.props.onUndo} disabled={!(this.props.canUndo)}>
+                            <button type="button" className="btn btn-secondary" onClick={this.props.onUndo} disabled={!(this.props.canUndo)}>
                               Undo
                             </button>
-                            <button onClick={this.props.onRedo} disabled={!(this.props.canRedo)}>
+                            <button type="button" className="btn btn-secondary" onClick={this.props.onRedo} disabled={!(this.props.canRedo)}>
                               Redo
                             </button>
                         </div>
