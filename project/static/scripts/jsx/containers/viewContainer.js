@@ -20,16 +20,6 @@ class ViewContainer extends React.Component {
                        editItem={this.props.editItem}
                        editItemName={this.props.editItemName}/>
                     <span/>
-                    <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('SPIDER')}>Toggle View</button>
-
-                    <p>
-                        <button onClick={this.props.onUndo} disabled={!(this.props.canUndo)}>
-                          Undo
-                        </button>
-                        <button onClick={this.props.onRedo} disabled={!(this.props.canRedo)}>
-                          Redo
-                        </button>
-                      </p>
                 </div>
             );
         } else {
@@ -38,7 +28,6 @@ class ViewContainer extends React.Component {
                     <ZoomDragCircle/>
                     <ProgressChart/>
                     <span/>
-                    <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('CHART')}>Toggle View</button>
                 </div>
             );
         }
