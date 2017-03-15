@@ -111,7 +111,8 @@ def profile_page():
     # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
     recent_comp = get_recent_user_comparisons(current_user.id, 5, get_json=False)
     all_comp = get_user_comparisons(current_user.id, get_json=False)
-    return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp)
+    all_temp = get_user_templates(current_user.id, get_json=False)
+    return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp)
 
 @app.route('/myProfile')
 @login_required
@@ -300,7 +301,7 @@ def view_comparison(token):
 @app.route('/template/<token>')
 def view_template(token):
     template_id = ts.loads(token, salt='template-id')
-    return render_template('testbed2.html', template=get_template(template_id=template_id))
+    return render_template('testbed2.html', template=get_template(template_id))
     # TODO: check if user is logged in or not, pass if correct user, also change redirect to workspace vs testbed2 when changed
 
 if __name__ == '__main__':

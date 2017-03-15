@@ -12,19 +12,20 @@
 
 
 <div id="container">
-    
+
 </div>
 
 <div id="all">
 
     <!-- *** HOMEPAGE CAROUSEL *** -->
     <div>
-    <div id="dash-username">
-        <div id="dash-username-content">
-            <p style="text-align: center;"><img src="https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"></p>
-            <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
+        <div id="dash-username">
+            <div id="dash-username-content">
+                <p style="text-align: center;"><img
+                        src="https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"></p>
+                <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
+            </div>
         </div>
-    </div>
     </div>
 
     <div class="home-carousel" style="height: 20em">
@@ -42,52 +43,61 @@
                         </div>
                         <!--<div id="recent-comp" data-feed="{{recent_comp}}">-->
                         {% for row in recent_comp %}
-                                <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
-                                    {{row['name']}}
-                                </button>
-                        {% endfor %}
-
-                        </div>
-                    </div>
-
-                    <div class="col-sm-5">
-                        <div class="heading text-left">
-                            <h3>Or Make a New Comparison!</h3>
-                        </div>
-                        <div class="text-left">
-                        <br>
-                                <button type="submit" class="btn btn-template-main btn-lg" onclick="location.href='workspace'">Start Comparing</button>
-                        </div>
-                        <br>
-                    </div>
-                </div>
-            <!-- </div> -->
-        <!-- </div>
-    </div> -->
-
-    <div class="container" align="center" style="padding-left: 4em">
-            <!-- <div class="col-sm-11" align="center"> -->
-            <ul class="tab" style="padding-left: 2em">
-              <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'comparisons')" id="defaultOpen">My Comparisons</a></li>
-              <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'templates')">My Templates</a></li>
-            </ul>
-
-            <div class="col-sm-11" align="center" style="margin-top: 0">
-            <div id="comparisons" class="tabcontent">
-                <h3>Comparisons</h3>
-                <!--<div id="all-comp" data-feed="{{all_comp}}">-->
-                {% for row in all_comp %}
                         <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
                             {{row['name']}}
                         </button>
-                {% endfor %}
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+                <div class="col-sm-5">
+                    <div class="heading text-left">
+                        <h3>Or Make a New Comparison!</h3>
+                    </div>
+                    <div class="text-left">
+                        <br>
+                        <button type="submit" class="btn btn-template-main btn-lg" onclick="location.href='workspace'">
+                            Start Comparing
+                        </button>
+                    </div>
+                    <br>
                 </div>
             </div>
+            <!-- </div> -->
+            <!-- </div>
+        </div> -->
 
-            <div id="templates" class="tabcontent">
-              <h3>Templates</h3>
-              <p>Your Templates Will Live Here</p>
-            </div>
+            <div class="container" align="center" style="padding-left: 4em">
+                <!-- <div class="col-sm-11" align="center"> -->
+                <ul class="tab" style="padding-left: 2em">
+                    <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'comparisons')"
+                           id="defaultOpen">My Comparisons</a></li>
+                    <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'templates')">My
+                        Templates</a></li>
+                </ul>
+
+                <div class="col-sm-11" align="center" style="margin-top: 0">
+                    <div id="comparisons" class="tabcontent">
+                        <h3>Comparisons</h3>
+                        <!--<div id="all-comp" data-feed="{{all_comp}}">-->
+                        {% for row in all_comp %}
+                        <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
+                            {{row['name']}}
+                        </button>
+                        {% endfor %}
+                    </div>
+
+                    <div id="templates" class="tabcontent">
+                        <h3>Templates</h3>
+                        {% for row in all_temp %}
+                        <button type="button" onclick="location.href='{{row['id'] | share_template}}'">
+                            {{row['name']}}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
             </div>
 
             <script>
@@ -107,18 +117,21 @@
 
             // Get the element with id="defaultOpen" and click on it
             document.getElementById("defaultOpen").click();
+
+
+
             </script>
             <!-- </div> -->
-        <!-- </div> -->
+            <!-- </div> -->
+        </div>
     </div>
-    </div>
-    </div>
-    </div>
-    <!-- *** HOMEPAGE CAROUSEL END ***
-
-    <!-- Include the footer for things like copyright info and JS scripts -->
-    {% include "partials/footer.html" %}
 </div>
-    <!--<script src="../static/scripts/js/dashboard.bundle.js"></script>-->
+</div>
+<!-- *** HOMEPAGE CAROUSEL END ***
+
+<!-- Include the footer for things like copyright info and JS scripts -->
+{% include "partials/footer.html" %}
+</div>
+<!--<script src="../static/scripts/js/dashboard.bundle.js"></script>-->
 </body>
 </html>
