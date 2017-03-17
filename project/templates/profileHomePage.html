@@ -43,7 +43,7 @@
                         </div>
                         <!--<div id="recent-comp" data-feed="{{recent_comp}}">-->
                         {% for row in recent_comp %}
-                        <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
+                        <button type="button" onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
                             {{row['name']}}
                         </button>
                         {% endfor %}
@@ -82,7 +82,7 @@
                         <h3>Comparisons</h3>
                         <!--<div id="all-comp" data-feed="{{all_comp}}">-->
                         {% for row in all_comp %}
-                        <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
+                        <button type="button" onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
                             {{row['name']}}
                         </button>
                         {% endfor %}
@@ -91,7 +91,7 @@
                     <div id="templates" class="tabcontent">
                         <h3>Templates</h3>
                         {% for row in all_temp %}
-                        <button type="button" onclick="location.href='{{row['id'] | share_template}}'">
+                        <button type="button" onclick="location.href='{{row['id'] | share_template(current_user.id)}}'">
                             {{row['name']}}
                         </button>
                         {% endfor %}

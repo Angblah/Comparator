@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, jsonify, redirect
+from flask import Flask, render_template, request, url_for, jsonify, redirect, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
@@ -282,26 +282,33 @@ def upload_file():
 
 # returns url encoding specified comparison id
 @app.template_filter('share_comparison')
-def share_comparison(id):
-    token = ts.dumps(id, salt='comparison-id')
+def share_comparison(id, user_id):
+    token = ts.dumps((id, user_id), salt='comparison-data')
     return url_for('view_comparison', token=token, _external=True)
 
 # returns url encoding specified template id
 @app.template_filter('share_template')
-def share_template(id):
-    token = ts.dumps(id, salt='template-id')
+def share_template(id, user_id):
+    token = ts.dumps((id, user_id), salt='template-data')
     return url_for('view_template', token=token, _external=True)
 
 @app.route('/comparison/<token>')
 def view_comparison(token):
-    comparison_id = ts.loads(token, salt='comparison-id')
-    return render_template('testbed2.html', comparison=get_comparison(comparison_id))
-    # TODO: check if user is logged in or not, pass if correct user, also change redirect to workspace vs testbed2 when changed
+    comparison_id, user_id = ts.loads(token, salt='comparison-data')
+    if not current_user.is_anonymous() and user_id == current_user.id:
+        return render_template('testbed2.html', comparison=get_comparison(comparison_id))
+    else:
+        # TODO guest view
+        abort(404)
 
 @app.route('/template/<token>')
 def view_template(token):
-    template_id = ts.loads(token, salt='template-id')
-    return render_template('testbed2.html', template=get_template(template_id))
+    template_id, user_id = ts.loads(token, salt='template-data')
+    if not current_user.is_anonymous() and user_id == current_user.id:
+        return render_template('testbed2.html', template=get_template(template_id))
+    else:
+        # TODO guest view
+        abort(404)
     # TODO: check if user is logged in or not, pass if correct user, also change redirect to workspace vs testbed2 when changed
 
 if __name__ == '__main__':
