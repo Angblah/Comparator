@@ -8,6 +8,7 @@ import {createStore, applyMiddleware} from 'redux';
 
 import workspaceState from '../reducers/rootReducer';
 import ViewContainer from './viewContainer';
+import Toolbar from '../components/toolbar';
 import {fetchComparison} from '../actions/actions';
 
 // const initialState = {
@@ -50,6 +51,7 @@ class Workspace extends React.Component {
     render() {
         return (
             <div id="wrapper">
+                <Toolbar/>
                 <ViewContainer/>
             </div>
         );
