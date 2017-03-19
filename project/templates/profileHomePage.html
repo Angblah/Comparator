@@ -11,23 +11,69 @@
 <body>
 
 
-<div id="container">
-    
-</div>
-
 <div id="all">
 
     <!-- *** HOMEPAGE CAROUSEL *** -->
-    <div>
+<!--     <div>
     <div id="dash-username">
         <div id="dash-username-content">
             <p style="text-align: center;"><img src="https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"></p>
             <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
         </div>
     </div>
+    </div> -->
+        
+    <!-- </div> -->
+
+    <div class="nav-side">
+        <div>
+            <h3>Make a New Comparison!</h3>
+            <button type="submit" class="btn btn-template-main btn-lg" onclick="location.href='workspace'">Start Comparing</button>
+        </div>
+        <hr>
+        <div>
+            <a href="#recent-comps">Recent Comparisons</a>
+        </div>
+        <hr>
+        <div class="nav-side-cont">
+            <a href="#my-comps">My Comparisons</a>
+        </div>
+        <hr>
+        <div class="nav-side-cont">
+            <a href="#my-temps">My Templates</a>
+        </div>
     </div>
 
-    <div class="home-carousel" style="height: 20em">
+    <div id="dashboard-content" style="padding-left: 25vw">
+        <div id="recent-comps">
+            <h1>Recent Comparisons</h1>
+            {% for row in recent_comp %}
+                <button type="button" class="tile" onclick="location.href='{{row['id'] | share_comparison}}'">
+                    {{row['name']}}
+                </button>
+            {% endfor %}
+        </div>
+        <hr style="clear: left;">
+        <div id="my-comps" style="clear: left;">
+            <h1>My Comparisons</h1>
+            {% for row in all_comp %}
+                <button type="button" class="tile" onclick="location.href='{{row['id'] | share_comparison}}'">
+                    {{row['name']}}
+                </button>
+            {% endfor %}
+        </div>
+        <hr style="clear: left;">
+        <div id="my-temps" style="clear: left;">
+            <h1>My Templates</h1>
+<!--             {% for row in all_comp %}
+                <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
+                    {{row['name']}}
+                </button>
+            {% endfor %} -->
+        </div>
+    </div>
+
+    <!-- <div class="home-carousel" style="height: 20em">
 
         <div class="dark-mask"></div>
 
@@ -36,18 +82,16 @@
                 <div class="container">
                     <br>
                     <br>
-                    <div class="col-sm-6">
+                    <div id="recent-comp" class="col-sm-6">
                         <div class="heading text-left">
                             <h3>Recent Comparisons</h3>
                         </div>
-                        <!--<div id="recent-comp" data-feed="{{recent_comp}}">-->
                         {% for row in recent_comp %}
                                 <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
                                     {{row['name']}}
                                 </button>
                         {% endfor %}
 
-                        </div>
                     </div>
 
                     <div class="col-sm-5">
@@ -61,33 +105,29 @@
                         <br>
                     </div>
                 </div>
-            <!-- </div> -->
-        <!-- </div>
-    </div> -->
+
 
     <div class="container" align="center" style="padding-left: 4em">
-            <!-- <div class="col-sm-11" align="center"> -->
             <ul class="tab" style="padding-left: 2em">
               <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'comparisons')" id="defaultOpen">My Comparisons</a></li>
               <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'templates')">My Templates</a></li>
             </ul>
 
             <div class="col-sm-11" align="center" style="margin-top: 0">
-            <div id="comparisons" class="tabcontent">
-                <h3>Comparisons</h3>
-                <!--<div id="all-comp" data-feed="{{all_comp}}">-->
-                {% for row in all_comp %}
-                        <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
-                            {{row['name']}}
-                        </button>
-                {% endfor %}
+                <div id="comparisons" class="tabcontent">
+                    <h3>Comparisons</h3>
+                    {% for row in all_comp %}
+                            <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
+                                {{row['name']}}
+                            </button>
+                    {% endfor %}
+                    </div>
                 </div>
-            </div>
 
-            <div id="templates" class="tabcontent">
-              <h3>Templates</h3>
-              <p>Your Templates Will Live Here</p>
-            </div>
+                <div id="templates" class="tabcontent">
+                  <h3>Templates</h3>
+                  <p>Your Templates Will Live Here</p>
+                </div>
             </div>
 
             <script>
@@ -108,11 +148,10 @@
             // Get the element with id="defaultOpen" and click on it
             document.getElementById("defaultOpen").click();
             </script>
-            <!-- </div> -->
-        <!-- </div> -->
+ -->
+<!--     </div>
     </div>
-    </div>
-    </div>
+    </div> -->
     </div>
     <!-- *** HOMEPAGE CAROUSEL END ***
 
