@@ -10,21 +10,18 @@
 
 <body>
 
-
-<<<<<<< HEAD
 <div id="all">
 
     <!-- *** HOMEPAGE CAROUSEL *** -->
 <!--     <div>
-    <div id="dash-username">
-        <div id="dash-username-content">
-            <p style="text-align: center;"><img src="https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"></p>
-            <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
+        <div id="dash-username">
+            <div id="dash-username-content">
+                <p style="text-align: center;"><img
+                        src="https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"></p>
+                <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
+            </div>
         </div>
-    </div>
     </div> -->
-        
-    <!-- </div> -->
 
     <div class="nav-side">
         <div>
@@ -44,24 +41,7 @@
             <a href="#my-temps">My Templates</a>
         </div>
     </div>
-=======
-<div id="container">
 
-</div>
-
-<div id="all">
-
-    <!-- *** HOMEPAGE CAROUSEL *** -->
-    <div>
-        <div id="dash-username">
-            <div id="dash-username-content">
-                <p style="text-align: center;"><img
-                        src="https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"></p>
-                <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
-            </div>
-        </div>
-    </div>
->>>>>>> origin/master
 
     <div id="dashboard-content" style="padding-left: 25vw">
         <div id="recent-comps">
@@ -156,8 +136,7 @@
             <!-- </div>
         </div> -->
 
-            <div class="container" align="center" style="padding-left: 4em">
-                <!-- <div class="col-sm-11" align="center"> -->
+            <!-- <div class="container" align="center" style="padding-left: 4em">
                 <ul class="tab" style="padding-left: 2em">
                     <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'comparisons')"
                            id="defaultOpen">My Comparisons</a></li>
@@ -168,7 +147,6 @@
                 <div class="col-sm-11" align="center" style="margin-top: 0">
                     <div id="comparisons" class="tabcontent">
                         <h3>Comparisons</h3>
-                        <!--<div id="all-comp" data-feed="{{all_comp}}">-->
                         {% for row in all_comp %}
                         <button type="button" onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
                             {{row['name']}}
@@ -186,7 +164,6 @@
                     </div>
                 </div>
 
->>>>>>> origin/master
             </div>
 
             <script>
@@ -209,20 +186,10 @@
 
 
 
-            </script>
-<<<<<<< HEAD
- -->
-<!--     </div>
-    </div>
-    </div> -->
-=======
-            <!-- </div> -->
-            <!-- </div> -->
-        </div>
->>>>>>> origin/master
-    </div>
+            </script> -->
+
 </div>
-</div>
+
 <!-- *** HOMEPAGE CAROUSEL END ***
 
 <!-- Include the footer for things like copyright info and JS scripts -->
