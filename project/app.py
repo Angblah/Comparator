@@ -309,7 +309,6 @@ def view_template(token):
     else:
         # TODO guest view
         abort(404)
-    # TODO: check if user is logged in or not, pass if correct user, also change redirect to workspace vs testbed2 when changed
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

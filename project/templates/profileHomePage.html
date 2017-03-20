@@ -67,7 +67,7 @@
         <div id="recent-comps">
             <h1>Recent Comparisons</h1>
             {% for row in recent_comp %}
-                <button type="button" class="tile" onclick="location.href='{{row['id'] | share_comparison}}'">
+                <button type="button" class="tile" onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
                     {{row['name']}}
                 </button>
             {% endfor %}
@@ -76,7 +76,7 @@
         <div id="my-comps" style="clear: left;">
             <h1>My Comparisons</h1>
             {% for row in all_comp %}
-                <button type="button" class="tile" onclick="location.href='{{row['id'] | share_comparison}}'">
+                <button type="button" class="tile" onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
                     {{row['name']}}
                 </button>
             {% endfor %}
