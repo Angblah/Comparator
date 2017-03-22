@@ -9,7 +9,7 @@ def initialize_db_structure():
     db.drop_all()
     db.create_all()
     query = text("""
-    --CREATE EXTENSION IF NOT EXISTS tablefunc;
+    CREATE EXTENSION IF NOT EXISTS tablefunc;
     CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
     create or replace function add_comparison_item (_comparison_id int, _position int, _name varchar, out _id int) returns int
@@ -432,6 +432,42 @@ def initialize_db_structure():
             where c.id = n.id;
     end;
     $$ language plpgsql;
+
+    /*
+    Function adapted from Erwin Brandstetter's response on http://stackoverflow.com/questions/36804551/execute-a-dynamic-crosstab-query
+    Creates view comparison_table_horizontal containing pivot table result
+    */
+    CREATE OR REPLACE FUNCTION create_comparison_table_horizontal(table_comparison_id int) RETURNS text AS
+        $func$
+        DECLARE
+           _cat_list text;
+           _col_list text;
+        BEGIN
+
+        -- generate categories for xtab param and col definition list
+        EXECUTE format(
+         $$SELECT string_agg(quote_literal(x.cat), '), (')
+                , string_agg(quote_ident  (x.cat), %L)
+           FROM  (SELECT "name" as cat FROM comparison_item where comparison_id = %s ORDER BY "position") x$$
+         , ' ' || 'varchar(255)' || ', ', table_comparison_id)
+        INTO  _cat_list, _col_list;
+
+        -- generate query string
+        RETURN format(
+          -- DROP TABLE used instead of CREATE OR REPLACE as column names may change between function calls
+          'DROP TABLE IF EXISTS comparison_table_horizontal;
+           CREATE TEMP TABLE comparison_table_horizontal AS SELECT * FROM crosstab(
+           $q$
+               SELECT attribute_name, item_name, val
+               FROM   (select * from comparison_table_stacked(%3$s)) as t1
+               order by id
+               $q$
+         , $c$VALUES (%1$s)$c$
+           ) ct(name text, %2$s varchar(255))'
+        , _cat_list, _col_list, table_comparison_id
+        );
+        END
+        $func$ LANGUAGE plpgsql;
 
     -- populates database with initial values (values needed for data types, as well as default templates/comparisons)
     create or replace function populate_database() returns void as
@@ -874,6 +910,35 @@ def create_empty_template (account_id, name='New Template', num_attributes=2):
     """)
     return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, name=name, num_attributes=num_attributes).scalar()
 
+# returns csv of specified comparison (image values are keys for corresponding cloudinary images)
+def get_comparison_csv(comparison_id):
+    from flask import send_file
+    from io import BytesIO
+
+    query = text("""
+    do
+    $$
+        begin
+            execute create_comparison_table_horizontal(:comparison_id);
+        end
+    $$;
+    """)
+
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id)
+    filename = db.engine.execute(text('select name from sheet where id = :comparison_id'), comparison_id=comparison_id).scalar()
+    filename += '.csv'
+
+    conn = db.engine.raw_connection()
+    try:
+        cur = conn.cursor()
+        f = BytesIO()
+        cur.copy_expert("""COPY comparison_table_horizontal TO STDOUT WITH CSV HEADER""", f)
+        cur.close()
+        f.seek(0)
+        return send_file(f, as_attachment=True, attachment_filename=filename, mimetype="text/csv")
+    finally:
+        conn.close()
+
 # TODO: change to return array of row dicts
 # takes in ResultProxy from executed query, returns json array of rows mapping column names to values
 def jsonify_table(result):
@@ -908,3 +973,4 @@ if __name__ == '__main__':
 # TODO: export csv
 # TODO: update comparison_table_stacked to also return attribute weight
 # TODO: consider changing functions to return errors for invalid id's (like get_comparison and get_template)
+# TODO: consider adding import for xlsx/csv (see flask-excel)

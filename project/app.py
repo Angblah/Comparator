@@ -310,6 +310,19 @@ def view_template(token):
         # TODO guest view
         abort(404)
 
+# TESTING PURPOSES ONLY
+@app.route('/test')
+def test():
+    return """
+        <html><body>
+        <a href="/csv">Get csv.</a>
+        </body></html>
+        """
+@app.route('/csv')
+def csv():
+    return get_comparison_csv(12)
+# TESTING PURPOSES ONLY
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
