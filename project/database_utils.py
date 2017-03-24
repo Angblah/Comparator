@@ -974,3 +974,4 @@ if __name__ == '__main__':
 # TODO: update comparison_table_stacked to also return attribute weight
 # TODO: consider changing functions to return errors for invalid id's (like get_comparison and get_template)
 # TODO: consider adding import for xlsx/csv (see flask-excel)
+# TODO: examine parsing error messages from database rather than checking data validity in separate sql call (like in validate_registration)

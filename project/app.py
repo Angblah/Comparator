@@ -310,18 +310,10 @@ def view_template(token):
         # TODO guest view
         abort(404)
 
-# TESTING PURPOSES ONLY
-@app.route('/test')
-def test():
-    return """
-        <html><body>
-        <a href="/csv">Get csv.</a>
-        </body></html>
-        """
-@app.route('/csv')
-def csv():
-    return get_comparison_csv(12)
-# TESTING PURPOSES ONLY
+@app.route('/csv/<token>')
+def csv(token):
+    comparison_id, user_id = ts.loads(token, salt='comparison-data')
+    return get_comparison_csv(comparison_id)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
