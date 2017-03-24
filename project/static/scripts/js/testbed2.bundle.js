@@ -22676,6 +22676,7 @@ exports.routeToAddItem = routeToAddItem;
 exports.editItem = editItem;
 exports.routeToEditItem = routeToEditItem;
 exports.editItemName = editItemName;
+exports.exportCSV = exportCSV;
 exports.fetchComparison = fetchComparison;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22811,6 +22812,12 @@ var routeToEditItemName = exports.routeToEditItemName = function routeToEditItem
     };
 };
 
+// TOOLBAR FUNCTIONALITIES
+// ================================
+function exportCSV() {
+    window.location.href = '/csv/' + window.location.href.split("/")[4];
+}
+
 // WORKSPACE/STATE ACTIONS
 // ================================
 var changeView = exports.changeView = function changeView(view) {
@@ -22822,7 +22829,6 @@ var changeView = exports.changeView = function changeView(view) {
 
 // THUNKS FOR COMPARISON LOAD
 // ================================
-
 var loadAttr = exports.loadAttr = function loadAttr(json) {
     return {
         type: 'LOAD_ATTR',
@@ -27383,11 +27389,13 @@ var Toolbar = function (_React$Component) {
                         ),
                         _react2.default.createElement(
                             'div',
-                            { className: 'btn-group ml-auto', role: 'group', 'aria-label': 'Export/Share' },
+                            { className: 'btn-group ml-auto', role: 'group', 'aria-label': 'Export' },
                             _react2.default.createElement(
                                 'button',
-                                { type: 'button blank-bg', className: 'btn btn-secondary' },
-                                'Share/Export'
+                                { type: 'button blank-bg', className: 'btn btn-secondary', onClick: function onClick() {
+                                        return _this2.props.exportCSV();
+                                    } },
+                                'Export as CSV'
                             )
                         )
                     )
@@ -27432,6 +27440,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         changeView: function changeView(view) {
             dispatch((0, _actions.changeView)(view));
+        },
+        exportCSV: function exportCSV() {
+            return dispatch((0, _actions.exportCSV)());
         },
         onUndo: function onUndo() {
             return dispatch(_reduxUndo.ActionCreators.undo());
@@ -27521,7 +27532,8 @@ var ViewContainer = function (_React$Component) {
                         editAttr: this.props.editAttr,
                         addItem: this.props.addItem,
                         editItem: this.props.editItem,
-                        editItemName: this.props.editItemName }),
+                        editItemName: this.props.editItemName,
+                        exportCSV: this.props.exportCSV }),
                     _react2.default.createElement('span', null)
                 );
             } else {
@@ -27567,6 +27579,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         changeView: function changeView(view) {
             dispatch((0, _actions.changeView)(view));
+        },
+        exportCSV: function exportCSV() {
+            dispatch((0, _actions.exportCSV)());
         },
         onUndo: function onUndo() {
             return dispatch(_reduxUndo.ActionCreators.undo());

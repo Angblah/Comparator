@@ -120,6 +120,13 @@ export const routeToEditItemName = (itemId, name) => {
 }
 
 
+// TOOLBAR FUNCTIONALITIES
+// ================================
+export function exportCSV() {
+     window.location.href = '/csv/' + (window.location.href).split("/")[4];
+}
+
+
 // WORKSPACE/STATE ACTIONS
 // ================================
 export const changeView = (view) => {
@@ -132,7 +139,6 @@ export const changeView = (view) => {
 
 // THUNKS FOR COMPARISON LOAD
 // ================================
-
 export const loadAttr = (json) => {
     return {
         type: 'LOAD_ATTR',

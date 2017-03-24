@@ -21,19 +21,23 @@ ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 from models import *
 from database_utils import *
 
+
 @app.route('/')
 def index():
     return render_template('home.html')
 
+
 @login_manager.user_loader
 def load_user(user_id):
-    #Given user_id, return the associated User object
+    # Given user_id, return the associated User object
     return Account.query.filter_by(username=user_id).one()
+
 
 @app.route('/getComparisonData')
 def getComparisonData():
     data = get_comparison(12)
-    return (data)
+    return data
+
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():
@@ -43,6 +47,7 @@ def saveComparisonAttributesData():
     message['name'] = data['name']
     set_sheet_attribute_field(data['id'], 'name', data['name'])
     return jsonify(message)
+
 
 @app.route('/saveComparisonData', methods=["POST"])
 def saveComparisonData():
@@ -54,16 +59,16 @@ def saveComparisonData():
     set_comparison_attribute_value(data['itemId'], data['attrId'], data['value'])
     return jsonify(message)
 
+
 @app.route('/saveComparisonItemName', methods=["POST"])
 def saveComparisonItemName():
     message = {}
     data = json.loads(request.data)
     message['itemId'] = data['itemId']
     message['value'] = data['value']
-    a = data['itemId']
-    b = data['value']
     set_item_name(data['itemId'], data['value'])
     return jsonify(message)
+
 
 @app.route('/addComparisonAttr', methods=["POST"])
 def addComparisonAttr():
@@ -72,6 +77,7 @@ def addComparisonAttr():
     attrId['attrId'] = (add_sheet_attribute_back(data['compId']))
     return jsonify(attrId)
 
+
 @app.route('/addComparisonItem', methods=["POST"])
 def addComparisonItem():
     itemId = {}
@@ -79,11 +85,13 @@ def addComparisonItem():
     itemId['itemId'] = (add_comparison_item_back(data['compId']))
     return jsonify(itemId)
 
+
 @app.route('/newComparison')
 def newComparison():
     return render_template('newComparison.html')
 
-#TODO:: Pass in template/comparison_id from Select a Template/Comparison
+
+# TODO:: Pass in template/comparison_id from Select a Template/Comparison
 @app.route('/workspace')
 def workspace():
     # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
@@ -91,19 +99,23 @@ def workspace():
     comparison = get_comparison(12)
 
     return render_template('workspace.html', template=template, comparison=comparison)
-    
+
+
 @app.route('/testbed')
 def testbed():
     return render_template('testbed.html')
+
 
 @app.route('/testbed2')
 def testbed2():
     comparison = get_comparison(12)
     return render_template('testbed2.html', comparison=comparison)
 
+
 @app.route('/index')
 def index2():
     return render_template('index.html')
+
 
 @app.route('/profile')
 @login_required
@@ -114,14 +126,17 @@ def profile_page():
     all_temp = get_user_templates(current_user.id, get_json=False)
     return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp)
 
+
 @app.route('/myProfile')
 @login_required
 def myProfile_page():
     return render_template('myProfile.html')
 
+
 @app.route('/forgotPassword')
 def forgotPassword():
     return render_template('forgotPassword.html')
+
 
 @app.route('/reset_password')
 def reset_password():
@@ -131,19 +146,18 @@ def reset_password():
     try:
         user = Account.query.filter_by(username=emailOrUsername).one()
     except NoResultFound:
-        #Search the email column
+        # Search the email column
         try:
             user = Account.query.filter_by(email=emailOrUsername).one()
         except NoResultFound:
-            #User not found, inform guest user
+            # User not found, inform guest user
             data['error'] = "We couldn't find an associated email address."
             return jsonify(data)
 
-    #User is populated at this point, grab email to send email to
+    # User is populated at this point, grab email to send email to
 
     token = ts.dumps(user.email, salt='recover-key')
     recover_url = url_for('reset_with_token', token=token, _external=True)
-
 
     sg = sendgrid.SendGridAPIClient(apikey=os.environ['SENDGRID_API_KEY'])
     from_email = Email("admin@thecomparator.herokuapp.com")
@@ -155,6 +169,7 @@ def reset_password():
 
     data['success'] = "You'll receive an email with a link to reset your password shortly."
     return jsonify(data)
+
 
 @app.route('/reset/<token>', methods=["GET", "POST"])
 def reset_with_token(token):
@@ -176,7 +191,9 @@ def reset_with_token(token):
             set_password(user.id, password)
             change_success = True
 
-    return render_template('reset_with_token.html', token=token, valid_link=valid_link, change_success=change_success, password_valid=password_valid)
+    return render_template('reset_with_token.html', token=token, valid_link=valid_link, change_success=change_success,
+                           password_valid=password_valid)
+
 
 # TODO: consider adding requirements to password (length, character types, etc.)
 @app.route('/add_user')
@@ -186,7 +203,7 @@ def add_user():
     registerUsername = request.args.get('registerUsername')
     registerPassword = request.args.get('registerPassword')
 
-    #Make sure the username and email are available
+    # Make sure the username and email are available
     emailCheck = ""
     usernameCheck = ""
 
@@ -214,6 +231,7 @@ def add_user():
         register_user(registerEmail, registerUsername, registerPassword)
         return login_helper(registerUsername, registerPassword)
 
+
 @app.route('/login')
 def login():
     data = {}
@@ -222,7 +240,7 @@ def login():
 
     if validate_login(loginUsername, loginPassword):
         # Login successful
-        user = Account.query.filter_by(username = loginUsername).one()
+        user = Account.query.filter_by(username=loginUsername).one()
         login_user(user, remember=True)
 
         data['redirect'] = 'profile'
@@ -232,12 +250,13 @@ def login():
         data['error'] = "We couldn't find that username and password."
         return jsonify(data)
 
+
 def login_helper(loginUsername, loginPassword):
     data = {}
 
     if validate_login(loginUsername, loginPassword):
         # Login successful
-        user = Account.query.filter_by(username = loginUsername).one()
+        user = Account.query.filter_by(username=loginUsername).one()
         login_user(user, remember=True)
 
         data['redirect'] = 'profile'
@@ -253,6 +272,7 @@ def login_helper(loginUsername, loginPassword):
 def logout():
     logout_user()
     return render_template('home.html')
+
 
 # TODO: integrate into workspace once that's set up
 # Taken from https://github.com/cloudinary/pycloudinary/tree/master/samples/basic_flask (remove/adapt later for workspace)
@@ -276,6 +296,7 @@ def upload_file():
     return render_template('upload_form.html', upload_result=upload_result, thumbnail_url1=thumbnail_url1,
                            thumbnail_url2=thumbnail_url2)
 
+
 # @app.route('/test/<id>')
 # def test(id):
 #     return redirect(share_comparison(id))
@@ -286,11 +307,13 @@ def share_comparison(id, user_id):
     token = ts.dumps((id, user_id), salt='comparison-data')
     return url_for('view_comparison', token=token, _external=True)
 
+
 # returns url encoding specified template id
 @app.template_filter('share_template')
 def share_template(id, user_id):
     token = ts.dumps((id, user_id), salt='template-data')
     return url_for('view_template', token=token, _external=True)
+
 
 @app.route('/comparison/<token>')
 def view_comparison(token):
@@ -301,6 +324,7 @@ def view_comparison(token):
         # TODO guest view
         abort(404)
 
+
 @app.route('/template/<token>')
 def view_template(token):
     template_id, user_id = ts.loads(token, salt='template-data')
@@ -310,10 +334,12 @@ def view_template(token):
         # TODO guest view
         abort(404)
 
+
 @app.route('/csv/<token>')
 def csv(token):
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
     return get_comparison_csv(comparison_id)
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

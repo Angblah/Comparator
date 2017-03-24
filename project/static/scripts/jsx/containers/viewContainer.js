@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import {connect} from 'react-redux'
-import {addAttr, editAttr, addItem, editItem, editItemName, changeView} from '../actions/actions'
+import {addAttr, editAttr, addItem, editItem, editItemName, changeView, exportCSV} from '../actions/actions'
 import ChartView from '../components/chartView'
 import ZoomDragCircle from '../components/spiderView'
 import ProgressChart from '../components/testView'
@@ -18,7 +18,8 @@ class ViewContainer extends React.Component {
                        editAttr={this.props.editAttr}
                        addItem={this.props.addItem}
                        editItem={this.props.editItem}
-                       editItemName={this.props.editItemName}/>
+                       editItemName={this.props.editItemName}
+                       exportCSV={this.props.exportCSV}/>
                     <span/>
                 </div>
             );
@@ -63,6 +64,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         changeView: (view) => {
             dispatch(changeView(view))
+        },
+        exportCSV: () => {
+            dispatch(exportCSV())
         },
         onUndo: () => dispatch(UndoActionCreators.undo()),
         onRedo: () => dispatch(UndoActionCreators.redo())

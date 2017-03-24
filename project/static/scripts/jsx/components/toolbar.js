@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux'
-import {addAttr, addItem, changeView} from '../actions/actions'
+import {addAttr, addItem, changeView, exportCSV} from '../actions/actions'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 
 class Toolbar extends React.Component {
@@ -27,8 +27,8 @@ class Toolbar extends React.Component {
                             <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('SPIDER')}>Toggle View</button>
                         </div>
 
-                        <div className="btn-group ml-auto" role="group" aria-label="Export/Share">
-                            <button type="button blank-bg" className="btn btn-secondary">Share/Export</button>
+                        <div className="btn-group ml-auto" role="group" aria-label="Export">
+                            <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.exportCSV()}>Export as CSV</button>
                         </div>
                     </div>
                 </div>
@@ -64,6 +64,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         changeView: (view) => {
             dispatch(changeView(view))
         },
+        exportCSV: () => dispatch(exportCSV()),
         onUndo: () => dispatch(UndoActionCreators.undo()),
         onRedo: () => dispatch(UndoActionCreators.redo())
     }
