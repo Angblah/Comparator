@@ -40,9 +40,9 @@ class Toolbar extends React.Component {
 
                         <div className="btn-group ml-auto" role="group" aria-label="Extra">
                             <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.exportCSV()}>Export as CSV</button>
-                            <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#myModal">Share</button>
+                            <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#shareModal">Share</button>
 
-                            <div className="modal fade" id="myModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div className="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
                                 <div className="modal-dialog" role="document">
                                     <div className="modal-content">
                                         <div className="modal-header">

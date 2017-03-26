@@ -33711,12 +33711,12 @@ var Toolbar = function (_React$Component) {
                             ),
                             _react2.default.createElement(
                                 'button',
-                                { type: 'button blank-bg', className: 'btn btn-secondary', 'data-toggle': 'modal', 'data-target': '#myModal' },
+                                { type: 'button blank-bg', className: 'btn btn-secondary', 'data-toggle': 'modal', 'data-target': '#shareModal' },
                                 'Share'
                             ),
                             _react2.default.createElement(
                                 'div',
-                                { className: 'modal fade', id: 'myModal', role: 'dialog', 'aria-labelledby': 'exampleModalLabel', 'aria-hidden': 'true' },
+                                { className: 'modal fade', id: 'shareModal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'shareModalLabel', 'aria-hidden': 'true' },
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'modal-dialog', role: 'document' },
