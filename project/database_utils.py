@@ -655,19 +655,6 @@ def get_recent_user_comparisons(user_id, number=None, get_json=True):
         return jsonify_table(result)
     return result
 
-# TODO: delete once code changed to use get_user_comparisons
-# returns array of all comparison names of specified user
-def get_user_comparison_names(user_id, get_json=True):
-    query = text("""
-        select name from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id;
-        """)
-    result = db.engine.execute(query, user_id=user_id)
-    output = [row['name'] for row in result]
-
-    if get_json:
-        return json.dumps(output)
-    return output
-
 # returns values of comparison table for specified user
 def get_user_comparisons(user_id, get_json=True):
     query = text("""
@@ -786,6 +773,24 @@ def swap_comparison_item (id1, id2):
     select swap_comparison_item (:id1, :id2);
     """)
     db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2)
+
+def move_comparison_item(item_id, position):
+    query = text("""
+    select move_comparison_item(:item_id, :position);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, position=position)
+
+def swap_attribute(id1, id2):
+    query = text("""
+    select swap_attribute(:id1, :id2);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2)
+
+def move_attribute(attribute_id, position):
+    query = text("""
+    select move_attribute(:attribute_id, :position);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id, position=position)
 
 def delete_comparison_item_by_position (comparison_id, position):
     query = text("""
@@ -986,3 +991,5 @@ if __name__ == '__main__':
 # TODO: consider changing functions to return errors for invalid id's (like get_comparison and get_template)
 # TODO: consider adding import for xlsx/csv (see flask-excel)
 # TODO: examine parsing error messages from database rather than checking data validity in separate sql call (like in validate_registration)
+# TODO: organize functions by category (attributes, sheets, etc.)
+# TODO: consider renaming ...sheet_attribute... functions to just ...attribute...
