@@ -178,6 +178,17 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
+    create or replace function delete_sheet_attribute (_id int) returns void
+        as $$
+        begin
+            with delete_1 as (
+                delete from sheet_attribute where id = _id returning position, sheet_id
+            ), update_1 as (
+                update sheet set date_modified = current_timestamp where id = (select sheet_id from delete_1)
+            ) update sheet_attribute set position = position - 1 where sheet_id = (select sheet_id from delete_1) and position > (select position from delete_1);
+        end;
+    $$ language plpgsql;
+
     create or replace function comparison_table_stacked (_comparison_id int) returns table(type_id smallint, "id" int, "position" int, attribute_name varchar, val varchar, item_name varchar, item_id int)
         as $$
         begin
@@ -689,6 +700,18 @@ def get_recent_user_templates(user_id, number=None, get_json=True):
     if get_json:
         return jsonify_table(result)
     return result
+
+def delete_comparison_item(item_id):
+    query = text("""
+    select delete_comparison_item(:item_id);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id)
+
+def delete_sheet_attribute(attribute_id):
+    query = text("""
+    select delete_sheet_attribute(:attribute_id);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id)
 
 def add_sheet_attribute(sheet_id, attribute_name, type_id, weight=1):
     query = text("""
