@@ -437,7 +437,7 @@ def initialize_db_structure():
     Function adapted from Erwin Brandstetter's response on http://stackoverflow.com/questions/36804551/execute-a-dynamic-crosstab-query
     Creates view comparison_table_horizontal containing pivot table result
     */
-    CREATE OR REPLACE FUNCTION create_comparison_table_horizontal(table_comparison_id int) RETURNS text AS
+    CREATE OR REPLACE FUNCTION comparison_table_horizontal_query(table_comparison_id int) RETURNS text AS
         $func$
         DECLARE
            _cat_list text;
@@ -454,9 +454,7 @@ def initialize_db_structure():
 
         -- generate query string
         RETURN format(
-          -- DROP TABLE used instead of CREATE OR REPLACE as column names may change between function calls
-          'DROP TABLE IF EXISTS comparison_table_horizontal;
-           CREATE TEMP TABLE comparison_table_horizontal AS SELECT * FROM crosstab(
+          'SELECT * FROM crosstab(
            $q$
                SELECT attribute_name, item_name, val
                FROM   (select * from comparison_table_stacked(%3$s)) as t1
@@ -916,15 +914,12 @@ def get_comparison_csv(comparison_id):
     from io import BytesIO
 
     query = text("""
-    do
-    $$
-        begin
-            execute create_comparison_table_horizontal(:comparison_id);
-        end
-    $$;
+    select comparison_table_horizontal_query(:comparison_id)
     """)
 
-    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id)
+    query = db.engine.execute(query, comparison_id=comparison_id).scalar()
+    query = "COPY ({}) TO STDOUT WITH CSV HEADER".format(query)
+
     filename = db.engine.execute(text('select name from sheet where id = :comparison_id'), comparison_id=comparison_id).scalar()
     filename += '.csv'
 
@@ -932,7 +927,7 @@ def get_comparison_csv(comparison_id):
     try:
         cur = conn.cursor()
         f = BytesIO()
-        cur.copy_expert("""COPY comparison_table_horizontal TO STDOUT WITH CSV HEADER""", f)
+        cur.copy_expert(query, f)
         cur.close()
         f.seek(0)
         return send_file(f, as_attachment=True, attachment_filename=filename, mimetype="text/csv")
@@ -963,7 +958,6 @@ def jsonify_column(result):
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
-
 
 # TODO: improve documentation
 # TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
