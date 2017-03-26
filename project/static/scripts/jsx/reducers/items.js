@@ -48,7 +48,8 @@ const items = (state = [], action) => {
 
         // Delete an Item
         case DELETE_ITEM:
-            return state.filter(items => items.id !== action.itemId);
+            //TODO:: Delete the itemId from the UI
+            return state;
 
         // Load the comparison items to store
         case LOAD_ITEMS:

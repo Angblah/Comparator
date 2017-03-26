@@ -1,5 +1,6 @@
 export const ADD_ATTR = 'ADD_ATTR'
 export const EDIT_ATTR = 'EDIT_ATTR'
+export const DELETE_ATTR = 'DELETE_ATTR'
 export const ADD_ITEM = 'ADD_ITEM'
 export const EDIT_ITEM = 'EDIT_ITEM'
 export const EDIT_ITEM_NAME = 'EDIT_ITEM_NAME'
@@ -49,6 +50,26 @@ export const routeToEditAttr = (id, name) => {
         type: 'EDIT_ATTR',
         id,
         name
+    }
+}
+
+export function deleteAttr(attrId) {
+    return function (dispatch) {
+        return fetch('/deleteComparisonAttr', {
+            method: 'POST',
+            body: JSON.stringify({
+                attrId : attrId
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToDeleteAttr(attrId)))
+    }
+}
+
+export const routeToDeleteAttr = (attrId) => {
+    return {
+        type: 'DELETE_ATTR',
+        attrId
     }
 }
 

@@ -1,6 +1,7 @@
 import {
     ADD_ATTR,
     EDIT_ATTR,
+    DELETE_ATTR,
     LOAD_ATTR,
     EDIT_ITEM_NAME
 } from '../actions/actions'
@@ -28,6 +29,10 @@ const attributes = (state = [], action) => {
                     name: action.name
                 }
             });
+        // Delete an attribute
+        case DELETE_ATTR:
+            //TODO: Delete the attrId from the UI
+            return state;
         // Load the attributes
         case LOAD_ATTR:
             return action.json;

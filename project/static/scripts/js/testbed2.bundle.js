@@ -22662,7 +22662,7 @@ for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList'
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.loadItems = exports.loadAttr = exports.changeView = exports.routeToDeleteItem = exports.routeToEditItemName = exports.routeToEditAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.DELETE_ITEM = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
+exports.loadItems = exports.loadAttr = exports.changeView = exports.routeToDeleteItem = exports.routeToEditItemName = exports.routeToDeleteAttr = exports.routeToEditAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.DELETE_ITEM = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.DELETE_ATTR = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
 
 var _stringify = __webpack_require__(329);
 
@@ -22671,6 +22671,7 @@ var _stringify2 = _interopRequireDefault(_stringify);
 exports.addAttr = addAttr;
 exports.routeToAddAttr = routeToAddAttr;
 exports.editAttr = editAttr;
+exports.deleteAttr = deleteAttr;
 exports.addItem = addItem;
 exports.routeToAddItem = routeToAddItem;
 exports.editItem = editItem;
@@ -22685,6 +22686,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var ADD_ATTR = exports.ADD_ATTR = 'ADD_ATTR';
 var EDIT_ATTR = exports.EDIT_ATTR = 'EDIT_ATTR';
+var DELETE_ATTR = exports.DELETE_ATTR = 'DELETE_ATTR';
 var ADD_ITEM = exports.ADD_ITEM = 'ADD_ITEM';
 var EDIT_ITEM = exports.EDIT_ITEM = 'EDIT_ITEM';
 var EDIT_ITEM_NAME = exports.EDIT_ITEM_NAME = 'EDIT_ITEM_NAME';
@@ -22738,6 +22740,28 @@ var routeToEditAttr = exports.routeToEditAttr = function routeToEditAttr(id, nam
         type: 'EDIT_ATTR',
         id: id,
         name: name
+    };
+};
+
+function deleteAttr(attrId) {
+    return function (dispatch) {
+        return fetch('/deleteComparisonAttr', {
+            method: 'POST',
+            body: (0, _stringify2.default)({
+                attrId: attrId
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(routeToDeleteAttr(attrId));
+        });
+    };
+}
+
+var routeToDeleteAttr = exports.routeToDeleteAttr = function routeToDeleteAttr(attrId) {
+    return {
+        type: 'DELETE_ATTR',
+        attrId: attrId
     };
 };
 
@@ -27549,6 +27573,18 @@ var Toolbar = function (_React$Component) {
                                 } },
                             'Delete Item'
                         )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        null,
+                        _react2.default.createElement('input', { id: 'deleteAttrInput', type: 'text' }),
+                        _react2.default.createElement(
+                            'button',
+                            { type: 'button blank-bg', className: 'btn btn-secondary', onClick: function onClick() {
+                                    return _this2.props.deleteAttr(document.getElementById("deleteAttrInput").value);
+                                } },
+                            'Delete Attribute'
+                        )
                     )
                 );
             } else {
@@ -27600,6 +27636,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         deleteItem: function deleteItem(itemId) {
             dispatch((0, _actions.deleteItem)(itemId));
+        },
+        deleteAttr: function deleteAttr(attrId) {
+            dispatch((0, _actions.deleteAttr)(attrId));
         },
         onUndo: function onUndo() {
             return dispatch(_reduxUndo.ActionCreators.undo());
@@ -29347,6 +29386,10 @@ var attributes = function attributes() {
                     name: action.name
                 });
             });
+        // Delete an attribute
+        case _actions.DELETE_ATTR:
+            //TODO: Delete the attrId from the UI
+            return state;
         // Load the attributes
         case _actions.LOAD_ATTR:
             return action.json;
@@ -29422,9 +29465,8 @@ var items = function items() {
 
         // Delete an Item
         case _actions.DELETE_ITEM:
-            return state.filter(function (items) {
-                return items.id !== action.itemId;
-            });
+            //TODO:: Delete the itemId from the UI
+            return state;
 
         // Load the comparison items to store
         case _actions.LOAD_ITEMS:
