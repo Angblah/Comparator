@@ -22662,7 +22662,7 @@ for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList'
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.loadItems = exports.loadAttr = exports.changeView = exports.routeToEditItemName = exports.routeToEditAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
+exports.loadItems = exports.loadAttr = exports.changeView = exports.routeToDeleteItem = exports.routeToEditItemName = exports.routeToEditAttr = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.DELETE_ITEM = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
 
 var _stringify = __webpack_require__(329);
 
@@ -22676,6 +22676,7 @@ exports.routeToAddItem = routeToAddItem;
 exports.editItem = editItem;
 exports.routeToEditItem = routeToEditItem;
 exports.editItemName = editItemName;
+exports.deleteItem = deleteItem;
 exports.exportCSV = exportCSV;
 exports.saveTemplate = saveTemplate;
 exports.fetchComparison = fetchComparison;
@@ -22687,6 +22688,7 @@ var EDIT_ATTR = exports.EDIT_ATTR = 'EDIT_ATTR';
 var ADD_ITEM = exports.ADD_ITEM = 'ADD_ITEM';
 var EDIT_ITEM = exports.EDIT_ITEM = 'EDIT_ITEM';
 var EDIT_ITEM_NAME = exports.EDIT_ITEM_NAME = 'EDIT_ITEM_NAME';
+var DELETE_ITEM = exports.DELETE_ITEM = 'DELETE_ITEM';
 var CHANGE_VIEW = exports.CHANGE_VIEW = 'CHANGE_VIEW';
 var LOAD_ATTR = exports.LOAD_ATTR = 'LOAD_ATTR';
 var LOAD_ITEMS = exports.LOAD_ITEMS = 'LOAD_ITEMS';
@@ -22810,6 +22812,28 @@ var routeToEditItemName = exports.routeToEditItemName = function routeToEditItem
         type: 'EDIT_ITEM_NAME',
         itemId: itemId,
         name: name
+    };
+};
+
+function deleteItem(itemId) {
+    return function (dispatch) {
+        return fetch('/deleteComparisonItem', {
+            method: 'POST',
+            body: (0, _stringify2.default)({
+                itemId: itemId
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(routeToDeleteItem(itemId));
+        });
+    };
+}
+
+var routeToDeleteItem = exports.routeToDeleteItem = function routeToDeleteItem(itemId) {
+    return {
+        type: 'DELETE_ITEM',
+        itemId: itemId
     };
 };
 
@@ -27513,6 +27537,18 @@ var Toolbar = function (_React$Component) {
                                 )
                             )
                         )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        null,
+                        _react2.default.createElement('input', { id: 'deleteItemInput', type: 'text' }),
+                        _react2.default.createElement(
+                            'button',
+                            { type: 'button blank-bg', className: 'btn btn-secondary', onClick: function onClick() {
+                                    return _this2.props.deleteItem(document.getElementById("deleteItemInput").value);
+                                } },
+                            'Delete Item'
+                        )
                     )
                 );
             } else {
@@ -27560,7 +27596,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
             return dispatch((0, _actions.exportCSV)());
         },
         saveTemplate: function saveTemplate(compId, name) {
-            return dispatch((0, _actions.saveTemplate)(compId, name));
+            dispatch((0, _actions.saveTemplate)(compId, name));
+        },
+        deleteItem: function deleteItem(itemId) {
+            dispatch((0, _actions.deleteItem)(itemId));
         },
         onUndo: function onUndo() {
             return dispatch(_reduxUndo.ActionCreators.undo());
@@ -27646,13 +27685,9 @@ var ViewContainer = function (_React$Component) {
                     null,
                     _react2.default.createElement(_chartView2.default, { items: this.props.items,
                         attributes: this.props.attributes,
-                        addAttr: this.props.addAttr,
                         editAttr: this.props.editAttr,
-                        addItem: this.props.addItem,
                         editItem: this.props.editItem,
-                        editItemName: this.props.editItemName,
-                        exportCSV: this.props.exportCSV,
-                        saveTemplate: this.props.saveTemplate }),
+                        editItemName: this.props.editItemName }),
                     _react2.default.createElement('span', null)
                 );
             } else {
@@ -27681,14 +27716,8 @@ var mapStateToProps = function mapStateToProps(state) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
     return {
-        addAttr: function addAttr(compId) {
-            dispatch((0, _actions.addAttr)(compId));
-        },
         editAttr: function editAttr(id, name) {
             dispatch((0, _actions.editAttr)(id, name));
-        },
-        addItem: function addItem(compId) {
-            dispatch((0, _actions.addItem)(compId));
         },
         editItem: function editItem(itemId, attrId, value) {
             dispatch((0, _actions.editItem)(itemId, attrId, value));
@@ -27698,12 +27727,6 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         changeView: function changeView(view) {
             dispatch((0, _actions.changeView)(view));
-        },
-        exportCSV: function exportCSV() {
-            dispatch((0, _actions.exportCSV)());
-        },
-        saveTemplate: function saveTemplate(compId, name) {
-            dispatch((0, _actions.saveTemplate)(compId, name));
         },
         onUndo: function onUndo() {
             return dispatch(_reduxUndo.ActionCreators.undo());
@@ -29395,6 +29418,12 @@ var items = function items() {
                 return (0, _extends4.default)({}, item, {
                     name: action.name
                 });
+            });
+
+        // Delete an Item
+        case _actions.DELETE_ITEM:
+            return state.filter(function (items) {
+                return items.id !== action.itemId;
             });
 
         // Load the comparison items to store

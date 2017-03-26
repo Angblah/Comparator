@@ -3,6 +3,7 @@ export const EDIT_ATTR = 'EDIT_ATTR'
 export const ADD_ITEM = 'ADD_ITEM'
 export const EDIT_ITEM = 'EDIT_ITEM'
 export const EDIT_ITEM_NAME = 'EDIT_ITEM_NAME'
+export const DELETE_ITEM = 'DELETE_ITEM'
 export const CHANGE_VIEW = 'CHANGE_VIEW'
 export const LOAD_ATTR = 'LOAD_ATTR'
 export const LOAD_ITEMS = 'LOAD_ITEMS'
@@ -116,6 +117,26 @@ export const routeToEditItemName = (itemId, name) => {
         type: 'EDIT_ITEM_NAME',
         itemId,
         name
+    }
+}
+
+export function deleteItem(itemId) {
+    return function (dispatch) {
+        return fetch('/deleteComparisonItem', {
+            method: 'POST',
+            body: JSON.stringify({
+                itemId : itemId
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToDeleteItem(itemId)))
+    }
+}
+
+export const routeToDeleteItem = (itemId) => {
+    return {
+        type: 'DELETE_ITEM',
+        itemId
     }
 }
 

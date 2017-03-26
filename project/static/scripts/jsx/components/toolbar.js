@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux'
-import {addAttr, addItem, changeView, exportCSV, saveTemplate} from '../actions/actions'
+import {addAttr, addItem, changeView, exportCSV, saveTemplate, deleteItem} from '../actions/actions'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 
 class Toolbar extends React.Component {
@@ -77,6 +77,11 @@ class Toolbar extends React.Component {
                             </div>
                         </div>
                     </div>
+
+                    <div>
+                        <input id="deleteItemInput" type="text" />
+                        <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.deleteItem(document.getElementById("deleteItemInput").value)}>Delete Item</button>
+                    </div>
                 </div>
             );
         } else {
@@ -111,7 +116,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(changeView(view))
         },
         exportCSV: () => dispatch(exportCSV()),
-        saveTemplate: (compId, name) => dispatch(saveTemplate(compId, name)),
+        saveTemplate: (compId, name) => {
+            dispatch(saveTemplate(compId, name))
+        },
+        deleteItem: (itemId) => {
+            dispatch(deleteItem(itemId))
+        },
         onUndo: () => dispatch(UndoActionCreators.undo()),
         onRedo: () => dispatch(UndoActionCreators.redo())
     }
