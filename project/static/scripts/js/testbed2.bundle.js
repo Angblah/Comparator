@@ -33744,7 +33744,7 @@ var Toolbar = function (_React$Component) {
                                         _react2.default.createElement(
                                             'div',
                                             { className: 'modal-body' },
-                                            window.location.href
+                                            _react2.default.createElement('input', { className: 'form-control', type: 'text', value: window.location.href, readonly: true })
                                         )
                                     )
                                 )

@@ -52,7 +52,7 @@ class Toolbar extends React.Component {
                                             </button>
                                           </div>
                                         <div className="modal-body">
-                                            {window.location.href}
+                                            <input className="form-control" type="text" value={window.location.href} readonly/>
                                         </div>
                                     </div>
                                 </div>
