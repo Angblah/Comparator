@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, jsonify, redirect, abort
+from flask import Flask, render_template, request, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
@@ -84,6 +84,23 @@ def addComparisonItem():
     data = json.loads(request.data)
     itemId['itemId'] = (add_comparison_item_back(data['compId']))
     return jsonify(itemId)
+
+@app.route('/deleteComparisonAttr', methods=["POST"])
+def deleteComparisonAttr():
+    message = {}
+    data = json.loads(request.data)
+    delete_sheet_attribute(data['attrId'])
+    message['success'] = 'success'
+    return jsonify(message)
+
+
+@app.route('/deleteComparisonItem', methods=["POST"])
+def deleteComparisonItem():
+    message = {}
+    data = json.loads(request.data)
+    delete_comparison_item(data['itemId'])
+    message['success'] = 'success'
+    return jsonify(message)
 
 
 @app.route('/saveComparisonAsTemplate', methods=["POST"])
