@@ -1,10 +1,22 @@
 import React from 'react';
-import {Modal} from 'react-bootstrap';
 import {connect} from 'react-redux'
 import {addAttr, addItem, changeView, exportCSV} from '../actions/actions'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 
 class Toolbar extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.copyText = this.copyText.bind(this);
+    }
+
+    copyText() {
+        var input = document.getElementById("copy-text");
+        input.select();
+        document.execCommand("copy");
+        input.blur();
+    }
+
     render() {
         if (this.props.view === 'CHART') {
             return (
@@ -43,7 +55,7 @@ class Toolbar extends React.Component {
                             <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#shareModal">Share</button>
 
                             <div className="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
-                                <div className="modal-dialog" role="document">
+                                <div className="modal-dialog modal-lg" role="document">
                                     <div className="modal-content">
                                         <div className="modal-header">
                                             <h5 className="modal-title" id="shareModalTitle">Share Your Comparison</h5>
@@ -52,7 +64,13 @@ class Toolbar extends React.Component {
                                             </button>
                                           </div>
                                         <div className="modal-body">
-                                            <input className="form-control" type="text" value={window.location.href} readonly/>
+                                            <label for="copy-text">Click the button to copy the link or CTRL+C after selecting the link!</label>
+                                            <div className="input-group">
+                                                <input id="copy-text" className="form-control" type="text" value={window.location.href} readOnly/>
+                                                <span className="input-group-btn">
+                                                    <button className="btn btn-primary" type="button" onClick={this.copyText}>Copy <i className="fa fa-clipboard" aria-hidden="true"></i></button>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
