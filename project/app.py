@@ -85,6 +85,7 @@ def addComparisonItem():
     itemId['itemId'] = (add_comparison_item_back(data['compId']))
     return jsonify(itemId)
 
+
 @app.route('/deleteComparisonAttr', methods=["POST"])
 def deleteComparisonAttr():
     message = {}

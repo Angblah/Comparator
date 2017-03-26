@@ -54,7 +54,7 @@ class Toolbar extends React.Component {
                             <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.exportCSV()}>Export as CSV</button>
                             <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#shareModal">Share</button>
 
-                            <div className="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
+                            <div className="modal fade" id="shareModal" tabIndex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
                                 <div className="modal-dialog modal-lg" role="document">
                                     <div className="modal-content">
                                         <div className="modal-header">
@@ -64,7 +64,7 @@ class Toolbar extends React.Component {
                                             </button>
                                           </div>
                                         <div className="modal-body">
-                                            <label for="copy-text">Click the button to copy the link or CTRL+C after selecting the link!</label>
+                                            <label htmlFor="copy-text">Click the button to copy the link or CTRL+C after selecting the link!</label>
                                             <div className="input-group">
                                                 <input id="copy-text" className="form-control" type="text" value={window.location.href} readOnly/>
                                                 <span className="input-group-btn">
