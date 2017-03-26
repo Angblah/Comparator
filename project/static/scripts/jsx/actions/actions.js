@@ -126,6 +126,19 @@ export function exportCSV() {
      window.location.href = '/csv/' + (window.location.href).split("/")[4];
 }
 
+export function saveTemplate(compId, name) {
+    return function (dispatch) {
+        return fetch('/saveComparisonAsTemplate', {
+            method: 'POST',
+            body: JSON.stringify({
+                compId : compId,
+                name : name
+            })
+        })
+        .then(response => response.json())
+    }
+}
+
 
 // WORKSPACE/STATE ACTIONS
 // ================================

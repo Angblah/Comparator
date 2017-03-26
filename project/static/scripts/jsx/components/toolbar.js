@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal} from 'react-bootstrap';
 import {connect} from 'react-redux'
-import {addAttr, addItem, changeView, exportCSV} from '../actions/actions'
+import {addAttr, addItem, changeView, exportCSV, saveTemplate} from '../actions/actions'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 
 class Toolbar extends React.Component {
@@ -33,7 +33,7 @@ class Toolbar extends React.Component {
                                 <button type="button blank-bg" className="btn btn-secondary dropdown-toggle" id="saveDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Save as</button>
                                 <div className="dropdown-menu" aria-labelledby="saveDropdown">
                                     <a className="dropdown-item" href="#">Comparison</a>
-                                    <a className="dropdown-item" href="#">Template</a>
+                                    <a className="dropdown-item" href="#" onClick={() => this.props.saveTemplate(12, 'My Swaggy Template')}>Template</a>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +42,7 @@ class Toolbar extends React.Component {
                             <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.exportCSV()}>Export as CSV</button>
                             <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#shareModal">Share</button>
 
-                            <div className="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
+                            <div className="modal fade" id="shareModal" tabIndex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
                                 <div className="modal-dialog" role="document">
                                     <div className="modal-content">
                                         <div className="modal-header">
@@ -52,7 +52,7 @@ class Toolbar extends React.Component {
                                             </button>
                                           </div>
                                         <div className="modal-body">
-                                            <input className="form-control" type="text" value={window.location.href} readonly/>
+                                            <input className="form-control" type="text" value={window.location.href} readOnly/>
                                         </div>
                                     </div>
                                 </div>
@@ -93,6 +93,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(changeView(view))
         },
         exportCSV: () => dispatch(exportCSV()),
+        saveTemplate: (compId, name) => dispatch(saveTemplate(compId, name)),
         onUndo: () => dispatch(UndoActionCreators.undo()),
         onRedo: () => dispatch(UndoActionCreators.redo())
     }

@@ -23516,6 +23516,7 @@ exports.editItem = editItem;
 exports.routeToEditItem = routeToEditItem;
 exports.editItemName = editItemName;
 exports.exportCSV = exportCSV;
+exports.saveTemplate = saveTemplate;
 exports.fetchComparison = fetchComparison;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -23655,6 +23656,20 @@ var routeToEditItemName = exports.routeToEditItemName = function routeToEditItem
 // ================================
 function exportCSV() {
     window.location.href = '/csv/' + window.location.href.split("/")[4];
+}
+
+function saveTemplate(compId, name) {
+    return function (dispatch) {
+        return fetch('/saveComparisonAsTemplate', {
+            method: 'POST',
+            body: (0, _stringify2.default)({
+                compId: compId,
+                name: name
+            })
+        }).then(function (response) {
+            return response.json();
+        });
+    };
 }
 
 // WORKSPACE/STATE ACTIONS
@@ -33693,7 +33708,9 @@ var Toolbar = function (_React$Component) {
                                     ),
                                     _react2.default.createElement(
                                         'a',
-                                        { className: 'dropdown-item', href: '#' },
+                                        { className: 'dropdown-item', href: '#', onClick: function onClick() {
+                                                return _this2.props.saveTemplate(12, 'My Swaggy Template');
+                                            } },
                                         'Template'
                                     )
                                 )
@@ -33716,7 +33733,7 @@ var Toolbar = function (_React$Component) {
                             ),
                             _react2.default.createElement(
                                 'div',
-                                { className: 'modal fade', id: 'shareModal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'shareModalLabel', 'aria-hidden': 'true' },
+                                { className: 'modal fade', id: 'shareModal', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'shareModalLabel', 'aria-hidden': 'true' },
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'modal-dialog', role: 'document' },
@@ -33744,7 +33761,7 @@ var Toolbar = function (_React$Component) {
                                         _react2.default.createElement(
                                             'div',
                                             { className: 'modal-body' },
-                                            _react2.default.createElement('input', { className: 'form-control', type: 'text', value: window.location.href, readonly: true })
+                                            _react2.default.createElement('input', { className: 'form-control', type: 'text', value: window.location.href, readOnly: true })
                                         )
                                     )
                                 )
@@ -33795,6 +33812,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         exportCSV: function exportCSV() {
             return dispatch((0, _actions.exportCSV)());
+        },
+        saveTemplate: function saveTemplate(compId, name) {
+            return dispatch((0, _actions.saveTemplate)(compId, name));
         },
         onUndo: function onUndo() {
             return dispatch(_reduxUndo.ActionCreators.undo());
@@ -33885,7 +33905,8 @@ var ViewContainer = function (_React$Component) {
                         addItem: this.props.addItem,
                         editItem: this.props.editItem,
                         editItemName: this.props.editItemName,
-                        exportCSV: this.props.exportCSV }),
+                        exportCSV: this.props.exportCSV,
+                        saveTemplate: this.props.saveTemplate }),
                     _react2.default.createElement('span', null)
                 );
             } else {
@@ -33934,6 +33955,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         exportCSV: function exportCSV() {
             dispatch((0, _actions.exportCSV)());
+        },
+        saveTemplate: function saveTemplate(compId, name) {
+            dispatch((0, _actions.saveTemplate)(compId, name));
         },
         onUndo: function onUndo() {
             return dispatch(_reduxUndo.ActionCreators.undo());

@@ -86,6 +86,14 @@ def addComparisonItem():
     return jsonify(itemId)
 
 
+@app.route('/saveComparisonAsTemplate', methods=["POST"])
+def saveComparisonAsTemplate():
+    tempId = {}
+    data = json.loads(request.data)
+    tempId['tempId'] = (save_comparison_as_template(data['compId'], data['name']))
+    return jsonify(tempId)
+
+
 @app.route('/newComparison')
 def newComparison():
     return render_template('newComparison.html')
