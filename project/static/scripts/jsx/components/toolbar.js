@@ -1,4 +1,5 @@
 import React from 'react';
+import {Modal} from 'react-bootstrap';
 import {connect} from 'react-redux'
 import {addAttr, addItem, changeView, exportCSV} from '../actions/actions'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
@@ -27,8 +28,35 @@ class Toolbar extends React.Component {
                             <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('SPIDER')}>Toggle View</button>
                         </div>
 
-                        <div className="btn-group ml-auto" role="group" aria-label="Export">
+                        <div className="btn-group mr-2" role="group" aria-label="Fourth group">
+                            <div className="dropdown">
+                                <button type="button blank-bg" className="btn btn-secondary dropdown-toggle" id="saveDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Save as</button>
+                                <div className="dropdown-menu" aria-labelledby="saveDropdown">
+                                    <a className="dropdown-item" href="#">Comparison</a>
+                                    <a className="dropdown-item" href="#">Template</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="btn-group ml-auto" role="group" aria-label="Extra">
                             <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.exportCSV()}>Export as CSV</button>
+                            <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#myModal">Share</button>
+
+                            <div className="modal fade" id="myModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div className="modal-dialog" role="document">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="shareModalTitle">Share Your Comparison</h5>
+                                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                        <div className="modal-body">
+                                            {window.location.href}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
