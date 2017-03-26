@@ -793,12 +793,6 @@ def delete_comparison_item_by_position (comparison_id, position):
     """)
     db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position)
 
-def delete_comparison_item_by_id (id):
-    query = text("""
-    select delete_comparison_item(:id);
-    """)
-    db.engine.execute(query.execution_options(autocommit=True), id=id)
-
 def get_comparison (comparison_id, get_json=True):
     query = text("""
     select * from comparison_table_stacked(:comparison_id);
