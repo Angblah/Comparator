@@ -29388,8 +29388,9 @@ var attributes = function attributes() {
             });
         // Delete an attribute
         case _actions.DELETE_ATTR:
-            //TODO: Delete the attrId from the UI
-            return state;
+            return state.filter(function (attribute) {
+                return action.attrId != attribute.id;
+            });
         // Load the attributes
         case _actions.LOAD_ATTR:
             return action.json;
@@ -29465,8 +29466,9 @@ var items = function items() {
 
         // Delete an Item
         case _actions.DELETE_ITEM:
-            //TODO:: Delete the itemId from the UI
-            return state;
+            return state.filter(function (item) {
+                return action.itemId != item.id;
+            });
 
         // Load the comparison items to store
         case _actions.LOAD_ITEMS:

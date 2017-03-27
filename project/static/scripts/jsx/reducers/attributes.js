@@ -31,8 +31,7 @@ const attributes = (state = [], action) => {
             });
         // Delete an attribute
         case DELETE_ATTR:
-            //TODO: Delete the attrId from the UI
-            return state;
+            return state.filter(attribute => action.attrId != attribute.id);
         // Load the attributes
         case LOAD_ATTR:
             return action.json;
