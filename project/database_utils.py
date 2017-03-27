@@ -590,16 +590,12 @@ def initialize_db_structure():
 # TODO: change default comparisons + templates for admin to be actual defaults instead of balls
 # TODO: consider function to import csv (both for allowing imports of exported tables/csv tables in general, and to ease example making)
 
-def initialize_db_values():
-    query = text("""
-        select initialize_db_values()
-    """)
-    db.engine.execute(query.execution_options(autocommit=True))
+############################################################################################
+# Account related functions
 
 # returns 1 for valid registration parameters, 2 for invalid email, 3 for invalid username
 def validate_registration(email, username):
     from models import Account
-
 
     if db.engine.execute((select([Account.id]).where(Account.email == email))).rowcount > 0:
         # DUPLICATE EMAIL
@@ -621,77 +617,28 @@ def set_password(user_id, password):
 def validate_login(username, password):
     query = text("""select validate_login(:username, :password)""")
     return db.engine.execute(query, username=username, password=password).scalar()
+############################################################################################
 
-# returns array of template ids for specified user
-def get_user_template_ids(user_id, get_json=True):
-    result = get_user_templates(user_id)
-    output = [row['id'] for row in result]
+############################################################################################
+# Sheet related functions
 
-    if get_json:
-        return json.dumps(output)
-    return output
-
-# returns array of all comparison ids of specified user
-def get_user_comparison_ids(user_id, get_json=True):
-    from models import Comparison
-    result = db.engine.execute((select([Comparison]).where(Comparison.account_id == user_id)))
-    output = [row['id'] for row in result]
-
-    if get_json:
-        return json.dumps(output)
-    return output
-
-def get_recent_user_comparisons(user_id, number=None, get_json=True):
-    query = """
-    select * from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id order by date_modified desc
-    """
-    if number is not None:
-        query += """limit :number"""
-
-    query = text(query)
-    result = db.engine.execute(query, user_id=user_id, number=number)
-    if get_json:
-        return jsonify_table(result)
-    return result
-
-# returns values of comparison table for specified user
-def get_user_comparisons(user_id, get_json=True):
+def set_sheet_comment(sheet_id, comment):
     query = text("""
-        select * from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id;
-        """)
-    result = db.engine.execute(query, user_id=user_id)
-    if get_json:
-        return jsonify_table(result)
-    return result
-
-def get_user_templates(user_id, get_json=True):
-    query = text("""
-            select * from User_Template inner join Sheet using(id) where Sheet.account_id = :user_id;
-            """)
-    result = db.engine.execute(query, user_id=user_id)
-    if get_json:
-        return jsonify_table(result)
-    return result
-
-def get_recent_user_templates(user_id, number=None, get_json=True):
-    query = """
-        select * from User_Template inner join Sheet using(id) where Sheet.account_id = :user_id order by date_modified desc
-        """
-    if number is not None:
-        query += "limit :number"
-
-    query = text(query)
-
-    result = db.engine.execute(query, user_id=user_id, number=number)
-    if get_json:
-        return jsonify_table(result)
-    return result
-
-def delete_comparison_item(item_id):
-    query = text("""
-    select delete_comparison_item(:item_id);
+    select set_sheet_comment(:sheet_id, :comment);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id)
+    db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, comment=comment)
+
+# TODO: update when images implemented to delete images from cloudinary/whatever host is used
+def delete_sheet(sheet_id):
+    query = text("""
+    delete from sheet where id = :sheet_id;
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id)
+
+############################################################################################
+
+############################################################################################
+# Attribute related functions
 
 def delete_sheet_attribute(attribute_id):
     query = text("""
@@ -727,58 +674,6 @@ def add_sheet_attributes(sheet_id, position, num_attributes, get_json=True):
         return jsonify_column(result)
     return result
 
-def set_comparison_attribute_value(item_id, attribute_id, new_value):
-    query = text("""
-    select set_comparison_attribute_value(:item_id, :attribute_id, :new_value);
-    """)
-    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, attribute_id=attribute_id, new_value=new_value)
-
-# saves specified comparison as template with given name, returns new template id
-def save_comparison_as_template(comparison_id, template_name):
-    query = text("""
-    select save_comparison_as_template(:comparison_id, :template_name);
-    """)
-    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, template_name=template_name).scalar()
-
-def add_comparison_item(comparison_id, position, name=None):
-    query = text("""
-    select add_comparison_item(:comparison_id, :position, :name);
-    """)
-    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position, name=name).scalar()
-
-def add_comparison_item_back (comparison_id, num_items=1, get_json=True):
-    query = text("""
-    select add_comparison_item_back(:comparison_id, :num_items);
-    """)
-    result = db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, num_items=num_items)
-    if num_items == 1:
-        return result.scalar()
-
-    if get_json:
-        return jsonify_column(result)
-    return result
-
-def add_comparison_items (comparison_id, position, num_items=1, get_json=True):
-    query = text("""
-    select add_comparison_items (:comparison_id, :num_items, :position)
-    """)
-    result = db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position, num_items=num_items)
-    if get_json:
-        return jsonify_column(result)
-    return result
-
-def swap_comparison_item (id1, id2):
-    query = text("""
-    select swap_comparison_item (:id1, :id2);
-    """)
-    db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2)
-
-def move_comparison_item(item_id, position):
-    query = text("""
-    select move_comparison_item(:item_id, :position);
-    """)
-    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, position=position)
-
 def swap_attribute(id1, id2):
     query = text("""
     select swap_attribute(:id1, :id2);
@@ -791,12 +686,73 @@ def move_attribute(attribute_id, position):
     """)
     db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id, position=position)
 
-def delete_comparison_item_by_position (comparison_id, position):
+def set_comparison_attribute_value(item_id, attribute_id, new_value):
     query = text("""
-    select delete_comparison_item(:comparison_id, :position);
+    select set_comparison_attribute_value(:item_id, :attribute_id, :new_value);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, attribute_id=attribute_id, new_value=new_value)
 
+# sorts comparison by specified attribute (ascending)
+def sort_by_attribute(attribute_id):
+    query = text("""
+    select sort_by_attribute(:attribute_id);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id)
+
+# sorts sheet (comparison or template) attributes by ordering (list of attribute id's)
+def sort_by_attribute_ordering(ordering):
+    query = text("""
+    select sort_by_attribute_ordering(:ordering);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
+
+# WARNING: vulnerable to sql injection if users given access (as field string not checked)
+# valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
+def set_sheet_attribute_field(attribute_id, field, field_value):
+    query = text("""
+    update sheet_attribute set """ + field + """ = :field_value where id = :attribute_id;
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
+
+############################################################################################
+
+############################################################################################
+# Comparison related functions
+
+# returns array of all comparison ids of specified user
+def get_user_comparison_ids(user_id, get_json=True):
+    from models import Comparison
+    result = db.engine.execute((select([Comparison]).where(Comparison.account_id == user_id)))
+    output = [row['id'] for row in result]
+
+    if get_json:
+        return json.dumps(output)
+    return output
+
+def get_recent_user_comparisons(user_id, number=None, get_json=True):
+    query = """
+    select * from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id order by date_modified desc
+    """
+    if number is not None:
+        query += """limit :number"""
+
+    query = text(query)
+    result = db.engine.execute(query, user_id=user_id, number=number)
+    if get_json:
+        return jsonify_table(result)
+    return result
+
+# returns values of comparison table for specified user
+def get_user_comparisons(user_id, get_json=True):
+    query = text("""
+        select * from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id;
+        """)
+    result = db.engine.execute(query, user_id=user_id)
+    if get_json:
+        return jsonify_table(result)
+    return result
+
+# get comparison related data (includes attribute values)
 def get_comparison (comparison_id, get_json=True):
     query = text("""
     select * from comparison_table_stacked(:comparison_id);
@@ -855,18 +811,65 @@ def get_comparison (comparison_id, get_json=True):
         return json.dumps(data)
     return data
 
-def create_comparison_from_user_template (account_id, template_id, comparison_name, num_items=2):
+def delete_comparison_item(item_id):
     query = text("""
-    select create_comparison_from_user_template(:account_id, :template_id, :comparison_name, :num_items);
+    select delete_comparison_item(:item_id);
     """)
-    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name, num_items=num_items).scalar()
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id)
 
-# sorts comparison by specified attribute (ascending)
-def sort_by_attribute(attribute_id):
+# saves specified comparison as template with given name, returns new template id
+def save_comparison_as_template(comparison_id, template_name):
     query = text("""
-    select sort_by_attribute(:attribute_id);
+    select save_comparison_as_template(:comparison_id, :template_name);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id)
+    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, template_name=template_name).scalar()
+
+
+def add_comparison_item(comparison_id, position, name=None):
+    query = text("""
+    select add_comparison_item(:comparison_id, :position, :name);
+    """)
+    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position, name=name).scalar()
+
+def add_comparison_item_back (comparison_id, num_items=1, get_json=True):
+    query = text("""
+    select add_comparison_item_back(:comparison_id, :num_items);
+    """)
+    result = db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, num_items=num_items)
+    if num_items == 1:
+        return result.scalar()
+
+    if get_json:
+        return jsonify_column(result)
+    return result
+
+def add_comparison_items (comparison_id, position, num_items=1, get_json=True):
+    query = text("""
+    select add_comparison_items (:comparison_id, :num_items, :position)
+    """)
+    result = db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position, num_items=num_items)
+    if get_json:
+        return jsonify_column(result)
+    return result
+
+def swap_comparison_item (id1, id2):
+    query = text("""
+    select swap_comparison_item (:id1, :id2);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2)
+
+def move_comparison_item(item_id, position):
+    query = text("""
+    select move_comparison_item(:item_id, :position);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, position=position)
+
+def delete_comparison_item_by_position (comparison_id, position):
+    query = text("""
+    select delete_comparison_item(:comparison_id, :position);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position)
+
 
 # sorts comparison items by ordering determined by inputted list of ordered comparison_item id's
 def sort_by_item_ordering(ordering):
@@ -875,32 +878,93 @@ def sort_by_item_ordering(ordering):
     """)
     db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
 
-# sorts sheet (comparison or template) attributes by ordering (list of attribute id's)
-def sort_by_attribute_ordering(ordering):
-    query = text("""
-    select sort_by_attribute_ordering(:ordering);
-    """)
-    db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
-
-# WARNING: vulnerable to sql injection if users given access (as field string not checked)
-# valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
-def set_sheet_attribute_field(attribute_id, field, field_value):
-    query = text("""
-    update sheet_attribute set """ + field + """ = :field_value where id = :attribute_id;
-    """)
-    db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
-
 def set_item_name(item_id, name):
     query = text("""
     update comparison_item set name = :name where id = :item_id;
     """)
     db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, name=name)
 
-def set_sheet_comment(sheet_id, comment):
+def create_comparison_from_user_template (account_id, template_id, comparison_name, num_items=2):
     query = text("""
-    select set_sheet_comment(:sheet_id, :comment);
+    select create_comparison_from_user_template(:account_id, :template_id, :comparison_name, :num_items);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, comment=comment)
+    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id, comparison_name=comparison_name, num_items=num_items).scalar()
+
+# copies comparison into specified account, returns comparison id
+def copy_comparison (comparison_id, account_id):
+    query = text("""
+    select * from copy_comparison(:comparison_id, :account_id);
+    """)
+    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, account_id=account_id).scalar()
+
+def create_empty_comparison(account_id, name='New Comparison', num_items=2, num_attributes=2):
+    query = text("""
+    select * from create_empty_comparison(:name, :account_id, :num_items, :num_attributes)
+    """)
+    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, name=name, num_items=num_items, num_attributes=num_attributes).scalar()
+
+# returns csv of specified comparison (image values are keys for corresponding cloudinary images)
+def get_comparison_csv(comparison_id):
+    from flask import send_file
+    from io import BytesIO
+
+    query = text("""
+    select comparison_table_horizontal_query(:comparison_id)
+    """)
+
+    query = db.engine.execute(query, comparison_id=comparison_id).scalar()
+    query = "COPY ({}) TO STDOUT WITH CSV HEADER".format(query)
+
+    filename = db.engine.execute(text('select name from sheet where id = :comparison_id'), comparison_id=comparison_id).scalar()
+    filename += '.csv'
+
+    conn = db.engine.raw_connection()
+    try:
+        cur = conn.cursor()
+        f = BytesIO()
+        cur.copy_expert(query, f)
+        cur.close()
+        f.seek(0)
+        return send_file(f, as_attachment=True, attachment_filename=filename, mimetype="text/csv")
+    finally:
+        conn.close()
+
+############################################################################################
+
+############################################################################################
+# Template related functions
+
+# returns array of template ids for specified user
+def get_user_template_ids(user_id, get_json=True):
+    result = get_user_templates(user_id)
+    output = [row['id'] for row in result]
+
+    if get_json:
+        return json.dumps(output)
+    return output
+
+def get_user_templates(user_id, get_json=True):
+    query = text("""
+            select * from User_Template inner join Sheet using(id) where Sheet.account_id = :user_id;
+            """)
+    result = db.engine.execute(query, user_id=user_id)
+    if get_json:
+        return jsonify_table(result)
+    return result
+
+def get_recent_user_templates(user_id, number=None, get_json=True):
+    query = """
+        select * from User_Template inner join Sheet using(id) where Sheet.account_id = :user_id order by date_modified desc
+        """
+    if number is not None:
+        query += "limit :number"
+
+    query = text(query)
+
+    result = db.engine.execute(query, user_id=user_id, number=number)
+    if get_json:
+        return jsonify_table(result)
+    return result
 
 def get_template(id, get_json=True):
     query = text("""
@@ -942,57 +1006,22 @@ def copy_template(template_id, account_id):
     """)
     return db.engine.execute(query.execution_options(autocommit=True), template_id=template_id, account_id=account_id).scalar()
 
-# copies comparison into specified account, returns comparison id
-def copy_comparison (comparison_id, account_id):
-    query = text("""
-    select * from copy_comparison(:comparison_id, :account_id);
-    """)
-    return db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, account_id=account_id).scalar()
-
-def create_empty_comparison(account_id, name='New Comparison', num_items=2, num_attributes=2):
-    query = text("""
-    select * from create_empty_comparison(:name, :account_id, :num_items, :num_attributes)
-    """)
-    return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, name=name, num_items=num_items, num_attributes=num_attributes).scalar()
-
 def create_empty_template (account_id, name='New Template', num_attributes=2):
     query = text("""
     select * from create_empty_template(:name, :account_id, :num_attributes)
     """)
     return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, name=name, num_attributes=num_attributes).scalar()
 
-# TODO: update when images implemented to delete images from cloudinary/whatever host is used
-def delete_sheet(sheet_id):
+############################################################################################
+
+############################################################################################
+# Misc database related functions
+
+def initialize_db_values():
     query = text("""
-    delete from sheet where id = :sheet_id;
+        select initialize_db_values()
     """)
-    db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id)
-
-# returns csv of specified comparison (image values are keys for corresponding cloudinary images)
-def get_comparison_csv(comparison_id):
-    from flask import send_file
-    from io import BytesIO
-
-    query = text("""
-    select comparison_table_horizontal_query(:comparison_id)
-    """)
-
-    query = db.engine.execute(query, comparison_id=comparison_id).scalar()
-    query = "COPY ({}) TO STDOUT WITH CSV HEADER".format(query)
-
-    filename = db.engine.execute(text('select name from sheet where id = :comparison_id'), comparison_id=comparison_id).scalar()
-    filename += '.csv'
-
-    conn = db.engine.raw_connection()
-    try:
-        cur = conn.cursor()
-        f = BytesIO()
-        cur.copy_expert(query, f)
-        cur.close()
-        f.seek(0)
-        return send_file(f, as_attachment=True, attachment_filename=filename, mimetype="text/csv")
-    finally:
-        conn.close()
+    db.engine.execute(query.execution_options(autocommit=True))
 
 # takes in ResultProxy from executed query, returns json array of rows mapping column names to values
 def jsonify_table(result, get_json=True):
@@ -1014,6 +1043,8 @@ def jsonify_column(result):
         data.append(row[0])
     return json.dumps(data)
 
+############################################################################################
+
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
     initialize_db_structure()
@@ -1021,21 +1052,5 @@ if __name__ == '__main__':
 
 # TODO: improve documentation
     # TODO: organize functions by category (attributes, sheets, etc.)
-# TODO: consider changing functions to return errors for invalid id's (like get_comparison and get_template)
 # TODO: consider adding import for xlsx/csv (see flask-excel)
 # TODO: consider renaming ...sheet_attribute... functions to just ...attribute...
-# TODO: combine register_user and validate_registration to reduce database calls using below code
-    # query = text("""
-    # select register_user('adasd@a.com', 'a', 'a');
-    # """)
-    # try:
-    #     db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password)
-    # except sqlalchemy.exc.IntegrityError as err:
-    #     if err.orig.diag.constraint_name == 'account_email_key' and err.orig.pgcode == '23505':
-    #         # duplicate email key
-    #         'return 2'
-    #     elif err.orig.diag.constraint_name == 'account_username_key' and err.orig.pgcode == '23505':
-    #         # duplicate username key
-    #         'return 3'
-    # # successful registration
-    # 'return 1'
