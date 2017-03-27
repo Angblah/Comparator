@@ -178,6 +178,17 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
+    create or replace function delete_sheet_attribute (_id int) returns void
+        as $$
+        begin
+            with delete_1 as (
+                delete from sheet_attribute where id = _id returning position, sheet_id
+            ), update_1 as (
+                update sheet set date_modified = current_timestamp where id = (select sheet_id from delete_1)
+            ) update sheet_attribute set position = position - 1 where sheet_id = (select sheet_id from delete_1) and position > (select position from delete_1);
+        end;
+    $$ language plpgsql;
+
     create or replace function comparison_table_stacked (_comparison_id int) returns table(type_id smallint, "id" int, "position" int, attribute_name varchar, val varchar, item_name varchar, item_id int)
         as $$
         begin
@@ -644,19 +655,6 @@ def get_recent_user_comparisons(user_id, number=None, get_json=True):
         return jsonify_table(result)
     return result
 
-# TODO: delete once code changed to use get_user_comparisons
-# returns array of all comparison names of specified user
-def get_user_comparison_names(user_id, get_json=True):
-    query = text("""
-        select name from Comparison inner join Sheet using(id) where Sheet.account_id = :user_id;
-        """)
-    result = db.engine.execute(query, user_id=user_id)
-    output = [row['name'] for row in result]
-
-    if get_json:
-        return json.dumps(output)
-    return output
-
 # returns values of comparison table for specified user
 def get_user_comparisons(user_id, get_json=True):
     query = text("""
@@ -689,6 +687,18 @@ def get_recent_user_templates(user_id, number=None, get_json=True):
     if get_json:
         return jsonify_table(result)
     return result
+
+def delete_comparison_item(item_id):
+    query = text("""
+    select delete_comparison_item(:item_id);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id)
+
+def delete_sheet_attribute(attribute_id):
+    query = text("""
+    select delete_sheet_attribute(:attribute_id);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id)
 
 def add_sheet_attribute(sheet_id, attribute_name, type_id, weight=1):
     query = text("""
@@ -764,17 +774,29 @@ def swap_comparison_item (id1, id2):
     """)
     db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2)
 
+def move_comparison_item(item_id, position):
+    query = text("""
+    select move_comparison_item(:item_id, :position);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, position=position)
+
+def swap_attribute(id1, id2):
+    query = text("""
+    select swap_attribute(:id1, :id2);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2)
+
+def move_attribute(attribute_id, position):
+    query = text("""
+    select move_attribute(:attribute_id, :position);
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id, position=position)
+
 def delete_comparison_item_by_position (comparison_id, position):
     query = text("""
     select delete_comparison_item(:comparison_id, :position);
     """)
     db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position)
-
-def delete_comparison_item_by_id (id):
-    query = text("""
-    select delete_comparison_item(:id);
-    """)
-    db.engine.execute(query.execution_options(autocommit=True), id=id)
 
 def get_comparison (comparison_id, get_json=True):
     query = text("""
@@ -908,6 +930,13 @@ def create_empty_template (account_id, name='New Template', num_attributes=2):
     """)
     return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, name=name, num_attributes=num_attributes).scalar()
 
+# TODO: update when images implemented to delete images from cloudinary/whatever host is used
+def delete_sheet(sheet_id):
+    query = text("""
+    delete from sheet where id = :sheet_id;
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id)
+
 # returns csv of specified comparison (image values are keys for corresponding cloudinary images)
 def get_comparison_csv(comparison_id):
     from flask import send_file
@@ -960,12 +989,8 @@ if __name__ == '__main__':
     initialize_db_values()
 
 # TODO: improve documentation
-# TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
-    # single inheritance for attribute downsides:
-        # unique constraint for (name, comparison_id) can't be enforced easily
-        # queries slightly more complex
-# TODO: export csv
-# TODO: update comparison_table_stacked to also return attribute weight
+    # TODO: organize functions by category (attributes, sheets, etc.)
 # TODO: consider changing functions to return errors for invalid id's (like get_comparison and get_template)
 # TODO: consider adding import for xlsx/csv (see flask-excel)
 # TODO: examine parsing error messages from database rather than checking data validity in separate sql call (like in validate_registration)
+# TODO: consider renaming ...sheet_attribute... functions to just ...attribute...

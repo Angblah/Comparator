@@ -2,7 +2,8 @@ import {
     ADD_ITEM,
     EDIT_ITEM,
     LOAD_ITEMS,
-    EDIT_ITEM_NAME
+    EDIT_ITEM_NAME,
+    DELETE_ITEM
 } from '../actions/actions'
 
 const items = (state = [], action) => {
@@ -44,6 +45,11 @@ const items = (state = [], action) => {
                     name: action.name
                 }
             });
+
+        // Delete an Item
+        case DELETE_ITEM:
+            //TODO:: Delete the itemId from the UI
+            return state;
 
         // Load the comparison items to store
         case LOAD_ITEMS:

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, jsonify, redirect, abort
+from flask import Flask, render_template, request, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
@@ -84,6 +84,32 @@ def addComparisonItem():
     data = json.loads(request.data)
     itemId['itemId'] = (add_comparison_item_back(data['compId']))
     return jsonify(itemId)
+
+
+@app.route('/deleteComparisonAttr', methods=["POST"])
+def deleteComparisonAttr():
+    message = {}
+    data = json.loads(request.data)
+    delete_sheet_attribute(data['attrId'])
+    message['success'] = 'success'
+    return jsonify(message)
+
+
+@app.route('/deleteComparisonItem', methods=["POST"])
+def deleteComparisonItem():
+    message = {}
+    data = json.loads(request.data)
+    delete_comparison_item(data['itemId'])
+    message['success'] = 'success'
+    return jsonify(message)
+
+
+@app.route('/saveComparisonAsTemplate', methods=["POST"])
+def saveComparisonAsTemplate():
+    tempId = {}
+    data = json.loads(request.data)
+    tempId['tempId'] = (save_comparison_as_template(data['compId'], data['name']))
+    return jsonify(tempId)
 
 
 @app.route('/newComparison')
@@ -319,7 +345,7 @@ def share_template(id, user_id):
 def view_comparison(token):
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
     if not current_user.is_anonymous() and user_id == current_user.id:
-        return render_template('testbed2.html', comparison=get_comparison(comparison_id))
+        return render_template('testbed2.html', comparison=get_comparison(comparison_id), comparison_id=comparison_id)
     else:
         # TODO guest view
         abort(404)
@@ -329,7 +355,7 @@ def view_comparison(token):
 def view_template(token):
     template_id, user_id = ts.loads(token, salt='template-data')
     if not current_user.is_anonymous() and user_id == current_user.id:
-        return render_template('testbed2.html', template=get_template(template_id))
+        return render_template('testbed2.html', template=get_template(template_id), template_id=template_id)
     else:
         # TODO guest view
         abort(404)
