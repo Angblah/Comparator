@@ -105,6 +105,12 @@ $(function() {
     });
 });
 
+$(function() {
+    $('#closeSignUp').on('click', function(e) {
+        clearForm("registerForm", "registerButton");
+    });
+});
+
 
 // Checks if input is null, and calls setGroupInvalid if so.
 function checkNull(inputID, formGroup) {
@@ -157,4 +163,15 @@ function checkFormValid(form, submitButton) {
         $('#' + form + " #" + submitButton).removeAttr('disabled');
         return true;
     }
+}
+
+function clearForm(form, submitButton) {
+    $('#' + form + ' *').filter('.form-group').each(function(){
+        $('#' + this.id + 'helpBlock').remove();
+        $('#' + this.id + 'icon').remove();
+        $("#" + this.id).removeClass("has-error")
+        $("#" + this.id).removeClass("has-success")
+    });
+
+    $('#' + form + " #" + submitButton).removeAttr('disabled');
 }
