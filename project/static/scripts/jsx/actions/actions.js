@@ -1,8 +1,10 @@
 export const ADD_ATTR = 'ADD_ATTR'
 export const EDIT_ATTR = 'EDIT_ATTR'
+export const DELETE_ATTR = 'DELETE_ATTR'
 export const ADD_ITEM = 'ADD_ITEM'
 export const EDIT_ITEM = 'EDIT_ITEM'
 export const EDIT_ITEM_NAME = 'EDIT_ITEM_NAME'
+export const DELETE_ITEM = 'DELETE_ITEM'
 export const CHANGE_VIEW = 'CHANGE_VIEW'
 export const LOAD_ATTR = 'LOAD_ATTR'
 export const LOAD_ITEMS = 'LOAD_ITEMS'
@@ -48,6 +50,26 @@ export const routeToEditAttr = (id, name) => {
         type: 'EDIT_ATTR',
         id,
         name
+    }
+}
+
+export function deleteAttr(attrId) {
+    return function (dispatch) {
+        return fetch('/deleteComparisonAttr', {
+            method: 'POST',
+            body: JSON.stringify({
+                attrId : attrId
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToDeleteAttr(attrId)))
+    }
+}
+
+export const routeToDeleteAttr = (attrId) => {
+    return {
+        type: 'DELETE_ATTR',
+        attrId
     }
 }
 
@@ -116,6 +138,26 @@ export const routeToEditItemName = (itemId, name) => {
         type: 'EDIT_ITEM_NAME',
         itemId,
         name
+    }
+}
+
+export function deleteItem(itemId) {
+    return function (dispatch) {
+        return fetch('/deleteComparisonItem', {
+            method: 'POST',
+            body: JSON.stringify({
+                itemId : itemId
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToDeleteItem(itemId)))
+    }
+}
+
+export const routeToDeleteItem = (itemId) => {
+    return {
+        type: 'DELETE_ITEM',
+        itemId
     }
 }
 
