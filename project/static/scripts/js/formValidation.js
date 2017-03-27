@@ -107,7 +107,7 @@ $(function() {
 
 $(function() {
     $('#closeSignUp').on('click', function(e) {
-
+        clearForm("registerForm", "registerButton");
     });
 });
 
