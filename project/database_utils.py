@@ -600,7 +600,6 @@ def initialize_db_values():
 def validate_registration(email, username):
     from models import Account
 
-    # TODO: see if better way to complete function as unique constraints checked upon insert anyway (conditional on error message?)
 
     if db.engine.execute((select([Account.id]).where(Account.email == email))).rowcount > 0:
         # DUPLICATE EMAIL
@@ -810,7 +809,17 @@ def get_comparison (comparison_id, get_json=True):
         query = text("""
         select * from comparison inner join sheet using(id) where comparison.id = :comparison_id;
         """)
-        data = jsonify_table(db.engine.execute(query, comparison_id=comparison_id), get_json=False)[0]
+        #data = jsonify_table(db.engine.execute(query, comparison_id=comparison_id), get_json=False)[0]
+
+        # info put as separate part of json to allow easier React use (as fields other than 'id' used rarely)
+        data = {}
+        row = db.engine.execute(query, comparison_id=comparison_id).fetchone()
+        data['id'] = row['id']
+        temp = {}
+        for key, value in row.items():
+            if key != 'id':
+                temp[key] = value
+        data['info'] = temp
 
         attributes = []
         items = []
@@ -902,7 +911,18 @@ def get_template(id, get_json=True):
     query = text("""
     select * from user_template inner join sheet using(id) where user_template.id = :id;
     """)
-    data = jsonify_table(db.engine.execute(query, id=id), get_json=False)[0]
+    #data = jsonify_table(db.engine.execute(query, id=id), get_json=False)[0]
+
+    # info put as separate part of json to allow easier React use (as fields other than 'id' used rarely)
+    data = {}
+    row = db.engine.execute(query, id=id).fetchone()
+    data['id'] = row['id']
+    temp = {}
+    for key, value in row.items():
+        if key != 'id':
+            temp[key] = value
+    data['info'] = temp
+
     if get_json:
         attributes = []
         for row in result:
@@ -996,14 +1016,26 @@ def jsonify_column(result):
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
-    #initialize_db_structure()
-    #initialize_db_values()
-    a = get_template(2)
-    b = 1
+    initialize_db_structure()
+    initialize_db_values()
 
 # TODO: improve documentation
     # TODO: organize functions by category (attributes, sheets, etc.)
 # TODO: consider changing functions to return errors for invalid id's (like get_comparison and get_template)
 # TODO: consider adding import for xlsx/csv (see flask-excel)
-# TODO: examine parsing error messages from database rather than checking data validity in separate sql call (like in validate_registration)
 # TODO: consider renaming ...sheet_attribute... functions to just ...attribute...
+# TODO: combine register_user and validate_registration to reduce database calls using below code
+    # query = text("""
+    # select register_user('adasd@a.com', 'a', 'a');
+    # """)
+    # try:
+    #     db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password)
+    # except sqlalchemy.exc.IntegrityError as err:
+    #     if err.orig.diag.constraint_name == 'account_email_key' and err.orig.pgcode == '23505':
+    #         # duplicate email key
+    #         'return 2'
+    #     elif err.orig.diag.constraint_name == 'account_username_key' and err.orig.pgcode == '23505':
+    #         # duplicate username key
+    #         'return 3'
+    # # successful registration
+    # 'return 1'
