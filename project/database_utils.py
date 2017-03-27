@@ -806,7 +806,12 @@ def get_comparison (comparison_id, get_json=True):
     result = db.engine.execute(query, comparison_id=comparison_id)
     if get_json:
         curr_position = -1
-        data = {}
+
+        query = text("""
+        select * from comparison inner join sheet using(id) where comparison.id = :comparison_id;
+        """)
+        data = jsonify_table(db.engine.execute(query, comparison_id=comparison_id), get_json=False)[0]
+
         attributes = []
         items = []
         item = None
@@ -839,7 +844,7 @@ def get_comparison (comparison_id, get_json=True):
         data['items'] = items
 
         return json.dumps(data)
-    return result
+    return data
 
 def create_comparison_from_user_template (account_id, template_id, comparison_name, num_items=2):
     query = text("""
@@ -893,6 +898,11 @@ def get_template(id, get_json=True):
     select * from get_template(:id);
     """)
     result = db.engine.execute(query, id=id)
+
+    query = text("""
+    select * from user_template inner join sheet using(id) where user_template.id = :id;
+    """)
+    data = jsonify_table(db.engine.execute(query, id=id), get_json=False)[0]
     if get_json:
         attributes = []
         for row in result:
@@ -901,8 +911,9 @@ def get_template(id, get_json=True):
             attribute['type_id'] = row[1]
             attribute['id'] = row[0]
             attributes.append(attribute)
-        return json.dumps(attributes)
-    return result
+        data["attributes"] = attributes
+        return json.dumps(data)
+    return data
 
 # copies template into specified account, returns new template id
 def copy_template(template_id, account_id):
@@ -963,18 +974,18 @@ def get_comparison_csv(comparison_id):
     finally:
         conn.close()
 
-# TODO: change to return array of row dicts
 # takes in ResultProxy from executed query, returns json array of rows mapping column names to values
-def jsonify_table(result):
+def jsonify_table(result, get_json=True):
     data = []
-    columns = result.keys()
 
     for row in result:
         temp = {}
-        for i in range(len(columns)):
-            temp[columns[i]] = row[i]
+        for key, value in row.items():
+            temp[key] = value
         data.append(temp)
-    return json.dumps(data)
+    if get_json:
+        return json.dumps(data)
+    return data
 
 # returns simple json array for single column result
 def jsonify_column(result):
@@ -985,8 +996,10 @@ def jsonify_column(result):
 
 # TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
-    initialize_db_structure()
-    initialize_db_values()
+    #initialize_db_structure()
+    #initialize_db_values()
+    a = get_template(2)
+    b = 1
 
 # TODO: improve documentation
     # TODO: organize functions by category (attributes, sheets, etc.)

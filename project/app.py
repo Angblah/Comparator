@@ -345,7 +345,7 @@ def share_template(id, user_id):
 def view_comparison(token):
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
     if not current_user.is_anonymous() and user_id == current_user.id:
-        return render_template('testbed2.html', comparison=get_comparison(comparison_id), comparison_id=comparison_id)
+        return render_template('testbed2.html', comparison=get_comparison(comparison_id))
     else:
         # TODO guest view
         abort(404)
@@ -355,7 +355,7 @@ def view_comparison(token):
 def view_template(token):
     template_id, user_id = ts.loads(token, salt='template-data')
     if not current_user.is_anonymous() and user_id == current_user.id:
-        return render_template('testbed2.html', template=get_template(template_id), template_id=template_id)
+        return render_template('testbed2.html', template=get_template(template_id))
     else:
         # TODO guest view
         abort(404)
