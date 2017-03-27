@@ -930,6 +930,13 @@ def create_empty_template (account_id, name='New Template', num_attributes=2):
     """)
     return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, name=name, num_attributes=num_attributes).scalar()
 
+# TODO: update when images implemented to delete images from cloudinary/whatever host is used
+def delete_sheet(sheet_id):
+    query = text("""
+    delete from sheet where id = :sheet_id;
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id)
+
 # returns csv of specified comparison (image values are keys for corresponding cloudinary images)
 def get_comparison_csv(comparison_id):
     from flask import send_file
@@ -982,14 +989,8 @@ if __name__ == '__main__':
     initialize_db_values()
 
 # TODO: improve documentation
-# TODO: consider changing schema so that attributes inherit from common table to reduce redundant functions
-    # single inheritance for attribute downsides:
-        # unique constraint for (name, comparison_id) can't be enforced easily
-        # queries slightly more complex
-# TODO: export csv
-# TODO: update comparison_table_stacked to also return attribute weight
+    # TODO: organize functions by category (attributes, sheets, etc.)
 # TODO: consider changing functions to return errors for invalid id's (like get_comparison and get_template)
 # TODO: consider adding import for xlsx/csv (see flask-excel)
 # TODO: examine parsing error messages from database rather than checking data validity in separate sql call (like in validate_registration)
-# TODO: organize functions by category (attributes, sheets, etc.)
 # TODO: consider renaming ...sheet_attribute... functions to just ...attribute...
