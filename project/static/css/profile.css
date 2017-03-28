@@ -2,6 +2,10 @@
 /*Global Variables*/
 body {
   padding-top: 2.9em ! important;
+  font-family: Raleway;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
 }
 #dash-username {
   background-image: url('../img/default-user-back.jpg');
@@ -27,7 +31,7 @@ body {
   border: 2px solid #ff9900;
 }
 #dash-username span {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(6, 6, 6, 0.1);
   filter: blur(0px);
   -webkit-filter: blur(0px);
   -moz-filter: blur(0px);
@@ -39,10 +43,12 @@ body {
 }
 /*SIDE NAVBAR*/
 div.nav-side {
-  background-color: rgba(0, 0, 0, 0.2);
-  height: 100vh;
+  background-color: rgba(3, 3, 3, 0.2);
+  height: 85vh;
   width: 20vw;
   position: fixed;
+  box-shadow: 10px 10px 3em rgba(4, 4, 4, 0.1);
+  font-size: 20px;
 }
 div.nav-side div {
   height: 20%;
@@ -60,7 +66,7 @@ div.nav-side div a:focus,
   color: #fff;
 }
 #dashboard-content div {
-  min-height: 80vh;
+  min-height: 90vh;
   width: 70vw;
 }
 /*COMPARISON-TEMPLATE TABS*/
@@ -106,18 +112,19 @@ ul.tab li a:focus,
   transition: 1s transform;
 }
 .tile {
-  width: 15vw;
-  height: 15vw;
-  border: 2px solid #ff9900;
-  background-color: #5fa4eb;
+  width: 10em;
+  height: 10em;
+  border: 1px solid #ff9900;
+  color: #ff9900;
+  background-color: #fff;
   padding-top: 2em;
   box-sizing: border-box;
   transition: 1s transform;
   transform-origin: top left;
   float: left;
-  /*margin-right: 1em;
-    margin-bottom: 2em;*/
+  font-size: 20px;
   margin: 3em;
+  box-shadow: 10px 10px 3em rgba(4, 4, 4, 0.1);
 }
 #recentComp:hover {
   transform: translate3d(-2em, 0, 0);
@@ -125,7 +132,8 @@ ul.tab li a:focus,
 .tile:hover {
   /*transform: scale(2);*/
   /*border: 2px solid @primary-col;*/
-  background-color: #ff9900;
+  background-color: #5fa4eb;
+  color: #fff;
   margin-bottom: 3em;
 }
 .tile:hover ~ .tile {

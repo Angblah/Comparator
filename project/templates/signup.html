@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Include the head tags -->
+<!-- {% include "partials/header.html" %} -->
+<!-- Include the nav bar for a user who isn't logged in -->
+<!-- {% include "partials/guestNavBar.html" %} -->
+<head>
+      <meta charset="utf-8">
+  <title>Remodal example</title>
+  <meta name="description" content="Remodal example">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="file:../Remodal-1.1.1/dist/remodal.css">
+  <link rel="stylesheet" href="file:../Remodal-1.1.1/dist/remodal-default-theme.css">
+</head>
+
+<body>
+<a href="#modal">Modal №1</a><br>
+
+<div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+  <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+  <div>
+    <h2 id="modal1Title">Remodal</h2>
+    <p id="modal1Desc">
+      Responsive, lightweight, fast, synchronized with CSS animations, fully customizable modal window plugin
+      with declarative state notation and hash tracking.
+    </p>
+  </div>
+  <br>
+  <button data-remodal-action="cancel" class="remodal-cancel">Cancel</button>
+  <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
+<!-- </div> -->
+
+<div id="all">
+    <div class="home-carousel">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-5" id="home-data-cont">
+                    <form id="registerForm">
+                        <div class="form-group has-feedback" id='emailField'>
+                            <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Email">
+                        </div>
+                        <div class="form-group has-feedback" id='usernameField'>
+                            <input type="text" class="form-control" id="registerUsername" name="registerUsername" placeholder="Username">
+                        </div>
+                        <div class="form-group has-feedback" id='passwordField'>
+                            <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Password">
+                        </div>
+                        <div class="form-group has-feedback" id='confirmPassField'>
+                            <input type="password" class="form-control" id="registerPasswordConfirm" name="registerPasswordConfirm" placeholder="Confirm Password">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-template-main" id="registerButton">Register</button>
+                        </div>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the footer for things like copyright info and JS scripts -->
+    {% include "partials/footer.html" %}
+
+</div>
+</div>
+
+</body>
+</html>

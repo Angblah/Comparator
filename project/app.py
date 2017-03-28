@@ -159,6 +159,11 @@ def myProfile_page():
     return render_template('myProfile.html')
 
 
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+
+
 @app.route('/forgotPassword')
 def forgotPassword():
     return render_template('forgotPassword.html')
