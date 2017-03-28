@@ -103,9 +103,9 @@ class Toolbar extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        view: state.present.view,
-        canUndo: state.past.length > 0,
-        canRedo: state.future.length > 0
+        view: state.data.present.view,
+        canUndo: state.data.past.length > 0,
+        canRedo: state.data.future.length > 0
     };
 }
 

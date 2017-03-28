@@ -12,6 +12,14 @@ import Toolbar from '../components/toolbar';
 import {fetchComparison} from '../actions/actions';
 
 // const initialState = {
+//     id:   
+//     info: {
+//          account_id: 
+//          comment: 
+//          date_created: 
+//          date_modified: 
+//          name:
+//     },
 //     view: 'CHART',
 //     attributes: [
 //         {id: 1, name: "size", type_id: 0},
@@ -29,10 +37,19 @@ import {fetchComparison} from '../actions/actions';
 var workspaceElem = document.getElementById("workspace");
 
 // Pull data from jinja injection and parse as JSON
-var initialState = JSON.parse(workspaceElem.dataset.comparison);
+var json = JSON.parse(workspaceElem.dataset.comparison);
 
 // Load data into initial state for Redux
-initialState = {present: {...initialState, view: 'CHART'}};
+var initialState = {
+        id: json.id,
+        info: json.info,
+        data: {present: {
+            attributes: json.attributes, 
+            items: json.items, 
+            view: 'CHART'}
+        }};
+
+console.log(initialState);
 
 // Set up logger
 const loggerMiddleware = createLogger();

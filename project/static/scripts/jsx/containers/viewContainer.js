@@ -34,11 +34,11 @@ class ViewContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        attributes: state.present.attributes,
-        items: state.present.items,
-        view: state.present.view,
-        canUndo: state.past.length > 0,
-        canRedo: state.future.length > 0
+        attributes: state.data.present.attributes,
+        items: state.data.present.items,
+        view: state.data.present.view,
+        canUndo: state.data.past.length > 0,
+        canRedo: state.data.future.length > 0
     };
 }
 
