@@ -28938,6 +28938,9 @@ var ChartView = function (_React$Component) {
                     "td",
                     null,
                     _react2.default.createElement("input", {
+                        ref: function ref(input) {
+                            return input && input.focus();
+                        },
                         className: "form-control",
                         defaultValue: attr.name,
                         onBlur: function onBlur(evt) {
@@ -28968,6 +28971,9 @@ var ChartView = function (_React$Component) {
                     "td",
                     null,
                     _react2.default.createElement("input", {
+                        ref: function ref(input) {
+                            return input && input.focus();
+                        },
                         className: "form-control",
                         defaultValue: item[attrID],
                         onBlur: function onBlur(evt) {
@@ -28998,6 +29004,9 @@ var ChartView = function (_React$Component) {
                     "th",
                     null,
                     _react2.default.createElement("input", {
+                        ref: function ref(input) {
+                            return input && input.focus();
+                        },
                         className: "form-control",
                         defaultValue: item.name,
                         onBlur: function onBlur(evt) {

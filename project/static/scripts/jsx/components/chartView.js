@@ -26,6 +26,7 @@ class ChartView extends React.Component {
             return(
                 <td>
                     <input 
+                    ref={input => input && input.focus()}
                     className="form-control"
                     defaultValue={attr.name}
                     onBlur={(evt) => {this.props.editAttr(attr.id, evt.target.value); this.clearEditing();}}
@@ -47,6 +48,7 @@ class ChartView extends React.Component {
             return(
                 <td>
                     <input 
+                    ref={input => input && input.focus()}
                     className="form-control"
                     defaultValue={item[attrID]}
                     onBlur={(evt) => {this.props.editItem(item.id, attrID, evt.target.value); this.clearEditing();}}
@@ -67,7 +69,8 @@ class ChartView extends React.Component {
         if (this.state.editing.item === item.id && this.state.editing.attr === undefined) {
             return(
                 <th>
-                    <input 
+                    <input
+                    ref={input => input && input.focus()}
                     className="form-control"
                     defaultValue={item.name}
                     onBlur={(evt) => {this.props.editItemName(item.id, evt.target.value); this.clearEditing();}}
