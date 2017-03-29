@@ -9,6 +9,7 @@ import {createStore, applyMiddleware} from 'redux';
 import workspaceState from '../reducers/rootReducer';
 import ViewContainer from './viewContainer';
 import Toolbar from '../components/toolbar';
+import Navbar from './navbar';
 import {fetchComparison} from '../actions/actions';
 
 // const initialState = {
@@ -61,13 +62,11 @@ const store = createStore(workspaceState, initialState,
         loggerMiddleware
     ));
 
-// Dispatch action to fetch the comparison
-//store.dispatch(fetchComparison());
-
 class Workspace extends React.Component {
     render() {
         return (
             <div id="wrapper">
+                <Navbar/>
                 <Toolbar/>
                 <ViewContainer/>
             </div>
