@@ -23,8 +23,8 @@ class Toolbar extends React.Component {
                 <div>
                     <div className="btn-toolbar d-flex justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
                         <div className="btn-group mr-2" role="group" aria-label="First group">
-                            <button type="button" className="btn btn-secondary" id="addAttrButton" onClick={() => this.props.addAttr(12)}>Add Attribute</button>
-                            <button type="button" className="btn btn-secondary" id="addItemButton" onClick={() => this.props.addItem(12)}>Add Item</button>
+                            <button type="button" className="btn btn-secondary" id="addAttrButton" onClick={() => this.props.addAttr(this.props.id)}>Add Attribute</button>
+                            <button type="button" className="btn btn-secondary" id="addItemButton" onClick={() => this.props.addItem(this.props.id)}>Add Item</button>
                         </div>
 
                         <div className="btn-group mr-2" role="group" aria-label="Second group">
@@ -45,7 +45,7 @@ class Toolbar extends React.Component {
                                 <button type="button blank-bg" className="btn btn-secondary dropdown-toggle" id="saveDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Save as</button>
                                 <div className="dropdown-menu" aria-labelledby="saveDropdown">
                                     <a className="dropdown-item" href="#">Comparison</a>
-                                    <a className="dropdown-item" href="#" onClick={() => this.props.saveTemplate(12, 'My Swaggy Template')}>Template</a>
+                                    <a className="dropdown-item" href="#" onClick={() => this.props.saveTemplate(this.props.id, this.props.info.name)}>Template</a>
                                 </div>
                             </div>
                         </div>
@@ -103,6 +103,8 @@ class Toolbar extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
+        id: state.id,
+        info: state.info,
         view: state.data.present.view,
         canUndo: state.data.past.length > 0,
         canRedo: state.data.future.length > 0
