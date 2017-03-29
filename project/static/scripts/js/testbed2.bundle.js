@@ -27705,11 +27705,36 @@ var Navbar = function (_React$Component) {
         value: function render() {
             return _react2.default.createElement(
                 'nav',
-                { className: 'navbar navbar-light bg-faded' },
+                { className: 'navbar navbar-light navbar-toggleable-sm' },
                 _react2.default.createElement(
-                    'h1',
-                    { className: 'navbar-brand mb-0' },
-                    this.props.info.name
+                    'div',
+                    { className: 'navbar-collapse collapse dual-collapse' },
+                    _react2.default.createElement(
+                        'ul',
+                        { className: 'navbar-nav mr-auto' },
+                        _react2.default.createElement(
+                            'h1',
+                            { className: 'navbar-brand mb-0' },
+                            this.props.info.name
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'navbar-collapse collapse dual-collapse' },
+                    _react2.default.createElement(
+                        'ul',
+                        { className: 'navbar-nav ml-auto' },
+                        _react2.default.createElement(
+                            'li',
+                            { className: 'nav-item' },
+                            _react2.default.createElement(
+                                'a',
+                                { className: 'nav-link', href: '#' },
+                                _react2.default.createElement('img', { src: '/path/to/image.png' })
+                            )
+                        )
+                    )
                 )
             );
         }
