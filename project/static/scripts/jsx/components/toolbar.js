@@ -44,8 +44,18 @@ class Toolbar extends React.Component {
                             <div className="dropdown">
                                 <button type="button blank-bg" className="btn btn-secondary dropdown-toggle" id="saveDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Save as</button>
                                 <div className="dropdown-menu" aria-labelledby="saveDropdown">
-                                    <a className="dropdown-item" href="#">Comparison</a>
+                                    <a className="dropdown-item" href="#" data-toggle="modal" data-target="#saveModal">Comparison</a>
                                     <a className="dropdown-item" href="#" onClick={() => this.props.saveTemplate(this.props.id, this.props.info.name)}>Template</a>
+                                </div>
+
+                                <div className="modal fade" id="saveModal" tabIndex="-1" role="dialog" aria-labelledby="saveModalLabel" aria-hidden="true">
+                                    <div className="modal-dialog modal-lg" role="document">
+                                        <div className="modal-content">
+                                            <div className="modal-body">
+                                                <p>Save successful!</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
