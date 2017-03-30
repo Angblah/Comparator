@@ -27483,7 +27483,7 @@ var Toolbar = function (_React$Component) {
                                     ),
                                     _react2.default.createElement(
                                         'a',
-                                        { className: 'dropdown-item', href: '#', onClick: function onClick() {
+                                        { className: 'dropdown-item', href: '#', 'data-toggle': 'modal', 'data-target': '#saveModal', onClick: function onClick() {
                                                 return _this2.props.saveTemplate(_this2.props.id, _this2.props.info.name);
                                             } },
                                         'Template'
@@ -27494,18 +27494,14 @@ var Toolbar = function (_React$Component) {
                                     { className: 'modal fade', id: 'saveModal', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'saveModalLabel', 'aria-hidden': 'true' },
                                     _react2.default.createElement(
                                         'div',
-                                        { className: 'modal-dialog modal-lg', role: 'document' },
+                                        { className: 'modal-dialog modal-sm', role: 'document' },
                                         _react2.default.createElement(
                                             'div',
                                             { className: 'modal-content' },
                                             _react2.default.createElement(
                                                 'div',
-                                                { className: 'modal-body' },
-                                                _react2.default.createElement(
-                                                    'p',
-                                                    null,
-                                                    'Save successful!'
-                                                )
+                                                { className: 'modal-body', style: { textAlign: "center" } },
+                                                'Save successful!'
                                             )
                                         )
                                     )
