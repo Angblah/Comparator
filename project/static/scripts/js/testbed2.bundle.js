@@ -27730,8 +27730,8 @@ var Navbar = function (_React$Component) {
                             { className: 'nav-item' },
                             _react2.default.createElement(
                                 'a',
-                                { className: 'nav-link', href: '#' },
-                                _react2.default.createElement('img', { src: '/path/to/image.png' })
+                                { className: 'nav-link', href: '/profile' },
+                                _react2.default.createElement('img', { src: "/static/img/logo.png", height: '40px' })
                             )
                         )
                     )

@@ -15,7 +15,7 @@ class Navbar extends React.Component {
                 <div className="navbar-collapse collapse dual-collapse">
                     <ul className="navbar-nav ml-auto">
                         <li className="nav-item">
-                            <a className="nav-link" href="#"><img src="/path/to/image.png"></img></a>
+                            <a className="nav-link" href="/profile"><img src={"/static/img/logo.png"} height="40px"></img></a>
                         </li>
                     </ul>
                 </div>
