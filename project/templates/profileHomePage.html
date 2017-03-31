@@ -25,25 +25,28 @@
 
     <div class="nav-side">
         <div>
-            <h3>Make a New Comparison!</h3>
-            <button type="submit" class="btn btn-template-main btn-lg" onclick="location.href='workspace'">Start Comparing</button>
+            <!-- <a href="#recent-comps">RECENT COMPARISONS</a> -->
+            <button type="submit" onclick="location.href='#recent-comps'">RECENT COMPARISONS</button>
+        </div>
+        <hr>
+        <div class="nav-side-cont">
+            <!-- <a href="#my-comps">MY COMPARISONS</a> -->
+            <button type="submit" onclick="location.href='#my-comps'">MY COMPARISONS</button>
+        </div>
+        <hr>
+        <div class="nav-side-cont">
+            <!-- <a href="#my-temps">MY TEMPLATES</a> -->
+            <button type="submit" onclick="location.href='#my-temps'">MY TEMPLATES</button>
         </div>
         <hr>
         <div>
-            <a href="#recent-comps">RECENT COMPARISONS</a>
-        </div>
-        <hr>
-        <div class="nav-side-cont">
-            <a href="#my-comps">MY COMPARISONS</a>
-        </div>
-        <hr>
-        <div class="nav-side-cont">
-            <a href="#my-temps">MY TEMPLATES</a>
+            <button id="new-comp" type="submit" onclick="location.href='workspace'">+ NEW COMPARISON</button>
         </div>
     </div>
 
 
-    <div id="dashboard-content" style="padding-left: 25vw">
+    <div id="dashboard-content" style="padding-left: 37.5%">
+        <hr style="clear: left;">
         <div id="recent-comps">
             <h1>Recent Comparisons</h1>
             {% for row in recent_comp %}

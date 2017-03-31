@@ -6,17 +6,20 @@
 @back-col: #eee;
 @primary-text: #111;
 @secondary-text: #fff;
+@nav-side-primary-text: rgb(147,149,152);
+@nav-side-secondary-text: #000;
 @shadow: rgba(4, 4, 4, 0.1);
 
 body {
-    padding-top: 2.9em ! important;
+    padding-top: 2% ! important;
     font-family: Raleway;
     font-style: normal;
     font-variant: normal;
     font-weight: bold;
+    background-color: rgb(233, 234, 235);
 }
 
-#dash-username {
+/*#dash-username {
     background-image: url('../img/default-user-back.jpg');
     filter: blur(5px);
     -webkit-filter: blur(5px);
@@ -49,16 +52,17 @@ body {
 }
 #dash-username > h1 {
     color: @primary-text;
-}
+}*/
 
 /*SIDE NAVBAR*/
 div.nav-side {
-  background-color: rgba(3, 3, 3, 0.2);
-  height: 85vh;
-  width: 20vw;
+  background-color: rgb(243, 243, 244);
+  height: 87%; 
+  width: 35%;
   position: fixed;
   box-shadow: 10px 10px 3em @shadow;
   font-size: 20px;
+  padding-top: 0.5%;
 }
 
 div.nav-side div {
@@ -66,7 +70,38 @@ div.nav-side div {
     width: 100%;
     text-align: center;
 }
-div.nav-side div a {
+
+div.nav-side button {
+    height: 100%;
+    width: 100%;
+    border: none;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    font-weight: bold;
+    font-size: 125%;
+    color: @nav-side-primary-text;
+}
+
+div.nav-side button:hover {
+    color: @nav-side-secondary-text ! important;
+}
+
+#new-comp {
+    color: @primary-col;
+}
+
+#new-comp:hover {
+    color: @primary-col;
+}
+
+div.nav-side hr {
+    border-top: 1px solid @nav-side-primary-text;
+    padding-left: 30%;
+    width: 40%;
+
+}
+
+/*div.nav-side div a {
     color: @primary-text;
 }
 div.nav-side div a:hover {
@@ -74,99 +109,100 @@ div.nav-side div a:hover {
 }
 div.nav-side div a:focus, .active {
     color: @secondary-text;
-}
+}*/
 
 #dashboard-content div {
     min-height: 90vh;
-    width: 70vw;
+    width: 55vw;
+    padding-top: 50px;
+    margin-top: -50px;
 }
 
 
 /*COMPARISON-TEMPLATE TABS*/
-ul.tab {
+/*ul.tab {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-}
+}*/
 
 /* Float the list items side by side */
-ul.tab li {
+/*ul.tab li {
     float: left;
-}
+}*/
 
 /* Style the links inside the list items */
-ul.tab li a {
+/*ul.tab li a {
     display: inline-block;
     color: @secondary-text;
-    /*text-align: center;*/
     padding: 1em 1em;
     text-decoration: none;
     transition: 0.3s;
     font-size: 17px;
-}
+}*/
 
 /* Change background color of links on hover */
-ul.tab li a:hover {
+/*ul.tab li a:hover {
     background-color: @secondary-col;
-}
+}*/
 
 /* Create an active/current tablink class */
-ul.tab li a:focus, .active {
+/*ul.tab li a:focus, .active {
     background-color: @primary-col;
     color: @secondary-text;
-}
+}*/
 
 /* Style the tab content */
-.tabcontent {
+/*.tabcontent {
     display: none;
     padding: 6px 12px;
     border-top: none;
-}
+}*/
 /*END TABS*/
 
 
 /*RECENT COMPARISONS*/
-#recent-comp {
+/*#recent-comp {
     transition: 1s transform;
-}
+}*/
 .tile {
-    width: 10em;
+    width: 17em;
     height: 10em;
     border: 1px solid @secondary-col;
     color: @secondary-col;
     background-color: @secondary-text;
-    padding-top: 2em;
+    /*padding-top: 2px;*/
     box-sizing: border-box;
     transition: 1s transform;
     transform-origin: top left;
     float: left;
     font-size: 20px;
 
-    margin: 3em;
+    margin: 1.5em;
     box-shadow: 10px 10px 3em @shadow;
 }
 
-#recentComp:hover {
+/*#recentComp:hover {
     transform: translate3d(-2em, 0, 0);
-}
+}*/
 
 .tile:hover {
     /*transform: scale(2);*/
     /*border: 2px solid @primary-col;*/
     background-color: @primary-col;
     color: @secondary-text;
-    margin-bottom: 3em;
+    /*margin-bottom: 3em;*/
 }
-
+/*
 .tile:hover ~ .tile {
-    /*transform: translate3d(4.5em, 0, 0);*/
-}
+    transform: translate3d(4.5em, 0, 0);
+}*/
 /*END RECENT COMPARISONS*/
 
 
 /*COMPARISONS*/
-#div.comparisons {
+/*#div.comparisons {
 
 }
 
@@ -190,5 +226,5 @@ div.col-sm-11 {
 
 .fixed-tile:hover {
     background-color: @secondary-col;
-}
+}*/
 /*END COMPARISONS*/
