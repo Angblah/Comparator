@@ -65,7 +65,9 @@ div.nav-side button {
   background-repeat: no-repeat;
   font-weight: bold;
   font-size: 125%;
+  padding-left: 15%;
   color: #939598;
+  text-align: left;
 }
 div.nav-side button:hover {
   color: #000 ! important;
@@ -74,12 +76,15 @@ div.nav-side button:hover {
   color: #5fa4eb;
 }
 #new-comp:hover {
-  color: #5fa4eb;
+  color: #ff9900 ! important;
 }
 div.nav-side hr {
   border-top: 1px solid #939598;
   padding-left: 30%;
   width: 40%;
+}
+div.nav-side i {
+  font-size: 200%;
 }
 /*div.nav-side div a {
     color: @primary-text;
