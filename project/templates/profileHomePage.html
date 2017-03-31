@@ -24,26 +24,29 @@
     </div> -->
 
     <div class="nav-side">
+        <div style="height: 10%">
+            <button type="submit" onclick="location.href='workspace'">MAKE A NEW COMPARISON</button>
+        </div>
+        <hr style="padding-left: 30%; width: 40%;">
         <div>
-            <h3>Make a New Comparison!</h3>
-            <button type="submit" class="btn btn-template-main btn-lg" onclick="location.href='workspace'">Start Comparing</button>
+            <!-- <a href="#recent-comps">RECENT COMPARISONS</a> -->
+            <button type="submit" onclick="location.href='#recent-comps'">RECENT COMPARISONS</button>
         </div>
-        <hr>
-        <div>
-            <a href="#recent-comps">RECENT COMPARISONS</a>
-        </div>
-        <hr>
+        <hr style="padding-left: 30%; width: 40%;">
         <div class="nav-side-cont">
-            <a href="#my-comps">MY COMPARISONS</a>
+            <!-- <a href="#my-comps">MY COMPARISONS</a> -->
+            <button type="submit" onclick="location.href='#my-comps'">MY COMPARISONS</button>
         </div>
-        <hr>
+        <hr style="padding-left: 30%; width: 40%;">
         <div class="nav-side-cont">
-            <a href="#my-temps">MY TEMPLATES</a>
+            <!-- <a href="#my-temps">MY TEMPLATES</a> -->
+            <button type="submit" onclick="location.href='#my-temps'">MY TEMPLATES</button>
         </div>
     </div>
 
 
     <div id="dashboard-content" style="padding-left: 25vw">
+        <hr style="clear: left;">
         <div id="recent-comps">
             <h1>Recent Comparisons</h1>
             {% for row in recent_comp %}
