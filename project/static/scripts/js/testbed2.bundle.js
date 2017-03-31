@@ -25376,6 +25376,7 @@ var routeToEditAttr = exports.routeToEditAttr = function routeToEditAttr(id, nam
 };
 
 function deleteAttr(attrId) {
+    console.log(attrId);
     return function (dispatch) {
         return fetch('/deleteComparisonAttr', {
             method: 'POST',
@@ -47293,30 +47294,6 @@ var Toolbar = function (_React$Component) {
                                 )
                             )
                         )
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        null,
-                        _react2.default.createElement('input', { id: 'deleteItemInput', type: 'text' }),
-                        _react2.default.createElement(
-                            'button',
-                            { type: 'button blank-bg', className: 'btn btn-secondary', onClick: function onClick() {
-                                    return _this2.props.deleteItem(document.getElementById("deleteItemInput").value);
-                                } },
-                            'Delete Item'
-                        )
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        null,
-                        _react2.default.createElement('input', { id: 'deleteAttrInput', type: 'text' }),
-                        _react2.default.createElement(
-                            'button',
-                            { type: 'button blank-bg', className: 'btn btn-secondary', onClick: function onClick() {
-                                    return _this2.props.deleteAttr(document.getElementById("deleteAttrInput").value);
-                                } },
-                            'Delete Attribute'
-                        )
                     )
                 );
             } else {
@@ -47557,7 +47534,9 @@ var ViewContainer = function (_React$Component) {
                         attributes: this.props.attributes,
                         editAttr: this.props.editAttr,
                         editItem: this.props.editItem,
-                        editItemName: this.props.editItemName }),
+                        editItemName: this.props.editItemName,
+                        deleteAttr: this.props.deleteAttr,
+                        deleteItem: this.props.deleteItem }),
                     _react2.default.createElement('span', null)
                 );
             } else {
@@ -47600,6 +47579,12 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         changeView: function changeView(view) {
             dispatch((0, _actions.changeView)(view));
+        },
+        deleteItem: function deleteItem(itemId) {
+            dispatch((0, _actions.deleteItem)(itemId));
+        },
+        deleteAttr: function deleteAttr(attrId) {
+            dispatch((0, _actions.deleteAttr)(attrId));
         },
         onUndo: function onUndo() {
             return dispatch(_reduxUndo.ActionCreators.undo());
@@ -48866,6 +48851,16 @@ var ChartView = function (_React$Component) {
         value: function render() {
             var _this5 = this;
 
+            var deleteItems = this.props.items.map(function (item) {
+                return _react2.default.createElement(
+                    "td",
+                    { onClick: function onClick() {
+                            return _this5.props.deleteItem(item.id);
+                        } },
+                    _react2.default.createElement("i", { className: "fa fa-minus-circle fa-2x", "aria-hidden": "true" })
+                );
+            });
+
             return _react2.default.createElement(
                 "div",
                 null,
@@ -48886,7 +48881,8 @@ var ChartView = function (_React$Component) {
                             /*<th>
                                 {item.name}
                             </th>*/
-                            )
+                            ),
+                            _react2.default.createElement("th", null)
                         )
                     ),
                     _react2.default.createElement(
@@ -48903,16 +48899,30 @@ var ChartView = function (_React$Component) {
                             //<td>{item[attr.id]}</td>
                             );
 
-                            var attr = this.renderAttributeOrEditField(attr);
+                            var attrName = this.renderAttributeOrEditField(attr);
 
                             // Set each row to be attribute name, then generated column cells
                             return _react2.default.createElement(
                                 "tr",
                                 null,
-                                attr,
-                                rowCells
+                                attrName,
+                                rowCells,
+                                _react2.default.createElement(
+                                    "td",
+                                    { onClick: function onClick() {
+                                            return _this6.props.deleteAttr(attr.id);
+                                        } },
+                                    _react2.default.createElement("i", { className: "fa fa-minus-circle fa-2x", "aria-hidden": "true" })
+                                )
                             );
-                        }, this)
+                        }, this),
+                        _react2.default.createElement(
+                            "tr",
+                            null,
+                            _react2.default.createElement("td", null),
+                            deleteItems,
+                            _react2.default.createElement("td", null)
+                        )
                     )
                 )
             );

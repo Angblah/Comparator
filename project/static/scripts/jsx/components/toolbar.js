@@ -87,16 +87,6 @@ class Toolbar extends React.Component {
                             </div>
                         </div>
                     </div>
-
-                    <div>
-                        <input id="deleteItemInput" type="text" />
-                        <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.deleteItem(document.getElementById("deleteItemInput").value)}>Delete Item</button>
-                    </div>
-
-                    <div>
-                        <input id="deleteAttrInput" type="text" />
-                        <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.deleteAttr(document.getElementById("deleteAttrInput").value)}>Delete Attribute</button>
-                    </div>
                 </div>
             );
         } else {
