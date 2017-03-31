@@ -23,7 +23,8 @@ class ViewContainer extends React.Component {
         } else {
             return (
                 <div>
-                    <ZoomDragCircle/>
+                    <ZoomDragCircle items={this.props.items}
+                       attributes={this.props.attributes}/>
                     <ProgressChart/>
                     <span/>
                 </div>
