@@ -54,6 +54,7 @@ export const routeToEditAttr = (id, name) => {
 }
 
 export function deleteAttr(attrId) {
+    console.log(attrId);
     return function (dispatch) {
         return fetch('/deleteComparisonAttr', {
             method: 'POST',

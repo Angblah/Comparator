@@ -1,7 +1,9 @@
 //COMPONENTS
 import React from 'react';
 import {Surface, Group} from '@ecliptic/react-art';
-import Circle from '@ecliptic/react-art/shapes/circle'
+import Circle from '@ecliptic/react-art/shapes/circle';
+// import Radar from 'react-d3-radar';
+import {Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis} from 'recharts';
 
 
 class ZoomDragCircle extends React.Component {
@@ -80,6 +82,20 @@ class ZoomDragCircle extends React.Component {
     }
 
     render() {
+        var rechartData = []
+        this.props.attributes.map(function(attr) {
+            var attribute = {attribute: attr.name};
+            // Generate <td> column elements in each row
+            this.props.items.map(item =>
+                attribute[item.id] = Math.random()
+            );
+
+            // Set each row to be attribute name, then generated column cells
+            rechartData.push(attribute);
+        }, this);
+
+        console.log(rechartData);
+
         return (
             <div 
                     onMouseDown={this.handleMouseDown}
@@ -94,7 +110,17 @@ class ZoomDragCircle extends React.Component {
                     scaleX={this.state.scale} scaleY={this.state.scale}>
                         <Circle x={10} y={10} radius={5} fill="#000" />
                     </Group>
-                </Surface> 
+                </Surface>
+
+                <RadarChart cx={300} cy={250} outerRadius={150} width={600} height={500} data={rechartData}>
+                    {this.props.items.map(item =>
+                        <Radar name={item.name} dataKey={item.id} stroke="#8884d8" fill="#8884d8" fillOpacity={0.6}/>
+                    )}
+                    <PolarGrid />
+                    <Legend />
+                    <PolarAngleAxis dataKey="attribute" />
+                    <PolarRadiusAxis angle={30} domain={[0, 1]}/>
+                </RadarChart>
             </div>
         );
     }

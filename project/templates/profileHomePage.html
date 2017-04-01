@@ -24,28 +24,40 @@
     </div> -->
 
     <div class="nav-side">
-        <div style="height: 10%">
-            <button type="submit" onclick="location.href='workspace'">MAKE A NEW COMPARISON</button>
-        </div>
-        <hr style="padding-left: 30%; width: 40%;">
         <div>
             <!-- <a href="#recent-comps">RECENT COMPARISONS</a> -->
-            <button type="submit" onclick="location.href='#recent-comps'">RECENT COMPARISONS</button>
+            <button type="submit" onclick="location.href='#recent-comps'">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                RECENT COMPARISONS
+            </button>
         </div>
-        <hr style="padding-left: 30%; width: 40%;">
+        <hr>
         <div class="nav-side-cont">
             <!-- <a href="#my-comps">MY COMPARISONS</a> -->
-            <button type="submit" onclick="location.href='#my-comps'">MY COMPARISONS</button>
+            <button type="submit" onclick="location.href='#my-comps'">
+                <i class="fa fa-compress" aria-hidden="true"></i>
+                MY COMPARISONS
+            </button>
         </div>
-        <hr style="padding-left: 30%; width: 40%;">
+        <hr>
         <div class="nav-side-cont">
             <!-- <a href="#my-temps">MY TEMPLATES</a> -->
-            <button type="submit" onclick="location.href='#my-temps'">MY TEMPLATES</button>
+            <button type="submit" onclick="location.href='#my-temps'">
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                TEMPLATES
+            </button>
+        </div>
+        <hr>
+        <div>
+            <button id="new-comp" type="submit" onclick="location.href='workspace'">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                NEW COMPARISON
+            </button>
         </div>
     </div>
 
 
-    <div id="dashboard-content" style="padding-left: 25vw">
+    <div id="dashboard-content" style="padding-left: 37.5%">
         <hr style="clear: left;">
         <div id="recent-comps">
             <h1>Recent Comparisons</h1>

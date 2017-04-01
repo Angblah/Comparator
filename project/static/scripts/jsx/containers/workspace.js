@@ -23,9 +23,9 @@ import {fetchComparison} from '../actions/actions';
 //     },
 //     view: 'CHART',
 //     attributes: [
-//         {id: 1, name: "size", type_id: 0},
-//         {id: 2, name: "color", type_id: 0},
-//         {id: 3, name: "number", type_id: 1}
+//         {id: 1, name: "size", type_id: 0, weight: 1},
+//         {id: 2, name: "color", type_id: 0, weight: 1},
+//         {id: 3, name: "number", type_id: 1, weight: 1}
 //     ],
 //     items: [
 //         {name: "ball 2", "1": "large", "2": "red", "3": -1.32},

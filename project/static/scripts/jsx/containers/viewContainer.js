@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import {connect} from 'react-redux'
-import {editAttr, editItem, editItemName, changeView} from '../actions/actions'
+import {editAttr, editItem, editItemName, changeView, deleteAttr, deleteItem} from '../actions/actions'
 import ChartView from '../components/chartView'
 import ZoomDragCircle from '../components/spiderView'
 import ProgressChart from '../components/testView'
@@ -16,14 +16,17 @@ class ViewContainer extends React.Component {
                        attributes={this.props.attributes}
                        editAttr={this.props.editAttr}
                        editItem={this.props.editItem}
-                       editItemName={this.props.editItemName}/>
+                       editItemName={this.props.editItemName}
+                       deleteAttr={this.props.deleteAttr}
+                       deleteItem={this.props.deleteItem}/>
                     <span/>
                 </div>
             );
         } else {
             return (
                 <div>
-                    <ZoomDragCircle/>
+                    <ZoomDragCircle items={this.props.items}
+                       attributes={this.props.attributes}/>
                     <ProgressChart/>
                     <span/>
                 </div>
@@ -57,6 +60,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         changeView: (view) => {
             dispatch(changeView(view))
+        },
+        deleteItem: (itemId) => {
+            dispatch(deleteItem(itemId))
+        },
+        deleteAttr: (attrId) => {
+            dispatch(deleteAttr(attrId))
         },
         onUndo: () => dispatch(UndoActionCreators.undo()),
         onRedo: () => dispatch(UndoActionCreators.redo())

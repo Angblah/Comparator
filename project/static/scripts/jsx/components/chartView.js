@@ -89,6 +89,11 @@ class ChartView extends React.Component {
 
     render () {
 
+        var deleteItems = this.props.items.map(item => 
+            <td onClick={() => this.props.deleteItem(item.id)}>
+                <i className="fa fa-minus-circle fa-2x" aria-hidden="true"></i>
+            </td>);
+
         return (
             <div>
                 <table className="table table-bordered table-inverse">
@@ -103,6 +108,7 @@ class ChartView extends React.Component {
                                     {item.name}
                                 </th>*/
                             )}
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -115,15 +121,22 @@ class ChartView extends React.Component {
                                 //<td>{item[attr.id]}</td>
                             );
 
-                            var attr = this.renderAttributeOrEditField(attr);
+                            var attrName = this.renderAttributeOrEditField(attr);
 
                             // Set each row to be attribute name, then generated column cells
                             return(
                                 <tr>
-                                    {attr}
+                                    {attrName}
                                     {rowCells}
+                                    <td onClick={() => this.props.deleteAttr(attr.id)}><i className="fa fa-minus-circle fa-2x" aria-hidden="true"></i></td>
                                 </tr>);
                         }, this)}
+
+                        <tr>
+                            <td></td>
+                            {deleteItems}
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
