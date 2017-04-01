@@ -23,21 +23,19 @@ class Account(db.Model, UserMixin):
         self.username = username
         self.passhash = passhash
 
-    def is_active(self):
-        #True, all users are active
-        return True
 
     def get_id(self):
         #Return the username to satisfy Flask-Login's requirements
         return self.username
 
-    def is_authenticated(self):
-        #TODO: Are we having user authentication?
-        return True
 
-    def is_anonymous(self):
-        #Guest users won't have accounts, so this will always be false
-        return False
+    # no account activation currently implemented
+    is_active = True
+
+    is_authenticated = True
+
+    # Always False as guests don't log in with Account
+    is_anonymous = False
 
     def __repr__(self):
         return '<Account %r>' % self.username
