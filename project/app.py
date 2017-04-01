@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, url_for, jsonify, abort
+from flask import Flask, render_template, request, url_for, jsonify, abort, redirect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm.session import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 import os
@@ -17,6 +18,7 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+Session = sessionmaker(bind=db.engine)
 
 from models import *
 from database_utils import *
@@ -117,7 +119,6 @@ def newComparison():
     return render_template('newComparison.html')
 
 
-# TODO:: Pass in template/comparison_id from Select a Template/Comparison
 @app.route('/workspace')
 def workspace():
     # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
@@ -126,6 +127,18 @@ def workspace():
 
     return render_template('workspace.html', template=template, comparison=comparison)
 
+# FOR TESTING PURPOSES ONLY; DELETE ONCE LINKED TO PROPERLY
+@app.route('/new_empty_comparison')
+def new_empty_comparison():
+    from models import Account
+    if not current_user.is_anonymous:
+        id = create_empty_comparison(current_user.id)
+        return redirect(share_comparison(id, current_user.id))
+    else:
+        # consider hard-coding guest_id after more database finalization
+        guest_id = Account.query.filter_by(username='guest').first().id
+        id = create_empty_comparison(guest_id)
+        return redirect(share_comparison(id, guest_id))
 
 @app.route('/testbed')
 def testbed():
@@ -153,10 +166,59 @@ def profile_page():
     return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp)
 
 
-@app.route('/myProfile')
+@app.route('/myProfile', methods=["GET", "POST"])
 @login_required
-def myProfile_page():
-    return render_template('myProfile.html')
+def myProfile():
+    from models import Account
+    if request.method == 'POST':
+        session = Session()
+
+        user = session.query(Account).filter_by(id=current_user.id).first()
+
+        username = request.form['newUsername']
+        email = request.form['newEmail']
+        password = request.form['newPassword']
+        confirm_password = request.form['confirmPassword']
+
+        error = False
+        username_error = None
+        email_error = None
+        password_error = None
+
+        try:
+            if username:
+                if Account.query.filter_by(username=username).count() > 0:
+                    username_error = 'Username already taken'
+                    error = True
+                else:
+                    current_user.name = username
+                    user.username = username
+            if email:
+                if Account.query.filter_by(email=email).count() > 0:
+                    email_error = 'Email already taken'
+                    error = True
+
+                # errors in previous fields prevent update of any fields
+                elif not error:
+                    current_user.email = email
+                    user.email = email
+            if password:
+                # TODO: enforce password limits and do password match validation in frontend
+                set_password(current_user.id, password)
+            session.commit()
+
+        # may occur if another user registers/changes username/email before commit
+        except sqlalchemy.exc.IntegrityError as err:
+            if err.orig.pgcode == '23505':
+                if err.orig.diag.constraint_name == 'account_email_key':
+                    email_error = 'Email already taken'
+                elif err.orig.diag.constraint_name == 'account_username_key':
+                    username_error = 'Username already taken'
+
+        return render_template('myProfile.html', username_error=username_error, email_error=email_error, password_error=password_error)
+        # TODO: enforce at least one field not empty (see if possible in frontend, if not, frontend)
+    else:
+        return render_template('myProfile.html')
 
 
 @app.route('/signup')
@@ -349,20 +411,20 @@ def share_template(id, user_id):
 @app.route('/comparison/<token>')
 def view_comparison(token):
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
-    if not current_user.is_anonymous() and user_id == current_user.id:
+    if not current_user.is_anonymous and user_id == current_user.id:
         return render_template('testbed2.html', comparison=get_comparison(comparison_id))
     else:
-        # TODO guest view
+        # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
         abort(404)
 
 
 @app.route('/template/<token>')
 def view_template(token):
     template_id, user_id = ts.loads(token, salt='template-data')
-    if not current_user.is_anonymous() and user_id == current_user.id:
+    if not current_user.is_anonymous and user_id == current_user.id:
         return render_template('testbed2.html', template=get_template(template_id))
     else:
-        # TODO guest view
+        # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
         abort(404)
 
 

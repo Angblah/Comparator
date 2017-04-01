@@ -189,10 +189,10 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function comparison_table_stacked (_comparison_id int) returns table(type_id smallint, "id" int, "position" int, attribute_name varchar, val varchar, item_name varchar, item_id int)
+    create or replace function comparison_table_stacked (_comparison_id int) returns table(type_id smallint, "id" int, "position" int, attribute_name varchar, val varchar, item_name varchar, item_id int, worth int)
         as $$
         begin
-            return query select sheet_attribute.type_id, sheet_attribute.id, comparison_item.position, sheet_attribute.name, attribute_value.val, comparison_item.name, comparison_item.id
+            return query select sheet_attribute.type_id, sheet_attribute.id, comparison_item.position, sheet_attribute.name, attribute_value.val, comparison_item.name, comparison_item.id, coalesce(attribute_value.worth, 1)
             from comparison
                 inner join sheet_attribute on comparison.id = sheet_attribute.sheet_id
                 inner join comparison_item on comparison.id = comparison_item.comparison_id
@@ -506,6 +506,7 @@ def initialize_db_structure():
         begin
 
             select register_user('a@a.com', 'admin', 'password') into _account_id;
+            perform register_user('b@b.com', 'guest', 'guest_password');
             perform register_user('test@comparator_test.com', 'a', 'a');
             insert into sheet (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
             insert into comparison(id) values (_comparison_id);
@@ -692,7 +693,14 @@ def set_comparison_attribute_value(item_id, attribute_id, new_value):
     """)
     db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, attribute_id=attribute_id, new_value=new_value)
 
-# sorts comparison by specified attribute (ascending)
+# WARNING: will fail if attribute value does not have a value assigned
+def set_attribute_value_worth(item_id, attribute_id, worth):
+    query = text("""
+    update attribute_value set worth = :worth where item_id = :item_id and attribute_id = :attribute_id;
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, attribute_id=attribute_id, worth=worth)
+
+    # sorts comparison by specified attribute (ascending)
 def sort_by_attribute(attribute_id):
     query = text("""
     select sort_by_attribute(:attribute_id);
@@ -791,7 +799,9 @@ def get_comparison (comparison_id, get_json=True):
                     items.append(item)
                     attributes_parsed = True
                 item = {}
-            item[str(row[1])] = row[4]
+
+            # attribute id mapped to dict mapping "val" and "worth" for specific item
+            item[str(row[1])] = {"val": row[4], "worth": row[7]}
             item['name'] = row[5]
             item['id'] = row[6]
 
@@ -1045,12 +1055,15 @@ def jsonify_column(result):
 
 ############################################################################################
 
-# TODO: truncate table stored function for faster dropping of all data (or check if heroku has alternative)
 if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
 
-# TODO: improve documentation
-    # TODO: organize functions by category (attributes, sheets, etc.)
 # TODO: consider adding import for xlsx/csv (see flask-excel)
 # TODO: consider renaming ...sheet_attribute... functions to just ...attribute...
+# TODO: implement guest user functionalities (probably easiest to tie to an account "guest" to make things consistent/easier to manipulate
+# TODO: implement search for comparisons/templates by name, as well as sort by various attributes (probably in frontend)
+# TODO: after implementation more complete, change admin/guest login info and set outside of pushed code
+# TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
+# TODO: try to fix website crashes on database_utils run by rolling back changes on teardown
+

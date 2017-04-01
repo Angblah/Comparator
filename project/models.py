@@ -117,6 +117,7 @@ class AttributeValue(db.Model):
     item_id = db.Column(ForeignKey('comparison_item.id', ondelete='CASCADE'), primary_key=True, nullable=False)
     attribute_id = db.Column(ForeignKey('sheet_attribute.id', ondelete='CASCADE'), primary_key=True, nullable=False)
     val = db.Column(String(255), nullable=False)
+    worth = db.Column(Integer, nullable=False, server_default=text('1'))
 
     attribute = relationship('SheetAttribute')
     item = relationship('ComparisonItem')
