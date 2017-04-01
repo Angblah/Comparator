@@ -131,7 +131,7 @@ def workspace():
 @app.route('/new_empty_comparison')
 def new_empty_comparison():
     from models import Account
-    if not current_user.is_anonymous:
+    if not current_user.is_anonymous or not current_user.is_anonymous():
         id = create_empty_comparison(current_user.id)
         return redirect(share_comparison(id, current_user.id))
     else:
@@ -411,7 +411,9 @@ def share_template(id, user_id):
 @app.route('/comparison/<token>')
 def view_comparison(token):
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
-    if not current_user.is_anonymous and user_id == current_user.id:
+
+    # TODO: see why is_anonymous sometimes boolean, sometimes bound method
+    if (not current_user.is_anonymous or not current_user.is_anonymous()) and user_id == current_user.id:
         return render_template('testbed2.html', comparison=get_comparison(comparison_id))
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
@@ -421,7 +423,7 @@ def view_comparison(token):
 @app.route('/template/<token>')
 def view_template(token):
     template_id, user_id = ts.loads(token, salt='template-data')
-    if not current_user.is_anonymous and user_id == current_user.id:
+    if (not current_user.is_anonymous or not current_user.is_anonymous()) and user_id == current_user.id:
         return render_template('testbed2.html', template=get_template(template_id))
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
