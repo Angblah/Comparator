@@ -167,7 +167,7 @@ def profile_page():
     return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp)
 
 
-@app.route('/profile_form', methods=["POST"])
+@app.route('/profile_form', methods=["GET", "POST"])
 @login_required
 def profile_form():
     session = db.session
@@ -435,7 +435,6 @@ def csv(token):
 def teardown_request(exception):
     if exception:
         db.session.rollback()
-        db.session.remove()
     db.session.remove()
 
 if __name__ == '__main__':
