@@ -18,7 +18,6 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-Session = sessionmaker(bind=db.engine)
 
 from models import *
 from database_utils import *
@@ -32,7 +31,7 @@ def index():
 @login_manager.user_loader
 def load_user(user_id):
     # Given user_id, return the associated User object
-    return Account.query.filter_by(username=user_id).one()
+    return Account.query.filter_by(id=user_id).one()
 
 
 @app.route('/getComparisonData')
@@ -150,7 +149,6 @@ def testbed2():
     comparison = get_comparison(12)
     return render_template('testbed2.html', comparison=comparison)
 
-
 @app.route('/index')
 def index2():
     return render_template('index.html')
@@ -166,59 +164,66 @@ def profile_page():
     return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp)
 
 
-@app.route('/myProfile', methods=["GET", "POST"])
-@login_required
-def myProfile():
-    from models import Account
-    if request.method == 'POST':
-        session = Session()
+@app.route('/profile_form', methods=["GET", "POST"])
+def profile_form():
+    session = db.session
 
-        user = session.query(Account).filter_by(id=current_user.id).first()
+    user = session.query(Account).filter_by(id=current_user.id).first()
 
-        username = request.form['newUsername']
-        email = request.form['newEmail']
-        password = request.form['newPassword']
-        confirm_password = request.form['confirmPassword']
+    username = request.args.get('newUsername')
+    email = request.args.get('newEmail')
+    password = request.args.get('newPassword')
 
-        error = False
-        username_error = None
-        email_error = None
-        password_error = None
+    error = False
+    username_error = None
+    email_error = None
 
-        try:
-            if username:
-                if Account.query.filter_by(username=username).count() > 0:
-                    username_error = 'Username already taken'
-                    error = True
-                else:
-                    current_user.name = username
-                    user.username = username
-            if email:
-                if Account.query.filter_by(email=email).count() > 0:
-                    email_error = 'Email already taken'
-                    error = True
+    if not username and not password:
+        error = True
 
-                # errors in previous fields prevent update of any fields
-                elif not error:
-                    current_user.email = email
-                    user.email = email
-            if password:
-                # TODO: enforce password limits and do password match validation in frontend
-                set_password(current_user.id, password)
+    try:
+        if username:
+            if Account.query.filter_by(username=username).count() > 0:
+                username_error = 'Username already taken'
+                error = True
+            else:
+                current_user.username = username
+                user.username = username
+        if email:
+            if Account.query.filter_by(email=email).count() > 0:
+                email_error = 'Email already taken'
+                error = True
+
+            # errors in previous fields prevent update of any fields
+            elif not error:
+                current_user.email = email
+                user.email = email
+        if password and not error:
+            set_password(current_user.id, password)
+
+        if error:
+            session.rollback()
+        else:
             session.commit()
 
-        # may occur if another user registers/changes username/email before commit
-        except sqlalchemy.exc.IntegrityError as err:
-            if err.orig.pgcode == '23505':
-                if err.orig.diag.constraint_name == 'account_email_key':
-                    email_error = 'Email already taken'
-                elif err.orig.diag.constraint_name == 'account_username_key':
-                    username_error = 'Username already taken'
+    # may occur if another user registers/changes username/email before commit
+    except sqlalchemy.exc.IntegrityError as err:
+        if err.orig.pgcode == '23505':
+            if err.orig.diag.constraint_name == 'account_email_key':
+                email_error = 'Email already taken'
+            elif err.orig.diag.constraint_name == 'account_username_key':
+                username_error = 'Username already taken'
+            session.rollback()
 
-        return render_template('myProfile.html', username_error=username_error, email_error=email_error, password_error=password_error)
-        # TODO: enforce at least one field not empty (see if possible in frontend, if not, frontend)
-    else:
-        return render_template('myProfile.html')
+    session.close()
+    data = {'error': error, 'username_error': username_error, 'email_error': email_error}
+
+    return jsonify(data)
+
+@app.route('/myProfile')
+@login_required
+def myProfile():
+    return render_template('myProfile.html')
 
 
 @app.route('/signup')
@@ -327,21 +332,10 @@ def add_user():
 
 @app.route('/login')
 def login():
-    data = {}
     loginUsername = request.args.get('loginUsername')
     loginPassword = request.args.get('loginPassword')
 
-    if validate_login(loginUsername, loginPassword):
-        # Login successful
-        user = Account.query.filter_by(username=loginUsername).one()
-        login_user(user, remember=True)
-
-        data['redirect'] = 'profile'
-        return jsonify(data)
-    else:
-        # Login unsuccessful
-        data['error'] = "We couldn't find that username and password."
-        return jsonify(data)
+    return login_helper(loginUsername, loginPassword)
 
 
 def login_helper(loginUsername, loginPassword):

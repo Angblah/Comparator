@@ -5,7 +5,7 @@ import sqlalchemy
 # TODO: look into sessions and rollback
 # initializes db stored functions and adds some values
 def initialize_db_structure():
-
+    db.session.close_all()
     db.drop_all()
     db.create_all()
     query = text("""
