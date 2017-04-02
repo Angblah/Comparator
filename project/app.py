@@ -165,10 +165,9 @@ def profile_page():
 
 
 @app.route('/profile_form', methods=["GET", "POST"])
+@login_required
 def profile_form():
     session = db.session
-
-    user = session.query(Account).filter_by(id=current_user.id).first()
 
     username = request.args.get('newUsername')
     email = request.args.get('newEmail')
@@ -178,32 +177,36 @@ def profile_form():
     username_error = None
     email_error = None
 
-    if not username and not password:
-        error = True
-
     try:
+        user = session.query(Account).filter_by(id=current_user.id).first()
+
         if username:
-            if Account.query.filter_by(username=username).count() > 0:
+            if username == current_user.username:
+                username_error = 'This is already your username'
+                error = True
+            elif Account.query.filter_by(username=username).count() > 0:
                 username_error = 'Username already taken'
                 error = True
-            else:
-                current_user.username = username
-                user.username = username
         if email:
-            if Account.query.filter_by(email=email).count() > 0:
+            if email == current_user.email:
+                email_error = 'This is already your email'
+                error = True
+            elif Account.query.filter_by(email=email).count() > 0:
                 email_error = 'Email already taken'
                 error = True
 
-            # errors in previous fields prevent update of any fields
-            elif not error:
+        # update only if no errors in any field
+        if not error:
+            if username:
+                current_user.username = username
+                user.username = username
+            if email:
                 current_user.email = email
                 user.email = email
-        if password and not error:
-            set_password(current_user.id, password)
+            # password matching handled in frontend
+            if password:
+                set_password(current_user.id, password)
 
-        if error:
-            session.rollback()
-        else:
             session.commit()
 
     # may occur if another user registers/changes username/email before commit
@@ -213,12 +216,14 @@ def profile_form():
                 email_error = 'Email already taken'
             elif err.orig.diag.constraint_name == 'account_username_key':
                 username_error = 'Username already taken'
-            session.rollback()
+        session.rollback()
+    finally:
+        session.close()
 
-    session.close()
     data = {'error': error, 'username_error': username_error, 'email_error': email_error}
 
     return jsonify(data)
+
 
 @app.route('/myProfile')
 @login_required

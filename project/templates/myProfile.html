@@ -59,6 +59,10 @@
                             <strong>Success!</strong>
                             <span>You have successfully changed your information!</span>
                         </div>
+                        <div class="alert alert-danger" role="alert" id="overallErrorDiv" style="display:none">
+                            <strong>Uh oh!</strong>
+                            <span>At least one field must be filled out</span>
+                        </div>
 
                         <div class="alert alert-danger" role="alert" id="usernameErrorDiv" style="display:none">
                             <strong>Uh oh!</strong>
@@ -145,13 +149,22 @@ $(function() {
     $("#usernameErrorDiv").hide();
     $("#emailErrorDiv").hide();
     $("#passwordErrorDiv").hide();
+    $("#overallErrorDiv").hide();
 
+    var newUsername = $('#newUsername').val();
+    var newEmail = $('#newEmail').val();
     var newPassword = $('#newPassword').val();
     var confirmPassword = $('#confirmPassword').val();
 
+    // at least one field must be filled out
+    if (!newUsername && !newEmail && !newPassword) {
+        $("#overallErrorDiv").show();
+        return false;
+    }
+
     $.getJSON('/profile_form', {
-        newUsername: $('#newUsername').val(),
-        newEmail: $('#newEmail').val(),
+        newUsername: newUsername,
+        newEmail: newEmail,
         newPassword: newPassword
     }, function(data) {
         if (!data.error) {
