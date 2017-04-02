@@ -11,7 +11,19 @@ const items = (state = [], action) => {
         // Add empty Item by copying an old item and updating name and id.
         // TODO: May actually be unnecessary???? (slice not retaining attr id) Further testing needed
         case ADD_ITEM:
-            var newItem = {...state.slice(0,0), name: "", id: action.id}
+            var newItem = [...state.slice(0,1)];
+            newItem = JSON.parse(JSON.stringify(newItem[0]));
+            for (var key in newItem) {
+                if (newItem.hasOwnProperty(key)) {
+                    if (key === 'name') {
+                        newItem[key] = "";
+                    } else if (key === 'id') {
+                        newItem[key] = action.id;
+                    } else {
+                        newItem[key] = {val: "", worth: 1};
+                    }
+                }
+            }
             return [
                 ...state,
                 newItem
@@ -28,7 +40,7 @@ const items = (state = [], action) => {
 
                 return {
                     ...item,
-                    [action.attrId]: action.value
+                    [action.attrId]: {val: action.value}
                 }
             });
 

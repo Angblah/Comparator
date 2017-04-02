@@ -87,7 +87,7 @@ class ZoomDragCircle extends React.Component {
             var attribute = {attribute: attr.name};
             // Generate <td> column elements in each row
             this.props.items.map(item =>
-                attribute[item.id] = Math.random()
+                attribute[item.id] = item[attr.id].worth
             );
 
             // Set each row to be attribute name, then generated column cells
@@ -119,7 +119,6 @@ class ZoomDragCircle extends React.Component {
                     <PolarGrid />
                     <Legend />
                     <PolarAngleAxis dataKey="attribute" />
-                    <PolarRadiusAxis angle={30} domain={[0, 1]}/>
                 </RadarChart>
             </div>
         );

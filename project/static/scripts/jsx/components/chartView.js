@@ -50,18 +50,22 @@ class ChartView extends React.Component {
                     <input 
                     ref={input => input && input.focus()}
                     className="form-control"
-                    defaultValue={item[attrID]}
+                    defaultValue={item[attrID].val}
                     onBlur={(evt) => {this.props.editItem(item.id, attrID, evt.target.value); this.clearEditing();}}
                     />
                 </td>
             );
         } else {
-            return(
-                <td
-                onClick={() => this.toggleEditing(attrID, item.id)}
-                key={item.id+item.id}
-                >{item[attrID]}</td>
-            );
+            if (item[attrID]) {
+                return(
+                    <td
+                    onClick={() => this.toggleEditing(attrID, item.id)}
+                    key={item.id+item.id}
+                    >{item[attrID].val}</td>
+                );
+            } else {
+                return( <td></td>);
+            }
         }
     }
 

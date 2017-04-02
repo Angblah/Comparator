@@ -8,6 +8,7 @@ export const DELETE_ITEM = 'DELETE_ITEM'
 export const CHANGE_VIEW = 'CHANGE_VIEW'
 export const LOAD_ATTR = 'LOAD_ATTR'
 export const LOAD_ITEMS = 'LOAD_ITEMS'
+export const EDIT_NAME = 'EDIT_NAME'
 
 // ATTRIBUTE ACTIONS
 // ================================
@@ -192,6 +193,12 @@ export const changeView = (view) => {
     }
 }
 
+export const editName = (name) => {
+    return {
+        type: 'EDIT_NAME',
+        name
+    }
+}
 
 // THUNKS FOR COMPARISON LOAD
 // ================================
