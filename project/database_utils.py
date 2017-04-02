@@ -1062,7 +1062,6 @@ if __name__ == '__main__':
 
 # TODO: consider adding import for xlsx/csv (see flask-excel)
 # TODO: consider renaming ...sheet_attribute... functions to just ...attribute...
-# TODO: implement guest user functionalities (probably easiest to tie to an account "guest" to make things consistent/easier to manipulate
 # TODO: implement search for comparisons/templates by name, as well as sort by various attributes (probably in frontend)
 # TODO: after implementation more complete, change admin/guest login info and set outside of pushed code
 # TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
