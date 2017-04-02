@@ -220,8 +220,6 @@ def profile_form():
             elif err.orig.diag.constraint_name == 'account_username_key':
                 username_error = 'Username already taken'
         session.rollback()
-    finally:
-        session.close()
 
     data = {'error': error, 'username_error': username_error, 'email_error': email_error}
 
@@ -433,6 +431,12 @@ def csv(token):
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
     return get_comparison_csv(comparison_id)
 
+@app.teardown_request
+def teardown_request(exception):
+    if exception:
+        db.session.rollback()
+        db.session.remove()
+    db.session.remove()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
