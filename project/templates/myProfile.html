@@ -42,43 +42,57 @@
                     <!-- *** END MENU *** -->
                 </div>
                 <div class="col-md-9" id="changeImage" align="center">
-                <br>
-                    <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal" data-target="#newImage-modal">
-                        <img src="../static/img/user.png" class="img-responsive hidden-xs" style="background-color: white; border-radius: 100%">
+                    <br>
+                    <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal"
+                            data-target="#newImage-modal">
+                        <img src="../static/img/user.png" class="img-responsive hidden-xs"
+                             style="background-color: white; border-radius: 100%">
                         <br>
                         <p style="font-style: italic">Change image</p>
                     </button>
                 </div>
                 <br>
                 <div class="col-md-3" id="changeUserData">
-                    <form action="{{ url_for('myProfile') }}" method="POST">
-                        {% if username_error %}
-                        <div class="alert alert-danger" role="alert">
+                    <form id="changeInfoForm">
+
+                        <div class="alert alert-success" role="alert" id="successDiv" style="display:none">
+                            <strong>Success!</strong>
+                            <span>You have successfully changed your information!</span>
+                        </div>
+
+                        <div class="alert alert-danger" role="alert" id="usernameErrorDiv" style="display:none">
                             <strong>Uh oh!</strong>
-                            <span>{{ username_error }}</span>
+                            <span id="usernameError"></span>
                         </div>
-                        {% endif %}
                         <div class="form-group">
-                            <input type="text" name="newUsername" class="form-control" id="newUsername" placeholder="Enter New Username">
+                            <input type="text" name="newUsername" class="form-control" id="newUsername"
+                                   placeholder="Enter New Username">
                         </div>
-                        {% if email_error %}
-                        <div class="alert alert-danger" role="alert">
+
+                        <div class="alert alert-danger" role="alert" id="emailErrorDiv" style="display:none">
                             <strong>Uh oh!</strong>
-                            <span>{{ email_error }}</span>
-                        </div>
-                        {% endif %}
-                        <div class="form-group">
-                            <input type="text" name="newEmail" class="form-control" id="newEmail" placeholder="Enter New Email">
+                            <span id="emailError"></span>
                         </div>
                         <div class="form-group">
-                            <input type="password" name="newPassword" class="form-control" id="newPassword" placeholder="Enter New Password">
+                            <input type="text" name="newEmail" class="form-control" id="newEmail"
+                                   placeholder="Enter New Email">
+                        </div>
+
+                        <div class="alert alert-danger" role="alert" id="passwordErrorDiv" style="display:none">
+                            <strong>Uh oh!</strong>
+                            <span id="passwordError"></span>
                         </div>
                         <div class="form-group">
-                            <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" placeholder="Confirm New Password">
+                            <input type="password" name="newPassword" class="form-control" id="newPassword"
+                                   placeholder="Enter New Password">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="confirmPassword" class="form-control" id="confirmPassword"
+                                   placeholder="Confirm New Password">
                         </div>
                         <!--TODO: change to use ajax + regular button (assuming modal used)-->
                         <div class="text-center">
-                            <button type="submit" class="btn btn-template-main">Submit</button>
+                            <button type="submit" id="submitButton" class="btn btn-template-main">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -101,12 +115,13 @@
                         </div>
 
                         <p class="text-center">
-                            <button type="submit" class="btn btn-template-main"><i class="fa fa-sign-in"></i> Login</button>
+                            <button class="btn btn-template-main"><i class="fa fa-sign-in"></i> Login
+                            </button>
                         </p>
                     </form>
 
                     <p class="text-center text-muted"><a href="#">Not registered yet?</a><br>
-                    <a href="forgotPassword">Forgot your password?</a></p>
+                        <a href="forgotPassword">Forgot your password?</a></p>
 
                 </div>
             </div>
@@ -117,6 +132,46 @@
     {% include "partials/footer.html" %}
 
 </div>
-
 </body>
 </html>
+
+<!--<script src="{{ url_for('static', filename='scripts/js/formValidation.js') }}"></script>-->
+<script>
+
+$(function() {
+  $('button#submitButton').bind('click', function() {
+
+    $("#successDiv").hide();
+    $("#usernameErrorDiv").hide();
+    $("#emailErrorDiv").hide();
+    $("#passwordErrorDiv").hide();
+
+    var newPassword = $('#newPassword').val();
+    var confirmPassword = $('#confirmPassword').val();
+
+    $.getJSON('/profile_form', {
+        newUsername: $('#newUsername').val(),
+        newEmail: $('#newEmail').val(),
+        newPassword: newPassword
+    }, function(data) {
+        if (!data.error) {
+            $("#successDiv").show();
+        }
+        if (data.username_error) {
+            $("#usernameError").text(data.username_error);
+            $("#usernameErrorDiv").show();
+        }
+        if (data.email_error) {
+            $("#emailError").text(data.email_error);
+            $("#emailErrorDiv").show();
+        }
+        if (newPassword != confirmPassword) {
+            $("#passwordError").text('Passwords must match');
+            $("#passwordErrorDiv").show();
+        }
+    });
+    return false;
+  });
+});
+
+</script>

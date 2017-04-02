@@ -26,16 +26,7 @@ class Account(db.Model, UserMixin):
 
     def get_id(self):
         #Return the username to satisfy Flask-Login's requirements
-        return self.username
-
-
-    # no account activation currently implemented
-    is_active = True
-
-    is_authenticated = True
-
-    # Always False as guests don't log in with Account
-    is_anonymous = False
+        return self.id
 
     def __repr__(self):
         return '<Account %r>' % self.username
