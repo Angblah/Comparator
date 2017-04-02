@@ -79,11 +79,11 @@
         <hr style="clear: left;">
         <div id="my-temps" style="clear: left;">
             <h1>My Templates</h1>
-<!--             {% for row in all_comp %}
-                <button type="button" onclick="location.href='{{row['id'] | share_comparison}}'">
+             {% for row in all_temp %}
+                <button type="button" class="tile" onclick="location.href='{{row['id'] | share_template(current_user.id)}}'">
                     {{row['name']}}
                 </button>
-            {% endfor %} -->
+            {% endfor %}
         </div>
     </div>
 

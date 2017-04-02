@@ -154,6 +154,7 @@ def index2():
     return render_template('index.html')
 
 
+# dashboard
 @app.route('/profile')
 @login_required
 def profile_page():
