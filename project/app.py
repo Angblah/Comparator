@@ -117,6 +117,15 @@ def newComparison():
     return render_template('newComparison.html')
 
 
+@app.route('/workspace')
+def workspace():
+    # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
+    template = get_template(4)
+    comparison = get_comparison(12)
+
+    return render_template('workspace.html', template=template, comparison=comparison)
+
+
 # FOR TESTING PURPOSES ONLY; DELETE ONCE LINKED TO PROPERLY
 @app.route('/new_empty_comparison')
 def new_empty_comparison():
@@ -130,6 +139,7 @@ def new_empty_comparison():
         id = create_empty_comparison(guest_id)
         return redirect(share_comparison(id, guest_id))
 
+
 @app.route('/testbed')
 def testbed():
     return render_template('testbed.html')
@@ -139,6 +149,7 @@ def testbed():
 def testbed2():
     comparison = get_comparison(12)
     return render_template('testbed2.html', comparison=comparison)
+
 
 @app.route('/index')
 def index2():
@@ -379,6 +390,7 @@ def upload_file():
                                                      height=100, radius=20, effect="sepia")
     return render_template('upload_form.html', upload_result=upload_result, thumbnail_url1=thumbnail_url1,
                            thumbnail_url2=thumbnail_url2)
+
 
 # returns url encoding specified comparison id
 @app.template_filter('share_comparison')
