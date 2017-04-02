@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, url_for, jsonify, abort, redirect
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm.session import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 import os
@@ -118,14 +117,6 @@ def newComparison():
     return render_template('newComparison.html')
 
 
-@app.route('/workspace')
-def workspace():
-    # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
-    template = get_template(4)
-    comparison = get_comparison(12)
-
-    return render_template('workspace.html', template=template, comparison=comparison)
-
 # FOR TESTING PURPOSES ONLY; DELETE ONCE LINKED TO PROPERLY
 @app.route('/new_empty_comparison')
 def new_empty_comparison():
@@ -165,7 +156,7 @@ def profile_page():
     return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp)
 
 
-@app.route('/profile_form', methods=["GET", "POST"])
+@app.route('/profile_form', methods=["POST"])
 @login_required
 def profile_form():
     session = db.session
@@ -389,11 +380,6 @@ def upload_file():
     return render_template('upload_form.html', upload_result=upload_result, thumbnail_url1=thumbnail_url1,
                            thumbnail_url2=thumbnail_url2)
 
-
-# @app.route('/test/<id>')
-# def test(id):
-#     return redirect(share_comparison(id))
-
 # returns url encoding specified comparison id
 @app.template_filter('share_comparison')
 def share_comparison(id, user_id):
@@ -439,5 +425,3 @@ def csv(token):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
-
-# TODO: change workspace/testbed2 so that it takes in jinja data passed in html directly instead of calling python again
