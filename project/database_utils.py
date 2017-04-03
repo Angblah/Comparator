@@ -619,13 +619,13 @@ def validate_login(username, password):
 
 def set_sheet_comment(sheet_id, comment):
     query = text("""
-    update sheet set comment = :comment where id = :sheet_id;
+    update sheet set comment = :comment, date_modified = current_timestamp where id = :sheet_id;
     """)
     db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, comment=comment)
 
 def set_sheet_name(sheet_id, name):
     query = text("""
-    update sheet set name = :name where id = :sheet_id;
+    update sheet set name = :name, date_modified = current_timestamp where id = :sheet_id;
     """)
     db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, name=name)
 
@@ -714,13 +714,17 @@ def sort_by_attribute_ordering(ordering):
     """)
     db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
 
-# WARNING: vulnerable to sql injection if users given access (as field string not checked)
 # valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
 def set_sheet_attribute_field(attribute_id, field, field_value):
+    # format used rather than only sqlalchemy's parameters to allow safe dynamic column selection
     query = text("""
-    update sheet_attribute set """ + field + """ = :field_value where id = :attribute_id;
+    do $$
+    begin
+    execute format('update sheet_attribute set %I = %L where id = :attribute_id', :field, :field_value);
+    end
+    $$;
     """)
-    db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
+    db.engine.execute(query.execution_options(autocommit=True), field=field, field_value=field_value, attribute_id=attribute_id)
 
 ############################################################################################
 
@@ -1065,4 +1069,5 @@ if __name__ == '__main__':
 # TODO: after implementation more complete, change admin/guest login info and set outside of pushed code
 # TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
 # TODO: try to fix website crashes on database_utils run by rolling back changes on teardown
+# TODO: consider changing date_modified to update from database trigger
 
