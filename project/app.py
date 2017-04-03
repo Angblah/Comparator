@@ -142,13 +142,8 @@ def new_empty_comparison():
 
 @app.route('/testbed')
 def testbed():
-    return render_template('testbed.html')
-
-
-@app.route('/testbed2')
-def testbed2():
     comparison = get_comparison(12)
-    return render_template('testbed2.html', comparison=comparison)
+    return render_template('testbed.html', comparison=comparison)
 
 
 @app.route('/index')
@@ -410,7 +405,7 @@ def view_comparison(token):
 
     # TODO: see why is_anonymous sometimes boolean, sometimes bound method
     if not current_user.is_anonymous and user_id == current_user.id:
-        return render_template('testbed2.html', comparison=get_comparison(comparison_id))
+        return render_template('workspace.html', comparison=get_comparison(comparison_id))
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
         abort(404)
@@ -420,7 +415,7 @@ def view_comparison(token):
 def view_template(token):
     template_id, user_id = ts.loads(token, salt='template-data')
     if not current_user.is_anonymous and user_id == current_user.id:
-        return render_template('testbed2.html', template=get_template(template_id))
+        return render_template('workspace.html', template=get_template(template_id))
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
         abort(404)

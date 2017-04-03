@@ -26,9 +26,8 @@ module.exports = {
   },
   entry: {
       trial: './project/static/scripts/jsx/main.js',
-      workspace: './project/static/scripts/jsx/workspace2.js',
+      workspace: './project/static/scripts/jsx/containers/workspace.js',
       dashboard: './project/static/scripts/jsx/profileHomePage.js',
-      testbed: './project/static/scripts/jsx/workspace3.js',
-      testbed2: './project/static/scripts/jsx/containers/workspace.js'
+      testbed: './project/static/scripts/jsx/containers/workspace.js'
   }
 };
