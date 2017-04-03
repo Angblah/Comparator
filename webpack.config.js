@@ -25,9 +25,7 @@ module.exports = {
     filename: '[name].bundle.js'
   },
   entry: {
-      trial: './project/static/scripts/jsx/main.js',
       workspace: './project/static/scripts/jsx/containers/workspace.js',
-      dashboard: './project/static/scripts/jsx/profileHomePage.js',
       testbed: './project/static/scripts/jsx/containers/workspace.js'
   }
 };
