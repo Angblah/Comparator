@@ -35194,6 +35194,64 @@ var Navbar = function (_React$Component) {
                 { className: 'navbar navbar-light navbar-toggleable-sm' },
                 this.renderNameOrInput(),
                 _react2.default.createElement(
+                    'button',
+                    { type: 'button blank-bg', className: 'btn btn-secondary', 'data-toggle': 'modal', 'data-target': '#deleteModal' },
+                    _react2.default.createElement('i', { className: 'fa fa-trash', 'aria-hidden': 'true' })
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'modal fade', id: 'deleteModal', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'deleteModalLabel', 'aria-hidden': 'true' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'modal-dialog modal-lg', role: 'document' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'modal-content' },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'modal-header' },
+                                _react2.default.createElement(
+                                    'h5',
+                                    { className: 'modal-title', id: 'deleteModalTitle' },
+                                    'Delete Your Comparison'
+                                ),
+                                _react2.default.createElement(
+                                    'button',
+                                    { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+                                    _react2.default.createElement(
+                                        'span',
+                                        { 'aria-hidden': 'true' },
+                                        '\xD7'
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'modal-body' },
+                                _react2.default.createElement(
+                                    'p',
+                                    null,
+                                    'Do you really want to delete your Comparison?'
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'modal-footer' },
+                                _react2.default.createElement(
+                                    'button',
+                                    { type: 'button', className: 'btn btn-secondary', 'data-dismiss': 'modal' },
+                                    'Cancel'
+                                ),
+                                _react2.default.createElement(
+                                    'button',
+                                    { type: 'button', className: 'btn btn-primary', href: "/deleteComparison/" + this.props.id },
+                                    'Delete'
+                                )
+                            )
+                        )
+                    )
+                ),
+                _react2.default.createElement(
                     'div',
                     { className: 'navbar-collapse collapse dual-collapse' },
                     _react2.default.createElement(
