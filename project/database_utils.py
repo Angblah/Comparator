@@ -899,6 +899,7 @@ def set_item_name(item_id, name):
     """)
     db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, name=name)
 
+
 # create comparison from template and assigns it to the account specified
 # account_id = account to assign template to
 # template_id = template to create comparison from
