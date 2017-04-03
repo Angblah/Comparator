@@ -6,8 +6,7 @@ import {
 //          account_id: 
 //          comment: 
 //          date_created: 
-//          date_modified: 
-//          id:
+//          date_modified:
 //          name:
 //     }
 

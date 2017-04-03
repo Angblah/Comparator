@@ -55,7 +55,6 @@ export const routeToEditAttr = (id, name) => {
 }
 
 export function deleteAttr(attrId) {
-    console.log(attrId);
     return function (dispatch) {
         return fetch('/deleteComparisonAttr', {
             method: 'POST',
@@ -193,7 +192,21 @@ export const changeView = (view) => {
     }
 }
 
-export const editName = (name) => {
+export function editName(compId, name) {
+    return function (dispatch) {
+        return fetch('/editComparisonName', {
+            method: 'POST',
+            body: JSON.stringify({
+                compId : compId,
+                name : name
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToEditName(name)))
+    }
+}
+
+export const routeToEditName = (name) => {
     return {
         type: 'EDIT_NAME',
         name
