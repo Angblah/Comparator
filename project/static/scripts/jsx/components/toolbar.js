@@ -28,21 +28,21 @@ class Toolbar extends React.Component {
                         </div>
 
                         <div className="btn-group mr-2" role="group" aria-label="Second group">
-                            <button type="button" className="btn btn-secondary" onClick={this.props.onUndo} disabled={!(this.props.canUndo)}>
-                              Undo
+                            <button className="btn btn-secondary" onClick={this.props.onUndo} disabled={!(this.props.canUndo)}>
+                              <i className="fa fa-undo" aria-hidden="true"></i>
                             </button>
-                            <button type="button" className="btn btn-secondary" onClick={this.props.onRedo} disabled={!(this.props.canRedo)}>
-                              Redo
+                            <button className="btn btn-secondary" onClick={this.props.onRedo} disabled={!(this.props.canRedo)}>
+                              <i className="fa fa-repeat" aria-hidden="true"></i>
                             </button>
                         </div>
 
                         <div className="btn-group mr-2" role="group" aria-label="Third group">
-                            <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('SPIDER')}>Toggle View</button>
+                            <button id="toggleViewButton" className="btn btn-primary" onClick={() => this.props.changeView('SPIDER')}><i className="fa fa-eye" aria-hidden="true"></i></button>
                         </div>
 
                         <div className="btn-group mr-2" role="group" aria-label="Fourth group">
                             <div className="dropdown">
-                                <button type="button blank-bg" className="btn btn-secondary dropdown-toggle" id="saveDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Save as</button>
+                                <button type="button blank-bg" className="btn btn-secondary dropdown-toggle" id="saveDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="fa fa-floppy-o" aria-hidden="true"></i></button>
                                 <div className="dropdown-menu" aria-labelledby="saveDropdown">
                                     <a className="dropdown-item" href="#" data-toggle="modal" data-target="#saveModal">Comparison</a>
                                     <a className="dropdown-item" href="#" data-toggle="modal" data-target="#saveModal" onClick={() => this.props.saveTemplate(this.props.id, this.props.info.name)}>Template</a>
@@ -61,8 +61,8 @@ class Toolbar extends React.Component {
                         </div>
 
                         <div className="btn-group ml-auto" role="group" aria-label="Extra">
-                            <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.exportCSV()}>Export as CSV</button>
-                            <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#shareModal">Share</button>
+                            <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.exportCSV()}><i className="fa fa-file-excel-o" aria-hidden="true"></i></button>
+                            <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#shareModal"><i className="fa fa-share" aria-hidden="true"></i></button>
 
                             <div className="modal fade" id="shareModal" tabIndex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
                                 <div className="modal-dialog modal-lg" role="document">

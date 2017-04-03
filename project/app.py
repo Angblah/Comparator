@@ -38,6 +38,14 @@ def getComparisonData():
     data = get_comparison(12)
     return data
 
+@app.route('/editComparisonName', methods=["POST"])
+def editComparisonName():
+    message = {}
+    data = json.loads(request.data)
+    set_sheet_name(data['compId'], data['name'])
+    message['success'] = 'success'
+    return jsonify(message)
+
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():
@@ -152,14 +160,14 @@ def index2():
 
 
 # dashboard
-@app.route('/profile')
+@app.route('/dashboard')
 @login_required
-def profile_page():
+def dashboard():
     # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
     recent_comp = get_recent_user_comparisons(current_user.id, 5, get_json=False)
     all_comp = get_user_comparisons(current_user.id, get_json=False)
     all_temp = get_user_templates(current_user.id, get_json=False)
-    return render_template('profileHomePage.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp)
+    return render_template('dashboard.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp)
 
 
 @app.route('/profile_form', methods=["GET", "POST"])
@@ -221,10 +229,10 @@ def profile_form():
     return jsonify(data)
 
 
-@app.route('/myProfile')
+@app.route('/profile')
 @login_required
 def myProfile():
-    return render_template('myProfile.html')
+    return render_template('profile.html')
 
 
 @app.route('/signup')

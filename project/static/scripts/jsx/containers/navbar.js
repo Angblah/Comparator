@@ -21,8 +21,6 @@ class Navbar extends React.Component {
     }
 
     renderNameOrInput() {
-        console.log("Rendering Name or Input");
-        console.log(this.state.editingName);
         if (this.state.editingName) {
              return (
                 <form className="form-inline">
@@ -30,7 +28,7 @@ class Navbar extends React.Component {
                         ref={input => input && input.focus()}
                         className="form-control"
                         defaultValue={this.props.info.name}
-                        onBlur={(evt) => {this.props.editName(evt.target.value); this.clearEditing();}}
+                        onBlur={(evt) => {this.props.editName(this.props.id, evt.target.value); this.clearEditing();}}
                     />
                 </form>
              )
@@ -59,14 +57,15 @@ class Navbar extends React.Component {
 }
 const mapStateToProps = (state) => {
     return {
+        id: state.id,
         info: state.info
     };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        editName: (name) => {
-            dispatch(editName(name))
+        editName: (compId, name) => {
+            dispatch(editName(compId, name))
         }
     };
 }

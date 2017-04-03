@@ -243,13 +243,6 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function set_sheet_comment (_sheet_id int, _comment text) returns void
-        as $$
-        begin
-            update sheet set comment = _comment where id = _sheet_id;
-        end;
-    $$ language plpgsql;
-
     create or replace function register_user(_email varchar, _username varchar, _password varchar, out _account_id int) returns int as
     $$
         begin
@@ -290,11 +283,12 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function create_comparison_from_user_template (_account_id int, _template_id int, _comparison_name varchar, _num_items int default 2) returns int
+    create or replace function create_comparison_from_user_template (_account_id int, _template_id int, _comparison_name varchar default null, _num_items int default 2) returns int
         as $$
             declare _comparison_id int;
         begin
-            insert into sheet (name, account_id) values (_comparison_name, _account_id) returning id into _comparison_id;
+            -- name of new comparison is template name if not set
+            insert into sheet (name, account_id) select coalesce(_comparison_name, (select name from sheet where id = _template_id)), _account_id returning id into _comparison_id;
             insert into comparison(id) values (_comparison_id);
             insert into sheet_attribute (name, type_id, sheet_id, weight, position) select name, type_id, _comparison_id, weight, position from sheet_attribute where sheet_id = _template_id;
             perform add_comparison_item_back(_comparison_id, _num_items);
@@ -626,9 +620,15 @@ def validate_login(username, password):
 
 def set_sheet_comment(sheet_id, comment):
     query = text("""
-    select set_sheet_comment(:sheet_id, :comment);
+    update sheet set comment = :comment, date_modified = current_timestamp where id = :sheet_id;
     """)
     db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, comment=comment)
+
+def set_sheet_name(sheet_id, name):
+    query = text("""
+    update sheet set name = :name, date_modified = current_timestamp where id = :sheet_id;
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, name=name)
 
 # TODO: update when images implemented to delete images from cloudinary/whatever host is used
 def delete_sheet(sheet_id):
@@ -715,13 +715,17 @@ def sort_by_attribute_ordering(ordering):
     """)
     db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
 
-# WARNING: vulnerable to sql injection if users given access (as field string not checked)
 # valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
 def set_sheet_attribute_field(attribute_id, field, field_value):
+    # format used rather than only sqlalchemy's parameters to allow safe dynamic column selection
     query = text("""
-    update sheet_attribute set """ + field + """ = :field_value where id = :attribute_id;
+    do $$
+    begin
+    execute format('update sheet_attribute set %I = %L where id = :attribute_id', :field, :field_value);
+    end
+    $$;
     """)
-    db.engine.execute(query.execution_options(autocommit=True), field_value=field_value, attribute_id=attribute_id)
+    db.engine.execute(query.execution_options(autocommit=True), field=field, field_value=field_value, attribute_id=attribute_id)
 
 ############################################################################################
 
@@ -895,7 +899,13 @@ def set_item_name(item_id, name):
     """)
     db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, name=name)
 
-def create_comparison_from_user_template (account_id, template_id, comparison_name, num_items=2):
+
+# create comparison from template and assigns it to the account specified
+# account_id = account to assign template to
+# template_id = template to create comparison from
+# comparison_name = name of new comparison (defaults to template name if left as None)
+# num_items = number of items to initialize comparison with
+def create_comparison_from_user_template (account_id, template_id, comparison_name=None, num_items=2):
     query = text("""
     select create_comparison_from_user_template(:account_id, :template_id, :comparison_name, :num_items);
     """)
@@ -1066,4 +1076,7 @@ if __name__ == '__main__':
 # TODO: after implementation more complete, change admin/guest login info and set outside of pushed code
 # TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
 # TODO: try to fix website crashes on database_utils run by rolling back changes on teardown
+# TODO: consider changing date_modified to update from database trigger (many functions now forget to update date_modified)
+    # downsides: may be inefficient for multirow deletes/update relating to the same Sheet
+# TODO: check if copy_comparison/create_comparison_from_template call from ui preserves privacy (can users modify call to use random id to see random users' comparisons/templates?)
 
