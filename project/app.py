@@ -179,6 +179,10 @@ def dashboard():
     return render_template('dashboard.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp, sample_temp=sample_temp)
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/profile_form', methods=["GET", "POST"])
 @login_required
 def profile_form():
