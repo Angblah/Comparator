@@ -35243,8 +35243,8 @@ var Navbar = function (_React$Component) {
                                     'Cancel'
                                 ),
                                 _react2.default.createElement(
-                                    'button',
-                                    { type: 'button', className: 'btn btn-primary', href: "/deleteComparison/" + this.props.id },
+                                    'a',
+                                    { className: 'btn btn-primary', href: "/deleteComparison/" + this.props.id },
                                     'Delete'
                                 )
                             )
@@ -35262,7 +35262,7 @@ var Navbar = function (_React$Component) {
                             { className: 'nav-item' },
                             _react2.default.createElement(
                                 'a',
-                                { className: 'nav-link', href: '/profile' },
+                                { className: 'nav-link', href: '/dashboard' },
                                 _react2.default.createElement('img', { src: "/static/img/logo.png", height: '40px' })
                             )
                         )

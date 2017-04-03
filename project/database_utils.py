@@ -1079,4 +1079,4 @@ if __name__ == '__main__':
 # TODO: consider changing date_modified to update from database trigger (many functions now forget to update date_modified)
     # downsides: may be inefficient for multirow deletes/update relating to the same Sheet
 # TODO: check if copy_comparison/create_comparison_from_template call from ui preserves privacy (can users modify call to use random id to see random users' comparisons/templates?)
-
+# TODO: dynamic template select based on admin templates
