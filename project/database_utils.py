@@ -243,13 +243,6 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function set_sheet_comment (_sheet_id int, _comment text) returns void
-        as $$
-        begin
-            update sheet set comment = _comment where id = _sheet_id;
-        end;
-    $$ language plpgsql;
-
     create or replace function register_user(_email varchar, _username varchar, _password varchar, out _account_id int) returns int as
     $$
         begin
@@ -626,9 +619,15 @@ def validate_login(username, password):
 
 def set_sheet_comment(sheet_id, comment):
     query = text("""
-    select set_sheet_comment(:sheet_id, :comment);
+    update sheet set comment = :comment where id = :sheet_id;
     """)
     db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, comment=comment)
+
+def set_sheet_name(sheet_id, name):
+    query = text("""
+    update sheet set name = :name where id = :sheet_id;
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, name=name)
 
 # TODO: update when images implemented to delete images from cloudinary/whatever host is used
 def delete_sheet(sheet_id):
