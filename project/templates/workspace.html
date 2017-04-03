@@ -11,42 +11,16 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/workspace.css') }}">
     </head>
     <body>
-        <!--Navbar Options-->
-        <nav class="navbar navbar-light">
-            <!-- TODO: Create Dynamic NavBar for Workspace with Form and User/Guest Info-->
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/profile"> COMPARATOR </a>
-            </div>
-
-        </nav>
-
-        <div class="btn-toolbar d-flex justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" class="btn btn-secondary">1</button>
-                <button type="button" class="btn btn-secondary">2</button>
-                <button type="button" class="btn btn-secondary">3</button>
-                <button type="button" class="btn btn-secondary">4</button>
-            </div>
-            <div class="btn-group" role="group" aria-label="Second group">
-                <button type="button" class="btn btn-secondary">5</button>
-                <button type="button" class="btn btn-secondary">6</button>
-                <button type="button" class="btn btn-secondary">7</button>
-            </div>
-
-            <div class="btn-group ml-auto" role="group" aria-label="Export/Share">
-                <button type="button blank-bg" class="btn btn-secondary">Share/Export</button>
-            </div>
-        </div>
-
-        <!--<div class="container">-->
-            <!--<span> {{template}} </span>-->
-            <!--<span> {{comparison}} </span>-->
-        <!--</div>-->
 
         <!-- Workspace Link -->
         <div id="workspace" data-template="{{template}}" data-comparison="{{comparison}}"></div>
 
         <!--Scripts-->
         <script src="{{ url_for('static', filename='scripts/js/workspace.bundle.js') }}"></script>
+
+        <!-- Need these for Bootstrap 4 modal and dropdown to work in toolbar -->
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     </body>
 </html>
