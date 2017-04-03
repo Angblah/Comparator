@@ -5,7 +5,7 @@ $(function() {
       loginPassword: $('input[name="loginPassword"]').val()
     }, function(data) {
     if (data.redirect) {
-        window.location.href = "../myDashboard";
+        window.location.href = "../dashboard";
     }
     else {
         $("#result").text(data.error);

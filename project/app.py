@@ -165,9 +165,9 @@ def index2():
 
 
 # dashboard
-@app.route('/myDashboard')
+@app.route('/dashboard')
 @login_required
-def profile_page():
+def dashboard():
     # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
     recent_comp = get_recent_user_comparisons(current_user.id, 5, get_json=False)
     all_comp = get_user_comparisons(current_user.id, get_json=False)
@@ -234,10 +234,10 @@ def profile_form():
     return jsonify(data)
 
 
-@app.route('/myProfile')
+@app.route('/profile')
 @login_required
 def myProfile():
-    return render_template('myProfile.html')
+    return render_template('profile.html')
 
 
 @app.route('/signup')
