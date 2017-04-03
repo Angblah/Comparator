@@ -955,6 +955,25 @@ def get_comparison_csv(comparison_id):
 ############################################################################################
 # Template related functions
 
+def get_sample_templates():
+    query = text("""
+        select sheet.id, sheet.name, sheet_attribute.name as attribute_name from user_template
+        natural join sheet
+        inner join sheet_attribute on sheet_id = sheet.id
+        where account_id = (select id from account where username = 'admin');
+        """)
+    result = db.engine.execute(query)
+    id = -1
+    name = None
+    data = {}
+    for row in result:
+        if row['id'] != id:
+            id = row['id']
+            name = row['name']
+            data[(id, name)] = []
+        data[(id, name)].append(row['attribute_name'])
+    return data
+
 # returns array of template ids for specified user
 def get_user_template_ids(user_id, get_json=True):
     result = get_user_templates(user_id)
@@ -1075,8 +1094,8 @@ if __name__ == '__main__':
 # TODO: implement search for comparisons/templates by name, as well as sort by various attributes (probably in frontend)
 # TODO: after implementation more complete, change admin/guest login info and set outside of pushed code
 # TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
-# TODO: try to fix website crashes on database_utils run by rolling back changes on teardown
 # TODO: consider changing date_modified to update from database trigger (many functions now forget to update date_modified)
     # downsides: may be inefficient for multirow deletes/update relating to the same Sheet
 # TODO: check if copy_comparison/create_comparison_from_template call from ui preserves privacy (can users modify call to use random id to see random users' comparisons/templates?)
 # TODO: dynamic template select based on admin templates
+# TODO: consider adding list of attributes when selecting new comparisons

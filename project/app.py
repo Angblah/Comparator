@@ -32,6 +32,12 @@ def load_user(user_id):
     # Given user_id, return the associated User object
     return Account.query.filter_by(id=user_id).one()
 
+@app.route('/ComparisonFromTemplate', methods=["POST"])
+def comparisonFromTemplate():
+    template_id = int(request.values['id'])
+
+    comparison_id = create_comparison_from_user_template(current_user.id, template_id)
+    return redirect(share_comparison(comparison_id, current_user.id))
 
 @app.route('/getComparisonData')
 def getComparisonData():
@@ -167,7 +173,10 @@ def dashboard():
     recent_comp = get_recent_user_comparisons(current_user.id, 5, get_json=False)
     all_comp = get_user_comparisons(current_user.id, get_json=False)
     all_temp = get_user_templates(current_user.id, get_json=False)
-    return render_template('dashboard.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp)
+
+    # TODO: consider only loading sample_temp and temp_attributes on relevant modal links
+    sample_temp = get_sample_templates()
+    return render_template('dashboard.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp, sample_temp=sample_temp)
 
 
 @app.route('/profile_form', methods=["GET", "POST"])
