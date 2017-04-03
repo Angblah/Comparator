@@ -38,6 +38,14 @@ def getComparisonData():
     data = get_comparison(12)
     return data
 
+@app.route('/editComparisonName', methods=["POST"])
+def editComparisonName():
+    message = {}
+    data = json.loads(request.data)
+    set_sheet_name(data['compId'], data['name'])
+    message['success'] = 'success'
+    return jsonify(message)
+
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():

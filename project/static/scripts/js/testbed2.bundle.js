@@ -24067,7 +24067,7 @@ var getMaxRadius = function getMaxRadius(width, height) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.loadItems = exports.loadAttr = exports.editName = exports.changeView = exports.routeToDeleteItem = exports.routeToEditItemName = exports.routeToDeleteAttr = exports.routeToEditAttr = exports.EDIT_NAME = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.DELETE_ITEM = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.DELETE_ATTR = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
+exports.loadItems = exports.loadAttr = exports.routeToEditName = exports.changeView = exports.routeToDeleteItem = exports.routeToEditItemName = exports.routeToDeleteAttr = exports.routeToEditAttr = exports.EDIT_NAME = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.DELETE_ITEM = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.DELETE_ATTR = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
 
 var _stringify = __webpack_require__(407);
 
@@ -24085,6 +24085,7 @@ exports.editItemName = editItemName;
 exports.deleteItem = deleteItem;
 exports.exportCSV = exportCSV;
 exports.saveTemplate = saveTemplate;
+exports.editName = editName;
 exports.fetchComparison = fetchComparison;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -24150,7 +24151,6 @@ var routeToEditAttr = exports.routeToEditAttr = function routeToEditAttr(id, nam
 };
 
 function deleteAttr(attrId) {
-    console.log(attrId);
     return function (dispatch) {
         return fetch('/deleteComparisonAttr', {
             method: 'POST',
@@ -24297,7 +24297,23 @@ var changeView = exports.changeView = function changeView(view) {
     };
 };
 
-var editName = exports.editName = function editName(name) {
+function editName(compId, name) {
+    return function (dispatch) {
+        return fetch('/editComparisonName', {
+            method: 'POST',
+            body: (0, _stringify2.default)({
+                compId: compId,
+                name: name
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(routeToEditName(name));
+        });
+    };
+}
+
+var routeToEditName = exports.routeToEditName = function routeToEditName(name) {
     return {
         type: 'EDIT_NAME',
         name: name
@@ -47459,8 +47475,6 @@ var Navbar = function (_React$Component) {
         value: function renderNameOrInput() {
             var _this2 = this;
 
-            console.log("Rendering Name or Input");
-            console.log(this.state.editingName);
             if (this.state.editingName) {
                 return _react2.default.createElement(
                     'form',
@@ -47472,7 +47486,7 @@ var Navbar = function (_React$Component) {
                         className: 'form-control',
                         defaultValue: this.props.info.name,
                         onBlur: function onBlur(evt) {
-                            _this2.props.editName(evt.target.value);_this2.clearEditing();
+                            _this2.props.editName(_this2.props.id, evt.target.value);_this2.clearEditing();
                         }
                     })
                 );
@@ -47516,14 +47530,15 @@ var Navbar = function (_React$Component) {
 
 var mapStateToProps = function mapStateToProps(state) {
     return {
+        id: state.id,
         info: state.info
     };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
     return {
-        editName: function editName(name) {
-            dispatch((0, _actions.editName)(name));
+        editName: function editName(compId, name) {
+            dispatch((0, _actions.editName)(compId, name));
         }
     };
 };
@@ -49437,8 +49452,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //          account_id: 
 //          comment: 
 //          date_created: 
-//          date_modified: 
-//          id:
+//          date_modified:
 //          name:
 //     }
 
