@@ -12,17 +12,6 @@
 
 <div id="all">
 
-    <!-- *** HOMEPAGE CAROUSEL *** -->
-<!--     <div>
-        <div id="dash-username">
-            <div id="dash-username-content">
-                <p style="text-align: center;"><img
-                        src="https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"></p>
-                <h1 align="center">{{ current_user.username }}'s Dashboard</h1>
-            </div>
-        </div>
-    </div> -->
-
     <div class="nav-side">
         <div>
             <!-- <a href="#recent-comps">RECENT COMPARISONS</a> -->
@@ -49,13 +38,12 @@
         </div>
         <hr>
         <div>
-            <button id="new-comp" type="submit" onclick="location.href='workspace'">
+            <button id="new-comp" type="submit" data-toggle="modal" data-target="#selectTemplateModal">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 NEW COMPARISON
             </button>
         </div>
     </div>
-
 
     <div id="dashboard-content" style="padding-left: 37.5%">
         <hr style="clear: left;">
@@ -86,6 +74,110 @@
             {% endfor %}
         </div>
     </div>
+
+    <!-- *** Select Template Modal *** -->
+        <div id="selectTemplateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="gridModalLabel">Select a Template to Begin</h4>
+                    </div>
+                    <div class="modal-body" style="height:350px; overflow-y: scroll">
+                        <div class="cc-selector">
+                            <div class="panel-group accordion" id="newTemplate">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseNew">New Template</a></h4>
+                                    </div>
+                                    <div id="collapseNew" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+                                                </div>
+                                                <p>Create a custom template and specify your fields</p>
+                                                <button class="btn btn-template-main" onclick="location.href='{{'14' | share_comparison(current_user.id)}}'">Start Comparing</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default" id="cameraTemplate">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseCameras">Cameras</a></h4>
+                                    </div>
+                                    <div id="collapseCameras" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+                                                </div>
+                                                <p>Specifications include:</p>
+                                                <ul>
+                                                    <li>Autofocus Points</li>
+                                                    <li>Battery Life</li>
+                                                    <li>Digital Zoom</li>
+                                                    <li>Color</li>
+                                                </ul>
+                                                <button class="btn btn-template-main" onclick="location.href='{{'11' | share_comparison(current_user.id)}}'">Start Comparing</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default" id="laptopTemplate">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseLaptops">Laptops</a></h4>
+                                    </div>
+                                    <div id="collapseLaptops" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+                                                </div>
+                                                <p>Specifications include:</p>
+                                                <ul>
+                                                    <li>Battery Life</li>
+                                                    <li>Screen Size</li>
+                                                    <li>Graphics</li>
+                                                    <li>CPU</li>
+                                                </ul>
+                                                <button class="btn btn-template-main" onclick="location.href='{{'13' | share_comparison(current_user.id)}}'">Start Comparing</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default" id="washerTemplate">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseWashingMachines">Washing Machines</a></h4>
+                                    </div>
+                                    <div id="collapseWashingMachines" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+                                                </div>
+                                                <p>Specifications include:</p>
+                                                <ul>
+                                                    <li>Style</li>
+                                                    <li>Total Capacity</li>
+                                                    <li>Washer Control Features</li>
+                                                    <li>Wash/Rinse Temperatures</li>
+                                                </ul>
+                                                <button class="btn btn-template-main" onclick="location.href='{{'12' | share_comparison(current_user.id)}}'">Start Comparing</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-template-main" data-dismiss="modal">Exit to Dashboard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <!-- <div class="home-carousel" style="height: 20em">
 
@@ -205,7 +297,22 @@
 
 </div>
 
-<!-- *** HOMEPAGE CAROUSEL END ***
+<script>
+    $(function() {
+    $('#registerPassword').on('focusout', function(e) {
+        var registerPassword = $('#registerPassword').val();
+        var passwordConfirm = $('#registerPasswordConfirm').val();
+
+        if (registerPassword.length < 6) {
+            setGroupInvalid("passwordField", "Password length must be greater than 6 characters.");
+        } else {
+            setGroupGood("passwordField");
+        }
+        checkNull("registerPassword", "passwordField");
+        checkFormValid("registerForm", "registerButton");
+    });
+});
+</script>
 
 <!-- Include the footer for things like copyright info and JS scripts -->
 {% include "partials/footer.html" %}
