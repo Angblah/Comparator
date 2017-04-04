@@ -54,3 +54,21 @@ td:hover {
     vertical-align: center;
     align-content: center;
 }
+
+th {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    height: 4rem;
+    vertical-align: center;
+    align-content: center;
+}
+
+th:hover {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+    vertical-align: center;
+    align-content: center;
+}

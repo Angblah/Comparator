@@ -125,6 +125,10 @@ def saveComparisonAsTemplate():
     tempId['tempId'] = (save_comparison_as_template(data['compId'], data['name']))
     return jsonify(tempId)
 
+@app.route('/deleteComparison/<int:comp_id>')
+def deleteComparison(comp_id):
+    delete_sheet(comp_id)
+    return redirect(url_for('dashboard'))
 
 @app.route('/newComparison')
 def newComparison():
