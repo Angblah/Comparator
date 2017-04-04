@@ -960,7 +960,8 @@ def get_sample_templates():
         select sheet.id, sheet.name, sheet_attribute.name as attribute_name from user_template
         natural join sheet
         inner join sheet_attribute on sheet_id = sheet.id
-        where account_id = (select id from account where username = 'admin');
+        where account_id = (select id from account where username = 'admin')
+        order by sheet.id;
         """)
     result = db.engine.execute(query)
     id = -1
@@ -971,7 +972,9 @@ def get_sample_templates():
             id = row['id']
             name = row['name']
             data[(id, name)] = []
-        data[(id, name)].append(row['attribute_name'])
+        # null attribute names not added
+        if row['attribute_name']:
+            data[(id, name)].append(row['attribute_name'])
     return data
 
 # returns array of template ids for specified user
