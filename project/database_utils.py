@@ -567,7 +567,7 @@ def initialize_db_structure():
             perform create_comparison_from_user_template(_account_id, temp_2, 'Laptops', 3);
 
             perform create_empty_comparison('empty comparison 1', _account_id);
-            perform create_empty_template('empty template 1', _account_id);
+            perform create_empty_template('Empty template', _account_id);
             -- TODO: create and move default templates/comparisons to populate_database()
         end;
     $$ language plpgsql;

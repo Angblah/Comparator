@@ -24,8 +24,10 @@ from database_utils import *
 
 @app.route('/')
 def index():
-    return render_template('home.html')
-
+    if current_user.is_anonymous:
+        return render_template('home.html')
+    else:
+        return redirect(url_for('dashboard'))
 
 @login_manager.user_loader
 def load_user(user_id):
