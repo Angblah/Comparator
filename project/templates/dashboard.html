@@ -96,12 +96,16 @@
                                                     <div class="col-sm-6">
                                                         <img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
                                                     </div>
-                                                    <p>Specifications include:</p>
-                                                    <ul>
-                                                        {% for attribute_name in attribute_names %}
-                                                            <li>{{attribute_name}}</li>
-                                                        {% endfor %}
-                                                    </ul>
+                                                    {% if attribute_names %}
+                                                        <p>Specifications include:</p>
+                                                        <ul>
+                                                            {% for attribute_name in attribute_names %}
+                                                                <li>{{attribute_name}}</li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% else %}
+                                                        <p>Create a custom template and specify your fields</p>
+                                                    {% endif %}
                                                     <form action = "/ComparisonFromTemplate" method = "post">
                                                         <button name="id" value={{id}} class="btn btn-template-main">Start Comparing</button>
                                                     </form>
@@ -257,7 +261,6 @@
 
 <!-- Include the footer for things like copyright info and JS scripts -->
 {% include "partials/footer.html" %}
-</div>
 <!--<script src="../static/scripts/js/dashboard.bundle.js"></script>-->
 </body>
 </html>
