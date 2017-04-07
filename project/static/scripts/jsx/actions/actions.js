@@ -13,6 +13,7 @@ export const EDIT_NAME = 'EDIT_NAME'
 // ATTRIBUTE ACTIONS
 // ================================
 export function addAttr(compId) {
+    console.log(compId);
     return function (dispatch) {
         return fetch('/addComparisonAttr', {
             method: 'POST',
@@ -77,6 +78,7 @@ export const routeToDeleteAttr = (attrId) => {
 // ITEM ACTIONS
 // ================================
 export function addItem(compId) {
+    console.log(compId);
     return function (dispatch) {
         return fetch('/addComparisonItem', {
             method: 'POST',
@@ -229,6 +231,8 @@ export const loadItems = (json) => {
     }
 }
 
+// INVALID FUNCTION
+// Load the comparison json into the state
 function loadComp(json) {
     return dispatch => {
         dispatch(loadAttr(json.attributes));
@@ -236,6 +240,7 @@ function loadComp(json) {
     }
 }
 
+// Function to fetch the comparison from db
 export function fetchComparison() {
     return function (dispatch) {
         return fetch('/getComparisonData')
