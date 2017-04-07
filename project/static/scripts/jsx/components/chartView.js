@@ -112,7 +112,7 @@ class ChartView extends React.Component {
                                     {item.name}
                                 </th>*/
                             )}
-                            <th></th>
+                            <th onClick={() => this.props.addItem(this.props.id)}><i className="fa fa-plus fa-2x" aria-hidden="true"></i></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -137,7 +137,7 @@ class ChartView extends React.Component {
                         }, this)}
 
                         <tr>
-                            <td></td>
+                            <td onClick={() => this.props.addAttr(this.props.id)}><i className="fa fa-plus fa-2x" aria-hidden="true"></i></td>
                             {deleteItems}
                             <td></td>
                         </tr>

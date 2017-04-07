@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import {connect} from 'react-redux'
-import {editAttr, editItem, editItemName, changeView, deleteAttr, deleteItem} from '../actions/actions'
+import {addItem, addAttr, editAttr, editItem, editItemName, changeView, deleteAttr, deleteItem} from '../actions/actions'
 import ChartView from '../components/chartView'
 import ZoomDragCircle from '../components/spiderView'
 import ProgressChart from '../components/testView'
@@ -14,11 +14,14 @@ class ViewContainer extends React.Component {
                 <div>
                     <ChartView items={this.props.items}
                        attributes={this.props.attributes}
+                       id={this.props.id}
                        editAttr={this.props.editAttr}
                        editItem={this.props.editItem}
                        editItemName={this.props.editItemName}
                        deleteAttr={this.props.deleteAttr}
-                       deleteItem={this.props.deleteItem}/>
+                       deleteItem={this.props.deleteItem}
+                       addAttr={this.props.addAttr}
+                       addItem={this.props.addItem}/>
                     <span/>
                 </div>
             );
@@ -49,6 +52,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        addAttr: (compId) => {
+            dispatch(addAttr(compId))
+        },
+        addItem: (compId) => {
+            dispatch(addItem(compId))
+        },
         editAttr: (id, name) => {
             dispatch(editAttr(id, name))
         },

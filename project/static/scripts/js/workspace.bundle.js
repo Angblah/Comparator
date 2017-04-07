@@ -3652,6 +3652,7 @@ var EDIT_NAME = exports.EDIT_NAME = 'EDIT_NAME';
 // ATTRIBUTE ACTIONS
 // ================================
 function addAttr(compId) {
+    console.log(compId);
     return function (dispatch) {
         return fetch('/addComparisonAttr', {
             method: 'POST',
@@ -3722,6 +3723,7 @@ var routeToDeleteAttr = exports.routeToDeleteAttr = function routeToDeleteAttr(a
 // ITEM ACTIONS
 // ================================
 function addItem(compId) {
+    console.log(compId);
     return function (dispatch) {
         return fetch('/addComparisonItem', {
             method: 'POST',
@@ -3883,6 +3885,8 @@ var loadItems = exports.loadItems = function loadItems(json) {
     };
 };
 
+// INVALID FUNCTION
+// Load the comparison json into the state
 function loadComp(json) {
     return function (dispatch) {
         dispatch(loadAttr(json.attributes));
@@ -3890,6 +3894,7 @@ function loadComp(json) {
     };
 }
 
+// Function to fetch the comparison from db
 function fetchComparison() {
     return function (dispatch) {
         return fetch('/getComparisonData').then(function (response) {
@@ -35364,11 +35369,14 @@ var ViewContainer = function (_React$Component) {
                     null,
                     _react2.default.createElement(_chartView2.default, { items: this.props.items,
                         attributes: this.props.attributes,
+                        id: this.props.id,
                         editAttr: this.props.editAttr,
                         editItem: this.props.editItem,
                         editItemName: this.props.editItemName,
                         deleteAttr: this.props.deleteAttr,
-                        deleteItem: this.props.deleteItem }),
+                        deleteItem: this.props.deleteItem,
+                        addAttr: this.props.addAttr,
+                        addItem: this.props.addItem }),
                     _react2.default.createElement('span', null)
                 );
             } else {
@@ -35400,6 +35408,12 @@ var mapStateToProps = function mapStateToProps(state) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
     return {
+        addAttr: function addAttr(compId) {
+            dispatch((0, _actions.addAttr)(compId));
+        },
+        addItem: function addItem(compId) {
+            dispatch((0, _actions.addItem)(compId));
+        },
         editAttr: function editAttr(id, name) {
             dispatch((0, _actions.editAttr)(id, name));
         },
@@ -36701,7 +36715,13 @@ var ChartView = function (_React$Component) {
                                 {item.name}
                             </th>*/
                             ),
-                            _react2.default.createElement("th", null)
+                            _react2.default.createElement(
+                                "th",
+                                { onClick: function onClick() {
+                                        return _this5.props.addItem(_this5.props.id);
+                                    } },
+                                _react2.default.createElement("i", { className: "fa fa-plus fa-2x", "aria-hidden": "true" })
+                            )
                         )
                     ),
                     _react2.default.createElement(
@@ -36738,7 +36758,13 @@ var ChartView = function (_React$Component) {
                         _react2.default.createElement(
                             "tr",
                             null,
-                            _react2.default.createElement("td", null),
+                            _react2.default.createElement(
+                                "td",
+                                { onClick: function onClick() {
+                                        return _this5.props.addAttr(_this5.props.id);
+                                    } },
+                                _react2.default.createElement("i", { className: "fa fa-plus fa-2x", "aria-hidden": "true" })
+                            ),
                             deleteItems,
                             _react2.default.createElement("td", null)
                         )
