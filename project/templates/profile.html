@@ -6,52 +6,41 @@
 <!-- Include the nav bar for a user who isn't logged in -->
 {% include "partials/userNavBar.html" %}
 
+<link href="../static/css/profile.css" rel="stylesheet">
+
 <body>
 
 <div id="all">
 
-    <div class="home-carousel">
-        <br>
-        <h1 align="center">{{ current_user.username }}'s Profile</h1>
-        <br>
+    <div class="nav-side">
+        <div>
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            <h1 align="center">{{ current_user.username }}'s Profile</h1>
+        </div>
+    </div>
+    <div class="profile-data">
+        <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal"
+                            data-target="#change-info-modal">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            <div class="prof-cont">
+                <h1>USERNAME</h1>
+                <h2>{{ current_user.username }}</h2>
+            </div>
+            
+            <hr>
+            <div class="prof-cont">
+                <h1>EMAIL</h1>
+                <h2>{{ current_user.email }}</h2>
+            </div>
+            <hr>
+            <div class="prof-cont">
+                <h1>PASSWORD</h1>
+                <h2>********</h2>
+            </div>
+        </button>
     </div>
 
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3" style="height: 100em">
-                    <!-- *** MENU *** -->
-                    <div class="panel panel-default sidebar-menu with-icons">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Categories</h3>
-                        </div>
-
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#changeImage">Profile Picture</a>
-                                </li>
-                                <li><a href="#changeUsername">Username</a>
-                                </li>
-                                <li><a href="template-content-boxes.html">E-mail Address</a>
-                                </li>
-                                <li><a href="template-blocks.html">Password</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- *** END MENU *** -->
-                </div>
-                <div class="col-md-9" id="changeImage" align="center">
-                    <br>
-                    <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal"
-                            data-target="#newImage-modal">
-                        <img src="../static/img/user.png" class="img-responsive hidden-xs"
-                             style="background-color: white; border-radius: 100%">
-                        <br>
-                        <p style="font-style: italic">Change image</p>
-                    </button>
-                </div>
-                <br>
+<!--                 <br>
                 <div class="col-md-3" id="changeUserData">
                     <form id="changeInfoForm">
 
@@ -93,40 +82,69 @@
                         <div class="form-group">
                             <input type="password" name="confirmPassword" class="form-control" id="confirmPassword"
                                    placeholder="Confirm New Password">
+                        </div> -->
+                        <!--TODO: change to use ajax + regular button (assuming modal used)-->
+       <!--                  <div class="text-center">
+                            <button type="submit" id="submitButton" class="btn btn-template-main">Submit</button>
+                        </div>
+                    </form>
+                </div> -->
+
+
+    <!-- *** Change User Info Modal *** -->
+    <div class="modal fade" id="change-info-modal" tabindex="-1" role="dialog" aria-labelledby="Change User Info" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="">Change User Info</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="changeInfoForm">
+
+                        <div class="alert alert-success" role="alert" id="successDiv" style="display:none">
+                            <strong>Success!</strong>
+                            <span>You have successfully changed your information!</span>
+                        </div>
+                        <div class="alert alert-danger" role="alert" id="overallErrorDiv" style="display:none">
+                            <strong>Uh oh!</strong>
+                            <span>At least one field must be filled out</span>
+                        </div>
+
+                        <div class="alert alert-danger" role="alert" id="usernameErrorDiv" style="display:none">
+                            <strong>Uh oh!</strong>
+                            <span id="usernameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="newUsername" class="form-control" id="newUsername"
+                                   placeholder="Enter New Username">
+                        </div>
+                        <div class="alert alert-danger" role="alert" id="emailErrorDiv" style="display:none">
+                            <strong>Uh oh!</strong>
+                            <span id="emailError"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="newEmail" class="form-control" id="newEmail"
+                                   placeholder="Enter New Email">
+                        </div>
+
+                        <div class="alert alert-danger" role="alert" id="passwordErrorDiv" style="display:none">
+                            <strong>Uh oh!</strong>
+                            <span id="passwordError"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="newPassword" class="form-control" id="newPassword"
+                                   placeholder="Enter New Password">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="confirmPassword" class="form-control" id="confirmPassword"
+                                   placeholder="Confirm New Password">
                         </div>
                         <!--TODO: change to use ajax + regular button (assuming modal used)-->
                         <div class="text-center">
                             <button type="submit" id="submitButton" class="btn btn-template-main">Submit</button>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- *** NEW IMAGE MODAL *** -->
-    <div class="modal fade" id="newImage-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="profilePic">Profile Picture</h4>
-                </div>
-                <div class="modal-body">
-                    <form action="/login" method="post">
-                        <div class="form-group">
-                            <img src="../static/img/user.png" class="img-responsive hidden-xs">
-                        </div>
-
-                        <p class="text-center">
-                            <button class="btn btn-template-main"><i class="fa fa-sign-in"></i> Login
-                            </button>
-                        </p>
-                    </form>
-
-                    <p class="text-center text-muted"><a href="#">Not registered yet?</a><br>
-                        <a href="forgotPassword">Forgot your password?</a></p>
-
                 </div>
             </div>
         </div>
@@ -138,82 +156,85 @@
 </div>
 </body>
 </html>
+
+<script src="{{ url_for('static', filename='scripts/js/profile.js') }}"></script>
+
 <script>
 
 // TODO: move to util js file and add any additional password requirements
-// returns true if password
-function validatePassword(password, confirm) {
+// // returns true if password
+// function validatePassword(password, confirm) {
 
-    if (password != confirm) {
-        return false;
-    } else {
-        return true;
-    }
-};
+//     if (password != confirm) {
+//         return false;
+//     } else {
+//         return true;
+//     }
+// };
 
-function showMessage(label, message) {
-    $('#' + label).text(message);
-    $('#' + label + 'Div').show();
-}
+// function showMessage(label, message) {
+//     $('#' + label).text(message);
+//     $('#' + label + 'Div').show();
+// }
 
-$(function() {
-    $('#newPassword').add('#confirmPassword').on('focusout', function() {
-        if (validatePassword($('#newPassword').val(), $('#confirmPassword').val())) {
-            $("#passwordErrorDiv").hide();
-        } else {
-            showMessage('passwordError', 'Passwords must match');
-        }
-    });
-});
+// $(function() {
+//     $('#newPassword').add('#confirmPassword').on('focusout', function() {
+//         if (validatePassword($('#newPassword').val(), $('#confirmPassword').val())) {
+//             $("#passwordErrorDiv").hide();
+//         } else {
+//             showMessage('passwordError', 'Passwords must match');
+//         }
+//     });
+// });
 
-$(function() {
-  $('button#submitButton').bind('click', function() {
-
-
-    var newUsername = $('#newUsername').val();
-    var newEmail = $('#newEmail').val();
-    var newPassword = $('#newPassword').val();
-    var confirmPassword = $('#confirmPassword').val();
-
-    if (!validatePassword(newPassword, confirmPassword)) {
-        showMessage('passwordError', 'Passwords must match');
-        return false;
-    } else {
-        $("#passwordErrorDiv").hide();
-    }
-
-    // at least one field must be filled out
-    if (!newUsername && !newEmail && !newPassword) {
-        $("#overallErrorDiv").show();
-        return false;
-    } else {
-        $("#overallErrorDiv").hide();
-    }
+// $(function() {
+//   $('button#submitButton').bind('click', function() {
 
 
-    $.getJSON('/profile_form', {
-        newUsername: newUsername,
-        newEmail: newEmail,
-        newPassword: newPassword
-    }, function(data) {
-        if (!data.error) {
-            $("#successDiv").show();
-        } else {
-            $("#successDiv").hide();
-        }
-        if (data.username_error) {
-            showMessage('usernameError', data.username_error);
-        } else {
-            $("#usernameErrorDiv").hide();
-        }
-        if (data.email_error) {
-            showMessage("#emailError", data.email_error);
-        } else {
-            $("#emailErrorDiv").hide();
-        }
-    });
-    return false;
-  });
-});
+//     var newUsername = $('#newUsername').val();
+//     var newEmail = $('#newEmail').val();
+//     var newPassword = $('#newPassword').val();
+//     var confirmPassword = $('#confirmPassword').val();
+
+//     if (!validatePassword(newPassword, confirmPassword)) {
+//         showMessage('passwordError', 'Passwords must match');
+//         return false;
+//     } else {
+//         $("#passwordErrorDiv").hide();
+//     }
+
+//     // at least one field must be filled out
+//     if (!newUsername && !newEmail && !newPassword) {
+//         $("#overallErrorDiv").show();
+//         return false;
+//     } else {
+//         $("#overallErrorDiv").hide();
+//     }
+
+
+//     $.getJSON('/profile_form', {
+//         newUsername: newUsername,
+//         newEmail: newEmail,
+//         newPassword: newPassword
+//     }, function(data) {
+//         if (!data.error) {
+//             $("#successDiv").show();
+//         } else {
+//             $("#successDiv").hide();
+//         }
+//         if (data.username_error) {
+//             showMessage('usernameError', data.username_error);
+//         } else {
+//             $("#usernameErrorDiv").hide();
+//         }
+//         if (data.email_error) {
+//             showMessage("#emailError", data.email_error);
+//         } else {
+//             $("#emailErrorDiv").hide();
+//         }
+//     });
+//     return false;
+//   });
+// });
 
 </script>
