@@ -9,7 +9,7 @@ import ProgressChart from '../components/testView'
 class ViewContainer extends React.Component {
     render() {
         //TODO: Create ViewContainer toggle based on view of state.
-        if (this.props.view === 'CHART') {
+        if (this.props.view === 'CHART' &&  this.props.userId == this.props.info.account_id) {
             return (
                 <div>
                     <ChartView items={this.props.items}
@@ -22,6 +22,14 @@ class ViewContainer extends React.Component {
                        deleteItem={this.props.deleteItem}
                        addAttr={this.props.addAttr}
                        addItem={this.props.addItem}/>
+                    <span/>
+                </div>
+            );
+        } else if (this.props.view === 'CHART' &&  this.props.userId != this.props.info.account_id) {
+            return (
+                <div>
+                    <ChartView items={this.props.items}
+                       attributes={this.props.attributes}/>
                     <span/>
                 </div>
             );

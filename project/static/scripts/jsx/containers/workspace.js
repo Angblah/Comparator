@@ -40,6 +40,8 @@ var workspaceElem = document.getElementById("workspace");
 // Pull data from jinja injection and parse as JSON
 var json = JSON.parse(workspaceElem.dataset.comparison);
 
+var userId = workspaceElem.dataset.userid;
+
 // Load data into initial state for Redux
 var initialState = {
         id: json.id,
@@ -51,6 +53,8 @@ var initialState = {
         }};
 
 console.log(initialState);
+console.log(initialState.info.account_id);
+console.log(userId);
 
 // Set up logger
 const loggerMiddleware = createLogger();
@@ -64,23 +68,31 @@ const store = createStore(workspaceState, initialState,
 
 class Workspace extends React.Component {
     render() {
-        return (
-            <div id="wrapper">
-                <Navbar/>
-                <Toolbar/>
-                <ViewContainer/>
-            </div>
-        );
+        if (initialState.info.account_id == userId) {
+            return (
+                <div id="wrapper">
+                    <Navbar userId={this.props.userId}/>
+                    <Toolbar/>
+                    <ViewContainer userId={this.props.userId}/>
+                </div>
+            );
+        } else {
+            return (
+                <div id="wrapper">
+                    <Navbar userId={this.props.userId}/>
+                    <ViewContainer userId={this.props.userId}/>
+                </div>
+            );
+        }
     }
 }
 
 // ========================================
 
 
-
 ReactDOM.render(
     <Provider store={store}>
-        <Workspace/>
+        <Workspace userId={userId}/>
     </Provider>,
     workspaceElem
 );

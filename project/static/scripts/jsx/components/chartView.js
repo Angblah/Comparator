@@ -4,13 +4,17 @@ import React from 'react';
 class ChartView extends React.Component {
     constructor(props) {
         super(props);
-        
-        this.toggleEditing = this.toggleEditing.bind(this);
-        this.clearEditing = this.clearEditing.bind(this);
+        if (this.props.id) {
+            this.toggleEditing = this.toggleEditing.bind(this);
+            this.clearEditing = this.clearEditing.bind(this);
 
-        this.state = {};
+            this.state = {isGuestView: false};
+        } else {
+            this.state = {isGuestView: true};
+        }
+
         // TODO: Should eventually extract editing into a reducer
-        this.state.editing = {attr: undefined, item: undefined};
+            this.state.editing = {attr: undefined, item: undefined};
     }
 
     clearEditing() {
@@ -23,46 +27,86 @@ class ChartView extends React.Component {
 
     renderAttributeOrEditField(attr) {
         if (this.state.editing.attr === attr.id && this.state.editing.item === undefined) {
-            return(
-                <td>
-                    <input 
-                    ref={input => input && input.focus()}
-                    className="form-control"
-                    defaultValue={attr.name}
-                    onBlur={(evt) => {this.props.editAttr(attr.id, evt.target.value); this.clearEditing();}}
-                    />
-                </td>
-            );
+            if (!this.state.isGuestView) {
+                return(
+                    <td>
+                        <input
+                        ref={input => input && input.focus()}
+                        className="form-control"
+                        defaultValue={attr.name}
+                        onBlur={(evt) => {this.props.editAttr(attr.id, evt.target.value); this.clearEditing();}}
+                        />
+                    </td>
+                );
+            } else {
+                return(
+                    <td>
+                        <input
+                        className="form-control"
+                        defaultValue={attr.name}
+                        />
+                    </td>
+                );
+            }
         } else {
-            return(
-                <td
-                onClick={() => this.toggleEditing(attr.id, undefined)}
-                key={attr.id}
-                >{attr.name}</td>
-            );
+            if (!this.state.isGuestView) {
+                return(
+                    <td
+                    onClick={() => this.toggleEditing(attr.id, undefined)}
+                    key={attr.id}
+                    >{attr.name}</td>
+                );
+            } else {
+                return(
+                    <td
+                    key={attr.id}
+                    >{attr.name}</td>
+                );
+            }
+
         }
     }
 
     renderItemOrEditField(item, attrID) {
         if (this.state.editing.attr === attrID && this.state.editing.item === item.id) {
-            return(
-                <td>
-                    <input 
-                    ref={input => input && input.focus()}
-                    className="form-control"
-                    defaultValue={item[attrID].val}
-                    onBlur={(evt) => {this.props.editItem(item.id, attrID, evt.target.value); this.clearEditing();}}
-                    />
-                </td>
-            );
+            if (!this.state.isGuestView) {
+                return(
+                    <td>
+                        <input
+                        ref={input => input && input.focus()}
+                        className="form-control"
+                        defaultValue={item[attrID].val}
+                        onBlur={(evt) => {this.props.editItem(item.id, attrID, evt.target.value); this.clearEditing();}}
+                        />
+                    </td>
+                );
+            } else {
+                return(
+                    <td>
+                        <input
+                        className="form-control"
+                        defaultValue={item[attrID].val}
+                        />
+                    </td>
+                );
+            }
         } else {
             if (item[attrID]) {
-                return(
-                    <td
-                    onClick={() => this.toggleEditing(attrID, item.id)}
-                    key={item.id+item.id}
-                    >{item[attrID].val}</td>
-                );
+                if (!this.state.isGuestView) {
+                    return(
+                        <td
+                        onClick={() => this.toggleEditing(attrID, item.id)}
+                        key={item.id+item.id}
+                        >{item[attrID].val}</td>
+                    );
+                } else {
+                    return(
+                        <td
+                        key={item.id+item.id}
+                        >{item[attrID].val}</td>
+                    );
+                }
+
             } else {
                 return( <td></td>);
             }
@@ -71,32 +115,56 @@ class ChartView extends React.Component {
 
     renderItemNameOrEditField(item) {
         if (this.state.editing.item === item.id && this.state.editing.attr === undefined) {
-            return(
-                <th>
-                    <input
-                    ref={input => input && input.focus()}
-                    className="form-control"
-                    defaultValue={item.name}
-                    onBlur={(evt) => {this.props.editItemName(item.id, evt.target.value); this.clearEditing();}}
-                    />
-                </th>
-            );
+            if (!this.state.isGuestView) {
+                return(
+                    <th>
+                        <input
+                        ref={input => input && input.focus()}
+                        className="form-control"
+                        defaultValue={item.name}
+                        onBlur={(evt) => {this.props.editItemName(item.id, evt.target.value); this.clearEditing();}}
+                        />
+                    </th>
+                );
+            } else {
+                return(
+                    <th>
+                        <input
+                        className="form-control"
+                        defaultValue={item.name}
+                        />
+                    </th>
+                );
+            }
         } else {
-            return(
-                <th
-                onClick={() => this.toggleEditing(undefined, item.id)}
-                key={item.id}
-                >{item.name}</th>
-            );
+            if (!this.state.isGuestView) {
+                return(
+                    <th
+                    onClick={() => this.toggleEditing(undefined, item.id)}
+                    key={item.id}
+                    >{item.name}</th>
+                );
+            } else {
+                return(
+                    <th
+                    key={item.id}
+                    >{item.name}</th>
+                );
+            }
+
         }
     }
 
     render () {
 
-        var deleteItems = this.props.items.map(item => 
-            <td onClick={() => this.props.deleteItem(item.id)}>
-                <i className="fa fa-minus-circle fa-2x" aria-hidden="true"></i>
-            </td>);
+        const isGuestView = this.state.isGuestView;
+
+        if (!isGuestView) {
+            var deleteItems = this.props.items.map(item =>
+                <td onClick={() => this.props.deleteItem(item.id)}>
+                    <i className="fa fa-minus-circle fa-2x" aria-hidden="true"></i>
+                </td>);
+        }
 
         return (
             <div>
@@ -112,7 +180,10 @@ class ChartView extends React.Component {
                                     {item.name}
                                 </th>*/
                             )}
+
+                            {!isGuestView &&
                             <th onClick={() => this.props.addItem(this.props.id)}><i className="fa fa-plus fa-2x" aria-hidden="true"></i></th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -132,15 +203,19 @@ class ChartView extends React.Component {
                                 <tr>
                                     {attrName}
                                     {rowCells}
+                                    {!isGuestView &&
                                     <td onClick={() => this.props.deleteAttr(attr.id)}><i className="fa fa-minus-circle fa-2x" aria-hidden="true"></i></td>
+                                    }
                                 </tr>);
                         }, this)}
 
-                        <tr>
-                            <td onClick={() => this.props.addAttr(this.props.id)}><i className="fa fa-plus fa-2x" aria-hidden="true"></i></td>
-                            {deleteItems}
-                            <td></td>
-                        </tr>
+                        {!isGuestView &&
+                            <tr>
+                                <td onClick={() => this.props.addAttr(this.props.id)}><i className="fa fa-plus fa-2x" aria-hidden="true"></i></td>
+                                {deleteItems}
+                                <td></td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
