@@ -47,6 +47,7 @@ def uploadAvatar():
             upload_result = upload(file_to_upload)
             image_id = upload_result['public_id']
 
+            # TODO: conversion to ajax
             # TODO: keep track of user total image file size, limit upload accordingly
 
             query = text("""
