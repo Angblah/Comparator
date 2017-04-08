@@ -16,19 +16,24 @@
         <div>
             <img id="avatar" src="../static/img/user.png" class="img-responsive hidden-xs"
                  style="background-color: white; border-radius: 100%">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
+            <a id='editAvatar'>
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+            </a>
+            <form id="avatarForm" action="/uploadAvatar" enctype="multipart/form-data" method="POST">
+                <input id="avatarUpload" name="avatar" type="file" onchange="form.submit()" accept="image/*" style="display: none;" required checked/>
+            </form>
             <h1 align="center">{{ current_user.username }}'s Profile</h1>
         </div>
     </div>
     <div class="profile-data">
         <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal"
-                            data-target="#change-info-modal">
+                data-target="#change-info-modal">
             <i class="fa fa-pencil" aria-hidden="true"></i>
             <div class="prof-cont">
                 <h1>USERNAME</h1>
                 <h2>{{ current_user.username }}</h2>
             </div>
-            
+
             <hr>
             <div class="prof-cont">
                 <h1>EMAIL</h1>
@@ -42,59 +47,60 @@
         </button>
     </div>
 
-<!--                 <br>
-                <div class="col-md-3" id="changeUserData">
-                    <form id="changeInfoForm">
+    <!--                 <br>
+                    <div class="col-md-3" id="changeUserData">
+                        <form id="changeInfoForm">
 
-                        <div class="alert alert-success" role="alert" id="successDiv" style="display:none">
-                            <strong>Success!</strong>
-                            <span>You have successfully changed your information!</span>
-                        </div>
-                        <div class="alert alert-danger" role="alert" id="overallErrorDiv" style="display:none">
-                            <strong>Uh oh!</strong>
-                            <span>At least one field must be filled out</span>
-                        </div>
+                            <div class="alert alert-success" role="alert" id="successDiv" style="display:none">
+                                <strong>Success!</strong>
+                                <span>You have successfully changed your information!</span>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="overallErrorDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span>At least one field must be filled out</span>
+                            </div>
 
-                        <div class="alert alert-danger" role="alert" id="usernameErrorDiv" style="display:none">
-                            <strong>Uh oh!</strong>
-                            <span id="usernameError"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="newUsername" class="form-control" id="newUsername"
-                                   placeholder="Enter New Username">
-                        </div>
+                            <div class="alert alert-danger" role="alert" id="usernameErrorDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="usernameError"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="newUsername" class="form-control" id="newUsername"
+                                       placeholder="Enter New Username">
+                            </div>
 
-                        <div class="alert alert-danger" role="alert" id="emailErrorDiv" style="display:none">
-                            <strong>Uh oh!</strong>
-                            <span id="emailError"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="newEmail" class="form-control" id="newEmail"
-                                   placeholder="Enter New Email">
-                        </div>
+                            <div class="alert alert-danger" role="alert" id="emailErrorDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="emailError"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="newEmail" class="form-control" id="newEmail"
+                                       placeholder="Enter New Email">
+                            </div>
 
-                        <div class="alert alert-danger" role="alert" id="passwordErrorDiv" style="display:none">
-                            <strong>Uh oh!</strong>
-                            <span id="passwordError"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="password" name="newPassword" class="form-control" id="newPassword"
-                                   placeholder="Enter New Password">
-                        </div>
-                        <div class="form-group">
-                            <input type="password" name="confirmPassword" class="form-control" id="confirmPassword"
-                                   placeholder="Confirm New Password">
-                        </div> -->
-                        <!--TODO: change to use ajax + regular button (assuming modal used)-->
-       <!--                  <div class="text-center">
-                            <button type="submit" id="submitButton" class="btn btn-template-main">Submit</button>
-                        </div>
-                    </form>
-                </div> -->
+                            <div class="alert alert-danger" role="alert" id="passwordErrorDiv" style="display:none">
+                                <strong>Uh oh!</strong>
+                                <span id="passwordError"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="newPassword" class="form-control" id="newPassword"
+                                       placeholder="Enter New Password">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="confirmPassword" class="form-control" id="confirmPassword"
+                                       placeholder="Confirm New Password">
+                            </div> -->
+    <!--TODO: change to use ajax + regular button (assuming modal used)-->
+    <!--                  <div class="text-center">
+                         <button type="submit" id="submitButton" class="btn btn-template-main">Submit</button>
+                     </div>
+                 </form>
+             </div> -->
 
 
     <!-- *** Change User Info Modal *** -->
-    <div class="modal fade" id="change-info-modal" tabindex="-1" role="dialog" aria-labelledby="Change User Info" aria-hidden="true">
+    <div class="modal fade" id="change-info-modal" tabindex="-1" role="dialog" aria-labelledby="Change User Info"
+         aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -160,10 +166,10 @@
 </html>
 
 <script src="{{ url_for('static', filename='scripts/js/profile.js') }}"></script>
-<script src="static/node_modules/jquery/dist/jquery.js"                                          type="text/javascript"></script>
-<script src="static/node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js"              type="text/javascript"></script>
-<script src="static/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js"              type="text/javascript"></script>
-<script src="static/node_modules/blueimp-file-upload/js/jquery.fileupload.js"                    type="text/javascript"></script>
+<script src="static/node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
+<script src="static/node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js" type="text/javascript"></script>
+<script src="static/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js" type="text/javascript"></script>
+<script src="static/node_modules/blueimp-file-upload/js/jquery.fileupload.js" type="text/javascript"></script>
 
 <script src="static/node_modules/cloudinary-jquery-file-upload/cloudinary-jquery-file-upload.js"></script>
 
@@ -179,6 +185,13 @@
         }
         $('#avatar').attr("src", img_url);
     });
+
+    // clicking on pencil icon on avatar prompts user to upload image file
+    $("#editAvatar").click(function() {
+         $('#avatarUpload').click();
+    });
+
+
 </script>
 
 <script>
@@ -258,5 +271,6 @@
 //     return false;
 //   });
 // });
+
 
 </script>

@@ -35,6 +35,38 @@ def load_user(user_id):
     # Given user_id, return the associated User object
     return Account.query.filter_by(id=user_id).one()
 
+@login_required
+@app.route('/uploadAvatar', methods=["GET", "POST"])
+def uploadAvatar():
+
+    from cloudinary.uploader import upload, destroy
+
+    if request.method == 'POST':
+        file_to_upload = request.files['avatar']
+        if file_to_upload:
+            upload_result = upload(file_to_upload)
+            image_id = upload_result['public_id']
+
+            # TODO: keep track of user total image file size, limit upload accordingly
+
+            query = text("""
+            select avatar from account where id = :account_id;
+            """)
+
+            old_avatar_id = db.engine.execute(query, account_id=current_user.id).scalar()
+            if old_avatar_id:
+                # TODO: tag images with user id for easier bulk delete
+                # NOTE: image not replaced with same id as cached images may taken a while to clear from CDN
+                # consider changing if speed becomes a concern
+                destroy(old_avatar_id, invalidate=True)
+
+            query = text("""
+            update account set avatar = :image_id where id = :account_id;
+            """)
+            db.engine.execute(query.execution_options(autocommit=True), image_id=image_id, account_id=current_user.id)
+            return redirect(url_for('profile'))
+
+@login_required
 @app.route('/getUserAvatarName', methods=["GET", "POST"])
 def getUserAvatarName():
     query = text("""
@@ -258,7 +290,7 @@ def profile_form():
 
 @app.route('/profile')
 @login_required
-def myProfile():
+def profile():
     return render_template('profile.html')
 
 
@@ -401,7 +433,6 @@ def logout():
 # Taken from https://github.com/cloudinary/pycloudinary/tree/master/samples/basic_flask (remove/adapt later for workspace)
 @app.route('/image_upload_example', methods=['GET', 'POST'])
 def upload_file():
-    from flask import request, render_template
     from cloudinary.uploader import upload
     from cloudinary.utils import cloudinary_url
 
