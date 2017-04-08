@@ -1,3 +1,4 @@
+// Make sure the password meets requirements and other validation
 // Length: 6 min 
 $(function() {
     $('#registerPassword').on('focusout', function(e) {
@@ -14,6 +15,7 @@ $(function() {
     });
 });
 
+// Make sure the pass confirmation matches the password
 $(function() {
     $('#registerPasswordConfirm').on('focusout', function(e) {
         var registerPassword = $('#registerPassword').val();
@@ -37,6 +39,7 @@ $(function() {
     });
 });
 
+// Check username is alphanumeric and other validation for field
 // Alpha-numeric With ._ Length: 2-25 (For PJ)
 $(function() {
     $('#registerUsername').on('focusout', function(e) {
@@ -55,7 +58,7 @@ $(function() {
     }); 
 });
 
-// Something@Comething.something
+// Check for valid emails and other validation for field
 $(function() {
     $('#registerEmail').on('focusout', function(e) {
         var email = $('#registerEmail').val();
@@ -71,6 +74,7 @@ $(function() {
     }); 
 });
 
+// Check the fields before making a register call to database
 $(function() {
     $('button#registerButton').bind('click', function() {
 
@@ -83,10 +87,10 @@ $(function() {
         }
 
         $.getJSON('/add_user', {
-        registerEmail: $('input[name="registerEmail"]').val(),
-        registerUsername: $('input[name="registerUsername"]').val(),
-        registerPassword: $('input[name="registerPassword"]').val(),
-        registerPasswordConfirm: $('input[name="registerPasswordConfirm"]').val()
+            registerEmail: $('input[name="registerEmail"]').val(),
+            registerUsername: $('input[name="registerUsername"]').val(),
+            registerPassword: $('input[name="registerPassword"]').val(),
+            registerPasswordConfirm: $('input[name="registerPasswordConfirm"]').val()
         }, function(data) {
         if (data.redirect) {
             window.location.href = data.redirect;
@@ -105,6 +109,7 @@ $(function() {
     });
 });
 
+// Clear the signup form when exiting modal
 $(function() {
     $('#closeSignUp').on('click', function(e) {
         clearForm("registerForm", "registerButton");
@@ -147,7 +152,7 @@ function setGroupInvalid(formGroup, errorMessage) {
     $("#" + formGroup).addClass("has-error");
 }
 
-// Iterates through form groups to check if form is valid, sets submitButton to disaabled
+// Iterates through form groups to check if form is valid, sets submitButton to disabled
 function checkFormValid(form, submitButton) {
     var valid = true;
     $('#' + form + ' *').filter('.form-group').each(function(){
@@ -165,6 +170,7 @@ function checkFormValid(form, submitButton) {
     }
 }
 
+// Function to clear the form of indicators
 function clearForm(form, submitButton) {
     $('#' + form + ' *').filter('.form-group').each(function(){
         $('#' + this.id + 'helpBlock').remove();

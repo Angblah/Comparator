@@ -85,6 +85,7 @@
                     <div class="modal-body" style="height:350px; overflow-y: scroll">
                         <div class="cc-selector">
                             <div class="panel-group accordion" id="newTemplate">
+<<<<<<< HEAD
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseNew">New Template</a></h4>
@@ -144,32 +145,37 @@
                                                 </ul>
                                                 <button class="btn btn-template-main" onclick="location.href='{{'13' | share_comparison(current_user.id)}}'">Start Comparing</button>
                                             </div>
+=======
+                                {% for (id, name), attribute_names in sample_temp.items() %}
+                                    <div class="panel panel-default" id="{{'Template' ~ id}}">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#{{'Collapse' ~ id}}">{{name}}</a></h4>
+>>>>>>> origin/master
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="panel panel-default" id="washerTemplate">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#chooseTemplate" href="#collapseWashingMachines">Washing Machines</a></h4>
-                                    </div>
-                                    <div id="collapseWashingMachines" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+                                        <div id="{{'Collapse' ~ id}}" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <img src="http://foundation.zurb.com/assets/img/sites-templates/f6-template-realestate.svg" class="img-thumbnail" alt="Cinque Terre" width="247" height="192">
+                                                    </div>
+                                                    {% if attribute_names %}
+                                                        <p>Specifications include:</p>
+                                                        <ul>
+                                                            {% for attribute_name in attribute_names %}
+                                                                <li>{{attribute_name}}</li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% else %}
+                                                        <p>Create a custom template and specify your fields</p>
+                                                    {% endif %}
+                                                    <form action = "/ComparisonFromTemplate" method = "post">
+                                                        <button name="id" value={{id}} class="btn btn-template-main">Start Comparing</button>
+                                                    </form>
                                                 </div>
-                                                <p>Specifications include:</p>
-                                                <ul>
-                                                    <li>Style</li>
-                                                    <li>Total Capacity</li>
-                                                    <li>Washer Control Features</li>
-                                                    <li>Wash/Rinse Temperatures</li>
-                                                </ul>
-                                                <button class="btn btn-template-main" onclick="location.href='{{'12' | share_comparison(current_user.id)}}'">Start Comparing</button>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -296,11 +302,17 @@
 
                 </script> -->
 
+<<<<<<< HEAD
     </div>
 
     <!-- Include the footer for things like copyright info and JS scripts -->
     {% include "partials/footer.html" %}
     </div>
     <!--<script src="../static/scripts/js/dashboard.bundle.js"></script>-->
+=======
+<!-- Include the footer for things like copyright info and JS scripts -->
+{% include "partials/footer.html" %}
+<!--<script src="../static/scripts/js/dashboard.bundle.js"></script>-->
+>>>>>>> origin/master
 </body>
 </html>
