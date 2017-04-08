@@ -9,11 +9,10 @@ class Navbar extends React.Component {
         this.toggleEditing = this.toggleEditing.bind(this);
         this.clearEditing = this.clearEditing.bind(this);
 
-        this.state = {editingName: null};
+        this.state = {editingName: null, isGuestView: true};
 
-        var isGuestView = true;
-        if (this.props.userId === this.props.info.account_id) {
-            isGuestView = false;
+        if (this.props.userId == this.props.info.account_id) {
+            this.state.isGuestView = false;
         }
 
     }
@@ -63,10 +62,13 @@ class Navbar extends React.Component {
     }
 
     render() {
+
+        const isGuestView = this.state.isGuestView;
+
         return (
             <nav className="navbar navbar-light navbar-toggleable-sm">
                 {this.renderNameOrInput()}
-                {this.isGuestView &&
+                {!isGuestView &&
                 <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i className="fa fa-trash" aria-hidden="true"></i></button>
                 }
                 <div className="modal fade" id="deleteModal" tabIndex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -91,9 +93,14 @@ class Navbar extends React.Component {
 
                 <div className="navbar-collapse collapse dual-collapse">
                     <ul className="navbar-nav ml-auto">
+                        {isGuestView ?
+                        <li className="nav-item">
+                            <a className="nav-link" href="/"><img src={"/static/img/logo.png"} height="40px"></img></a>
+                        </li> :
                         <li className="nav-item">
                             <a className="nav-link" href="/dashboard"><img src={"/static/img/logo.png"} height="40px"></img></a>
                         </li>
+                        }
                     </ul>
                 </div>
             </nav>

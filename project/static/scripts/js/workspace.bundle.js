@@ -35161,11 +35161,10 @@ var Navbar = function (_React$Component) {
         _this.toggleEditing = _this.toggleEditing.bind(_this);
         _this.clearEditing = _this.clearEditing.bind(_this);
 
-        _this.state = { editingName: null };
+        _this.state = { editingName: null, isGuestView: true };
 
-        var isGuestView = true;
-        if (_this.props.userId === _this.props.info.account_id) {
-            isGuestView = false;
+        if (_this.props.userId == _this.props.info.account_id) {
+            _this.state.isGuestView = false;
         }
 
         return _this;
@@ -35231,11 +35230,14 @@ var Navbar = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
+
+            var isGuestView = this.state.isGuestView;
+
             return _react2.default.createElement(
                 'nav',
                 { className: 'navbar navbar-light navbar-toggleable-sm' },
                 this.renderNameOrInput(),
-                this.isGuestView && _react2.default.createElement(
+                !isGuestView && _react2.default.createElement(
                     'button',
                     { type: 'button blank-bg', className: 'btn btn-secondary', 'data-toggle': 'modal', 'data-target': '#deleteModal' },
                     _react2.default.createElement('i', { className: 'fa fa-trash', 'aria-hidden': 'true' })
@@ -35299,7 +35301,15 @@ var Navbar = function (_React$Component) {
                     _react2.default.createElement(
                         'ul',
                         { className: 'navbar-nav ml-auto' },
-                        _react2.default.createElement(
+                        isGuestView ? _react2.default.createElement(
+                            'li',
+                            { className: 'nav-item' },
+                            _react2.default.createElement(
+                                'a',
+                                { className: 'nav-link', href: '/' },
+                                _react2.default.createElement('img', { src: "/static/img/logo.png", height: '40px' })
+                            )
+                        ) : _react2.default.createElement(
                             'li',
                             { className: 'nav-item' },
                             _react2.default.createElement(
@@ -83945,8 +83955,6 @@ var initialState = {
     } };
 
 console.log(initialState);
-console.log(initialState.info.account_id);
-console.log(userId);
 
 // Set up logger
 var loggerMiddleware = (0, _reduxLogger2.default)();

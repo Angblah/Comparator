@@ -53,8 +53,6 @@ var initialState = {
         }};
 
 console.log(initialState);
-console.log(initialState.info.account_id);
-console.log(userId);
 
 // Set up logger
 const loggerMiddleware = createLogger();
