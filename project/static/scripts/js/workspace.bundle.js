@@ -35301,15 +35301,7 @@ var Navbar = function (_React$Component) {
                     _react2.default.createElement(
                         'ul',
                         { className: 'navbar-nav ml-auto' },
-                        isGuestView ? _react2.default.createElement(
-                            'li',
-                            { className: 'nav-item' },
-                            _react2.default.createElement(
-                                'a',
-                                { className: 'nav-link', href: '/' },
-                                _react2.default.createElement('img', { src: "/static/img/logo.png", height: '40px' })
-                            )
-                        ) : _react2.default.createElement(
+                        _react2.default.createElement(
                             'li',
                             { className: 'nav-item' },
                             _react2.default.createElement(

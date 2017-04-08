@@ -214,8 +214,10 @@ def index2():
 
 # dashboard
 @app.route('/dashboard')
-@login_required
 def dashboard():
+    if current_user.is_anonymous:
+        render_template('index.html')
+
     # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
     recent_comp = get_recent_user_comparisons(current_user.id, 5, get_json=False)
     all_comp = get_user_comparisons(current_user.id, get_json=False)
