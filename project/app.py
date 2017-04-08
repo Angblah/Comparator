@@ -432,10 +432,10 @@ def view_comparison(token):
 
     # TODO: see why is_anonymous sometimes boolean, sometimes bound method
     if not current_user.is_anonymous and user_id == current_user.id:
-        return render_template('workspace.html', comparison=get_comparison(comparison_id))
+        return render_template('workspace.html', comparison=get_comparison(comparison_id), userId=current_user.id)
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
-        abort(404)
+        return render_template('workspace.html', comparison=get_comparison(comparison_id), userId=current_user.id)
 
 
 @app.route('/template/<token>')
