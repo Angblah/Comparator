@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, url_for, jsonify, abort, redirect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 import os
@@ -33,6 +34,13 @@ def index():
 def load_user(user_id):
     # Given user_id, return the associated User object
     return Account.query.filter_by(id=user_id).one()
+
+@app.route('/getUserAvatarName', methods=["GET", "POST"])
+def getUserAvatarName():
+    query = text("""
+    select avatar from Account where id = :id;
+    """)
+    return json.dumps(db.engine.execute(query, id=current_user.id).scalar())
 
 @app.route('/ComparisonFromTemplate', methods=["POST"])
 def comparisonFromTemplate():

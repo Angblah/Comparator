@@ -14,6 +14,8 @@
 
     <div class="nav-side">
         <div>
+            <img id="avatar" src="../static/img/user.png" class="img-responsive hidden-xs"
+                 style="background-color: white; border-radius: 100%">
             <i class="fa fa-pencil" aria-hidden="true"></i>
             <h1 align="center">{{ current_user.username }}'s Profile</h1>
         </div>
@@ -158,6 +160,26 @@
 </html>
 
 <script src="{{ url_for('static', filename='scripts/js/profile.js') }}"></script>
+<script src="static/node_modules/jquery/dist/jquery.js"                                          type="text/javascript"></script>
+<script src="static/node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js"              type="text/javascript"></script>
+<script src="static/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js"              type="text/javascript"></script>
+<script src="static/node_modules/blueimp-file-upload/js/jquery.fileupload.js"                    type="text/javascript"></script>
+
+<script src="static/node_modules/cloudinary-jquery-file-upload/cloudinary-jquery-file-upload.js"></script>
+
+
+<script>
+    $.cloudinary.config({ cloud_name: "comparator"});
+    $.getJSON('/getUserAvatarName', {}, function(data) {
+        var img_url;
+        if (data == null) {
+            img_url = $.cloudinary.url("defaultAvatar.png", {width: 100, height:100, crop:'fill'});
+        } else {
+            img_url = $.cloudinary.url(data, {width: 100, height:100, crop:'fill'});
+        }
+        $('#avatar').attr("src", img_url);
+    });
+</script>
 
 <script>
 

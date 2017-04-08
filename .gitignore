@@ -5,7 +5,8 @@
 env
 venv
 
-node_modules/
+/node_modules/
 npm-debug.log
-project/static/bower_components/
 .module-cache
+.idea/
+project/static/etc/
