@@ -3,6 +3,7 @@ export const EDIT_ATTR = 'EDIT_ATTR'
 export const DELETE_ATTR = 'DELETE_ATTR'
 export const ADD_ITEM = 'ADD_ITEM'
 export const EDIT_ITEM = 'EDIT_ITEM'
+export const EDIT_ITEM_WORTH = 'EDIT_ITEM_WORTH'
 export const EDIT_ITEM_NAME = 'EDIT_ITEM_NAME'
 export const DELETE_ITEM = 'DELETE_ITEM'
 export const CHANGE_VIEW = 'CHANGE_VIEW'
@@ -119,6 +120,15 @@ export function routeToEditItem(itemId, attrId, value) {
         itemId,
         attrId,
         value
+    }
+}
+
+export function editItemWorth(itemId, attrId, worth) {
+    return {
+        type: 'EDIT_ITEM_WORTH',
+        itemId,
+        attrId,
+        worth
     }
 }
 

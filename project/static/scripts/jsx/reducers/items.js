@@ -2,6 +2,7 @@ import {
     ADD_ITEM,
     EDIT_ITEM,
     LOAD_ITEMS,
+    EDIT_ITEM_WORTH,
     EDIT_ITEM_NAME,
     DELETE_ITEM
 } from '../actions/actions'
@@ -40,7 +41,22 @@ const items = (state = [], action) => {
 
                 return {
                     ...item,
-                    [action.attrId]: {val: action.value}
+                    [action.attrId]: {val: action.value, worth: item[action.attrId].worth}
+                }
+            });
+
+        // Edit the item
+        case EDIT_ITEM_WORTH:
+            // Pass it itemID, attrId, Value. (adds attrId if doesnt exist)
+            var newState = [...state]
+            return newState.map((item) => {
+                if (item.id !== action.itemId) {
+                    return item;
+                }
+
+                return {
+                    ...item,
+                    [action.attrId]: {val: item[action.attrId].val, worth: action.worth}
                 }
             });
 

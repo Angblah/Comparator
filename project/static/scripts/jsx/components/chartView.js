@@ -175,10 +175,6 @@ class ChartView extends React.Component {
                             <th></th>
                             {this.props.items.map(item =>
                                 this.renderItemNameOrEditField(item)
-
-                                /*<th>
-                                    {item.name}
-                                </th>*/
                             )}
 
                             {!isGuestView &&
@@ -190,10 +186,7 @@ class ChartView extends React.Component {
                         {this.props.attributes.map(function(attr) {
                             // Generate <td> column elements in each row
                             var rowCells = this.props.items.map(item =>
-
                                 this.renderItemOrEditField(item, attr.id)
-
-                                //<td>{item[attr.id]}</td>
                             );
 
                             var attrName = this.renderAttributeOrEditField(attr);

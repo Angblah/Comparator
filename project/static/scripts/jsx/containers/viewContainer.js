@@ -2,7 +2,7 @@ import React from 'react';
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import {connect} from 'react-redux'
 import Slider from 'rc-slider';
-import {addItem, addAttr, editAttr, editItem, editItemName, changeView, deleteAttr, deleteItem} from '../actions/actions'
+import {addItem, addAttr, editAttr, editItem, editItemWorth, editItemName, changeView, deleteAttr, deleteItem} from '../actions/actions'
 import ChartView from '../components/chartView'
 import ZoomDragCircle from '../components/spiderView'
 import ProgressChart from '../components/testView'
@@ -12,38 +12,41 @@ class ViewContainer extends React.Component {
         //TODO: Create ViewContainer toggle based on view of state.
         if (this.props.view === 'CHART' &&  this.props.userId == this.props.info.account_id) {
             return (
-                <div>
-                    <nav className="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
-                        {this.props.items.map(function(item) {
-                            var itemAttr = this.props.attributes.map(function(attr) {
-                                if (item[attr.id].val) {
-                                    return(
-                                    <div className="nav-item">
-                                        <a className="nav-link" href="#">{item[attr.id].val}</a>
-                                        <Slider min={0} max={10} step={1} dots defaultValue={item[attr.id].worth}/>
-                                    </div>
-                                    );
-                                }
-                            });
-                            return(
-                                <ul className="nav nav-pills flex-column">
-                                    <h3>{item.name}</h3>
-                                    {itemAttr}
-                                </ul>
-                            ); 
-                        }, this)}
-                    </nav>
-                    <ChartView items={this.props.items}
-                       attributes={this.props.attributes}
-                       id={this.props.id}
-                       editAttr={this.props.editAttr}
-                       editItem={this.props.editItem}
-                       editItemName={this.props.editItemName}
-                       deleteAttr={this.props.deleteAttr}
-                       deleteItem={this.props.deleteItem}
-                       addAttr={this.props.addAttr}
-                       addItem={this.props.addItem}/>
-                    
+                <div className="container-fluid">
+                    <div className="row">
+                        <nav className="col-2 bg-faded sidebar">
+                            {this.props.items.map(function(item) {
+                                var itemAttr = this.props.attributes.map(function(attr) {
+                                    if (item[attr.id].val) {
+                                        return(
+                                        <div className="nav-item">
+                                            <a className="nav-link" href="#">{item[attr.id].val}</a>
+                                            <Slider min={0} max={10} step={1} dots defaultValue={item[attr.id].worth} onAfterChange={(value) => this.props.editItemWorth(item.id, attr.id, value)}/>
+                                        </div>
+                                        );
+                                    }
+                                }, this);
+                                return(
+                                    <ul className="nav nav-pills flex-column">
+                                        <h3>{item.name}</h3>
+                                        {itemAttr}
+                                    </ul>
+                                ); 
+                            }, this)}
+                        </nav>
+                        <div className="container col-10 pt-3">
+                            <ChartView items={this.props.items}
+                                attributes={this.props.attributes}
+                                id={this.props.id}
+                                editAttr={this.props.editAttr}
+                                editItem={this.props.editItem}
+                                editItemName={this.props.editItemName}
+                                deleteAttr={this.props.deleteAttr}
+                                deleteItem={this.props.deleteItem}
+                                addAttr={this.props.addAttr}
+                                addItem={this.props.addItem}/>
+                        </div>
+                    </div>
                 </div>
             );
         } else if (this.props.view === 'CHART' &&  this.props.userId != this.props.info.account_id) {
@@ -56,11 +59,35 @@ class ViewContainer extends React.Component {
             );
         } else {
             return (
-                <div>
-                    <ZoomDragCircle items={this.props.items}
-                       attributes={this.props.attributes}/>
-                    <ProgressChart/>
-                    <span/>
+                <div className="container-fluid">
+                    <div className="row">
+                        <nav className="col-2 bg-faded sidebar">
+                            {this.props.items.map(function(item) {
+                                var itemAttr = this.props.attributes.map(function(attr) {
+                                    if (item[attr.id].val) {
+                                        return(
+                                        <div className="nav-item">
+                                            <a className="nav-link" href="#">{item[attr.id].val}</a>
+                                            <Slider min={0} max={10} step={1} dots defaultValue={item[attr.id].worth} onAfterChange={(value) => this.props.editItemWorth(item.id, attr.id, value)}/>
+                                        </div>
+                                        );
+                                    }
+                                }, this);
+                                return(
+                                    <ul className="nav nav-pills flex-column">
+                                        <h3>{item.name}</h3>
+                                        {itemAttr}
+                                    </ul>
+                                ); 
+                            }, this)}
+                        </nav>
+                        <div className="col-10">
+                            <ZoomDragCircle items={this.props.items}
+                            attributes={this.props.attributes}/>
+                            <ProgressChart/>
+                            <span/>
+                        </div>
+                    </div>
                 </div>
             );
         }
@@ -92,6 +119,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         editItem: (itemId, attrId, value) => {
             dispatch(editItem(itemId, attrId, value))
+        },
+        editItemWorth: (itemId, attrId, worth) => {
+            dispatch(editItemWorth(itemId, attrId, worth))
         },
         editItemName: (itemId, value) => {
             dispatch(editItemName(itemId, value))

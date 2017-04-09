@@ -3730,7 +3730,7 @@ var getMaxRadius = function getMaxRadius(width, height) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.loadItems = exports.loadAttr = exports.routeToEditName = exports.changeView = exports.routeToDeleteItem = exports.routeToEditItemName = exports.routeToDeleteAttr = exports.routeToEditAttr = exports.EDIT_NAME = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.DELETE_ITEM = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM = exports.ADD_ITEM = exports.DELETE_ATTR = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
+exports.loadItems = exports.loadAttr = exports.routeToEditName = exports.changeView = exports.routeToDeleteItem = exports.routeToEditItemName = exports.routeToDeleteAttr = exports.routeToEditAttr = exports.EDIT_NAME = exports.LOAD_ITEMS = exports.LOAD_ATTR = exports.CHANGE_VIEW = exports.DELETE_ITEM = exports.EDIT_ITEM_NAME = exports.EDIT_ITEM_WORTH = exports.EDIT_ITEM = exports.ADD_ITEM = exports.DELETE_ATTR = exports.EDIT_ATTR = exports.ADD_ATTR = undefined;
 
 var _stringify = __webpack_require__(238);
 
@@ -3744,6 +3744,7 @@ exports.addItem = addItem;
 exports.routeToAddItem = routeToAddItem;
 exports.editItem = editItem;
 exports.routeToEditItem = routeToEditItem;
+exports.editItemWorth = editItemWorth;
 exports.editItemName = editItemName;
 exports.deleteItem = deleteItem;
 exports.exportCSV = exportCSV;
@@ -3758,6 +3759,7 @@ var EDIT_ATTR = exports.EDIT_ATTR = 'EDIT_ATTR';
 var DELETE_ATTR = exports.DELETE_ATTR = 'DELETE_ATTR';
 var ADD_ITEM = exports.ADD_ITEM = 'ADD_ITEM';
 var EDIT_ITEM = exports.EDIT_ITEM = 'EDIT_ITEM';
+var EDIT_ITEM_WORTH = exports.EDIT_ITEM_WORTH = 'EDIT_ITEM_WORTH';
 var EDIT_ITEM_NAME = exports.EDIT_ITEM_NAME = 'EDIT_ITEM_NAME';
 var DELETE_ITEM = exports.DELETE_ITEM = 'DELETE_ITEM';
 var CHANGE_VIEW = exports.CHANGE_VIEW = 'CHANGE_VIEW';
@@ -3884,6 +3886,15 @@ function routeToEditItem(itemId, attrId, value) {
         itemId: itemId,
         attrId: attrId,
         value: value
+    };
+}
+
+function editItemWorth(itemId, attrId, worth) {
+    return {
+        type: 'EDIT_ITEM_WORTH',
+        itemId: itemId,
+        attrId: attrId,
+        worth: worth
     };
 }
 
@@ -36844,47 +36855,59 @@ var ViewContainer = function (_React$Component) {
             if (this.props.view === 'CHART' && this.props.userId == this.props.info.account_id) {
                 return _react2.default.createElement(
                     'div',
-                    null,
+                    { className: 'container-fluid' },
                     _react2.default.createElement(
-                        'nav',
-                        { className: 'col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar' },
-                        this.props.items.map(function (item) {
-                            var itemAttr = this.props.attributes.map(function (attr) {
-                                if (item[attr.id].val) {
-                                    return _react2.default.createElement(
-                                        'div',
-                                        { className: 'nav-item' },
-                                        _react2.default.createElement(
-                                            'a',
-                                            { className: 'nav-link', href: '#' },
-                                            item[attr.id].val
-                                        ),
-                                        _react2.default.createElement(_rcSlider2.default, { min: 0, max: 10, step: 1, dots: true, defaultValue: item[attr.id].worth })
-                                    );
-                                }
-                            });
-                            return _react2.default.createElement(
-                                'ul',
-                                { className: 'nav nav-pills flex-column' },
-                                _react2.default.createElement(
-                                    'h3',
-                                    null,
-                                    item.name
-                                ),
-                                itemAttr
-                            );
-                        }, this)
-                    ),
-                    _react2.default.createElement(_chartView2.default, { items: this.props.items,
-                        attributes: this.props.attributes,
-                        id: this.props.id,
-                        editAttr: this.props.editAttr,
-                        editItem: this.props.editItem,
-                        editItemName: this.props.editItemName,
-                        deleteAttr: this.props.deleteAttr,
-                        deleteItem: this.props.deleteItem,
-                        addAttr: this.props.addAttr,
-                        addItem: this.props.addItem })
+                        'div',
+                        { className: 'row' },
+                        _react2.default.createElement(
+                            'nav',
+                            { className: 'col-2 bg-faded sidebar' },
+                            this.props.items.map(function (item) {
+                                var itemAttr = this.props.attributes.map(function (attr) {
+                                    var _this2 = this;
+
+                                    if (item[attr.id].val) {
+                                        return _react2.default.createElement(
+                                            'div',
+                                            { className: 'nav-item' },
+                                            _react2.default.createElement(
+                                                'a',
+                                                { className: 'nav-link', href: '#' },
+                                                item[attr.id].val
+                                            ),
+                                            _react2.default.createElement(_rcSlider2.default, { min: 0, max: 10, step: 1, dots: true, defaultValue: item[attr.id].worth, onAfterChange: function onAfterChange(value) {
+                                                    return _this2.props.editItemWorth(item.id, attr.id, value);
+                                                } })
+                                        );
+                                    }
+                                }, this);
+                                return _react2.default.createElement(
+                                    'ul',
+                                    { className: 'nav nav-pills flex-column' },
+                                    _react2.default.createElement(
+                                        'h3',
+                                        null,
+                                        item.name
+                                    ),
+                                    itemAttr
+                                );
+                            }, this)
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'container col-10 pt-3' },
+                            _react2.default.createElement(_chartView2.default, { items: this.props.items,
+                                attributes: this.props.attributes,
+                                id: this.props.id,
+                                editAttr: this.props.editAttr,
+                                editItem: this.props.editItem,
+                                editItemName: this.props.editItemName,
+                                deleteAttr: this.props.deleteAttr,
+                                deleteItem: this.props.deleteItem,
+                                addAttr: this.props.addAttr,
+                                addItem: this.props.addItem })
+                        )
+                    )
                 );
             } else if (this.props.view === 'CHART' && this.props.userId != this.props.info.account_id) {
                 return _react2.default.createElement(
@@ -36897,11 +36920,53 @@ var ViewContainer = function (_React$Component) {
             } else {
                 return _react2.default.createElement(
                     'div',
-                    null,
-                    _react2.default.createElement(_spiderView2.default, { items: this.props.items,
-                        attributes: this.props.attributes }),
-                    _react2.default.createElement(_testView2.default, null),
-                    _react2.default.createElement('span', null)
+                    { className: 'container-fluid' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'row' },
+                        _react2.default.createElement(
+                            'nav',
+                            { className: 'col-2 bg-faded sidebar' },
+                            this.props.items.map(function (item) {
+                                var itemAttr = this.props.attributes.map(function (attr) {
+                                    var _this3 = this;
+
+                                    if (item[attr.id].val) {
+                                        return _react2.default.createElement(
+                                            'div',
+                                            { className: 'nav-item' },
+                                            _react2.default.createElement(
+                                                'a',
+                                                { className: 'nav-link', href: '#' },
+                                                item[attr.id].val
+                                            ),
+                                            _react2.default.createElement(_rcSlider2.default, { min: 0, max: 10, step: 1, dots: true, defaultValue: item[attr.id].worth, onAfterChange: function onAfterChange(value) {
+                                                    return _this3.props.editItemWorth(item.id, attr.id, value);
+                                                } })
+                                        );
+                                    }
+                                }, this);
+                                return _react2.default.createElement(
+                                    'ul',
+                                    { className: 'nav nav-pills flex-column' },
+                                    _react2.default.createElement(
+                                        'h3',
+                                        null,
+                                        item.name
+                                    ),
+                                    itemAttr
+                                );
+                            }, this)
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-10' },
+                            _react2.default.createElement(_spiderView2.default, { items: this.props.items,
+                                attributes: this.props.attributes }),
+                            _react2.default.createElement(_testView2.default, null),
+                            _react2.default.createElement('span', null)
+                        )
+                    )
                 );
             }
         }
@@ -36934,6 +36999,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         },
         editItem: function editItem(itemId, attrId, value) {
             dispatch((0, _actions.editItem)(itemId, attrId, value));
+        },
+        editItemWorth: function editItemWorth(itemId, attrId, worth) {
+            dispatch((0, _actions.editItemWorth)(itemId, attrId, worth));
         },
         editItemName: function editItemName(itemId, value) {
             dispatch((0, _actions.editItemName)(itemId, value));
@@ -38687,12 +38755,7 @@ var ChartView = function (_React$Component) {
                             _react2.default.createElement("th", null),
                             this.props.items.map(function (item) {
                                 return _this5.renderItemNameOrEditField(item);
-                            }
-
-                            /*<th>
-                                {item.name}
-                            </th>*/
-                            ),
+                            }),
                             !isGuestView && _react2.default.createElement(
                                 "th",
                                 { onClick: function onClick() {
@@ -38711,10 +38774,7 @@ var ChartView = function (_React$Component) {
                             // Generate <td> column elements in each row
                             var rowCells = this.props.items.map(function (item) {
                                 return _this6.renderItemOrEditField(item, attr.id);
-                            }
-
-                            //<td>{item[attr.id]}</td>
-                            );
+                            });
 
                             var attrName = this.renderAttributeOrEditField(attr);
 
@@ -39234,9 +39294,9 @@ var _defineProperty2 = __webpack_require__(67);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
-var _extends3 = __webpack_require__(24);
+var _extends4 = __webpack_require__(24);
 
-var _extends4 = _interopRequireDefault(_extends3);
+var _extends5 = _interopRequireDefault(_extends4);
 
 var _stringify = __webpack_require__(238);
 
@@ -39282,7 +39342,19 @@ var items = function items() {
                     return item;
                 }
 
-                return (0, _extends4.default)({}, item, (0, _defineProperty3.default)({}, action.attrId, { val: action.value }));
+                return (0, _extends5.default)({}, item, (0, _defineProperty3.default)({}, action.attrId, { val: action.value, worth: item[action.attrId].worth }));
+            });
+
+        // Edit the item
+        case _actions.EDIT_ITEM_WORTH:
+            // Pass it itemID, attrId, Value. (adds attrId if doesnt exist)
+            var newState = [].concat((0, _toConsumableArray3.default)(state));
+            return newState.map(function (item) {
+                if (item.id !== action.itemId) {
+                    return item;
+                }
+
+                return (0, _extends5.default)({}, item, (0, _defineProperty3.default)({}, action.attrId, { val: item[action.attrId].val, worth: action.worth }));
             });
 
         // Edit the Item Name
@@ -39293,7 +39365,7 @@ var items = function items() {
                     return item;
                 }
 
-                return (0, _extends4.default)({}, item, {
+                return (0, _extends5.default)({}, item, {
                     name: action.name
                 });
             });
