@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import {connect} from 'react-redux'
+import Slider from 'rc-slider';
 import {addItem, addAttr, editAttr, editItem, editItemName, changeView, deleteAttr, deleteItem} from '../actions/actions'
 import ChartView from '../components/chartView'
 import ZoomDragCircle from '../components/spiderView'
@@ -12,6 +13,26 @@ class ViewContainer extends React.Component {
         if (this.props.view === 'CHART') {
             return (
                 <div>
+                    <nav className="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+                        {this.props.items.map(function(item) {
+                            var itemAttr = this.props.attributes.map(function(attr) {
+                                if (item[attr.id].val) {
+                                    return(
+                                    <div className="nav-item">
+                                        <a className="nav-link" href="#">{item[attr.id].val}</a>
+                                        <Slider min={0} max={10} step={1} dots defaultValue={item[attr.id].worth}/>
+                                    </div>
+                                    );
+                                }
+                            });
+                            return(
+                                <ul className="nav nav-pills flex-column">
+                                    <h3>{item.name}</h3>
+                                    {itemAttr}
+                                </ul>
+                            ); 
+                        }, this)}
+                    </nav>
                     <ChartView items={this.props.items}
                        attributes={this.props.attributes}
                        id={this.props.id}
@@ -22,7 +43,7 @@ class ViewContainer extends React.Component {
                        deleteItem={this.props.deleteItem}
                        addAttr={this.props.addAttr}
                        addItem={this.props.addItem}/>
-                    <span/>
+                    
                 </div>
             );
         } else {
