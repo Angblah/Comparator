@@ -8,7 +8,7 @@ import {createStore, applyMiddleware} from 'redux';
 
 import workspaceState from '../reducers/rootReducer';
 import ViewContainer from './viewContainer';
-import Toolbar from '../components/toolbar';
+import Toolbar from './toolbar';
 import Navbar from './navbar';
 import {fetchComparison} from '../actions/actions';
 
