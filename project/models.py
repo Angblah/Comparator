@@ -17,6 +17,7 @@ class Account(db.Model, UserMixin):
     email = db.Column(String(255), nullable=False, unique=True)
     username = db.Column(String(255), nullable=False, unique=True)
     passhash = db.Column(String(255), nullable=False)
+    avatar = db.Column(String(255), nullable=True)
 
     def __init__(self, email, username, passhash):
         self.email = email

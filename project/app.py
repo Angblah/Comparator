@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, url_for, jsonify, abort, redirect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 import os
@@ -33,6 +34,46 @@ def index():
 def load_user(user_id):
     # Given user_id, return the associated User object
     return Account.query.filter_by(id=user_id).one()
+
+@login_required
+@app.route('/uploadAvatar', methods=["GET", "POST"])
+def uploadAvatar():
+
+    from cloudinary.uploader import upload, destroy
+
+    if request.method == 'POST':
+        file_to_upload = request.files['avatar']
+        if file_to_upload:
+            upload_result = upload(file_to_upload)
+            image_id = upload_result['public_id']
+
+            # TODO: conversion to ajax
+            # TODO: keep track of user total image file size, limit upload accordingly
+
+            query = text("""
+            select avatar from account where id = :account_id;
+            """)
+
+            old_avatar_id = db.engine.execute(query, account_id=current_user.id).scalar()
+            if old_avatar_id:
+                # TODO: tag images with user id for easier bulk delete
+                # NOTE: image not replaced with same id as cached images may taken a while to clear from CDN
+                # consider changing if speed becomes a concern
+                destroy(old_avatar_id, invalidate=True)
+
+            query = text("""
+            update account set avatar = :image_id where id = :account_id;
+            """)
+            db.engine.execute(query.execution_options(autocommit=True), image_id=image_id, account_id=current_user.id)
+            return redirect(url_for('profile'))
+
+@login_required
+@app.route('/getUserAvatarName', methods=["GET", "POST"])
+def getUserAvatarName():
+    query = text("""
+    select avatar from Account where id = :id;
+    """)
+    return json.dumps(db.engine.execute(query, id=current_user.id).scalar())
 
 @app.route('/ComparisonFromTemplate', methods=["POST"])
 def comparisonFromTemplate():
@@ -173,8 +214,10 @@ def index2():
 
 # dashboard
 @app.route('/dashboard')
-@login_required
 def dashboard():
+    if current_user.is_anonymous:
+        render_template('index.html')
+
     # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
     recent_comp = get_recent_user_comparisons(current_user.id, 5, get_json=False)
     all_comp = get_user_comparisons(current_user.id, get_json=False)
@@ -250,7 +293,7 @@ def profile_form():
 
 @app.route('/profile')
 @login_required
-def myProfile():
+def profile():
     return render_template('profile.html')
 
 
@@ -393,7 +436,6 @@ def logout():
 # Taken from https://github.com/cloudinary/pycloudinary/tree/master/samples/basic_flask (remove/adapt later for workspace)
 @app.route('/image_upload_example', methods=['GET', 'POST'])
 def upload_file():
-    from flask import request, render_template
     from cloudinary.uploader import upload
     from cloudinary.utils import cloudinary_url
 
@@ -432,10 +474,14 @@ def view_comparison(token):
 
     # TODO: see why is_anonymous sometimes boolean, sometimes bound method
     if not current_user.is_anonymous and user_id == current_user.id:
-        return render_template('workspace.html', comparison=get_comparison(comparison_id))
+        return render_template('workspace.html', comparison=get_comparison(comparison_id), userId=current_user.id)
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
-        abort(404)
+        currUserId = 0;
+        if not current_user.is_anonymous:
+            currUserId = current_user.id
+
+        return render_template('workspace.html', comparison=get_comparison(comparison_id), userId=currUserId)
 
 
 @app.route('/template/<token>')
