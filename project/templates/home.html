@@ -49,7 +49,7 @@
                             <h3>Make a Comparison!</h3>
                         </div>
                         <div class="text-left">
-                            <button type="submit" class="btn btn-template-main btn-lg" onclick="location.href='{{'12' | share_comparison('anonymous')}}'" style="width:36%">Start Comparing</button>
+                            <button class="btn btn-template-main btn-lg" data-toggle="modal" data-target="#selectTemplateModal">Start Comparing</button>
                         </div>
                         <hr>
                         <div>
@@ -58,12 +58,12 @@
                         <br>
                     </div>
                 </div>
-                <!-- /.project owl-slider -->
             </div>
         </div>
-        <!-- *** HOMEPAGE CAROUSEL END *** -->
 
-        <!-- SIGN UP MODAL -->
+    <!-- Include the select template modal -->
+        {% include "partials/selectTemplateModal.html" %}
+
 <div class="modal fade" id="signup-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
     <div class="modal-dialog modal-sm">
 

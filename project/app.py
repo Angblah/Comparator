@@ -26,7 +26,8 @@ from database_utils import *
 @app.route('/')
 def index():
     if current_user.is_anonymous:
-        return render_template('home.html')
+        sample_temp = get_sample_templates()
+        return render_template('home.html', sample_temp=sample_temp)
     else:
         return redirect(url_for('dashboard'))
 
@@ -79,8 +80,14 @@ def getUserAvatarName():
 def comparisonFromTemplate():
     template_id = int(request.values['id'])
 
-    comparison_id = create_comparison_from_user_template(current_user.id, template_id)
-    return redirect(share_comparison(comparison_id, current_user.id))
+    # If it is a comparison from guest user, assign it to guest's account
+    if current_user.is_anonymous:
+        comparison_id = create_comparison_from_user_template(2, template_id)
+        return redirect(share_comparison(comparison_id, 2))
+    else:
+        comparison_id = create_comparison_from_user_template(current_user.id, template_id)
+        return redirect(share_comparison(comparison_id, current_user.id))
+
 
 @app.route('/getComparisonData')
 def getComparisonData():
@@ -216,7 +223,7 @@ def index2():
 @app.route('/dashboard')
 def dashboard():
     if current_user.is_anonymous:
-        render_template('index.html')
+        return redirect(url_for('index'))
 
     # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
     recent_comp = get_recent_user_comparisons(current_user.id, 5, get_json=False)
@@ -429,7 +436,7 @@ def login_helper(loginUsername, loginPassword):
 @login_required
 def logout():
     logout_user()
-    return render_template('home.html')
+    return redirect(url_for('index'))
 
 
 # TODO: integrate into workspace once that's set up
