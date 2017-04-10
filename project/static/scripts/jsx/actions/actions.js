@@ -124,6 +124,21 @@ export function routeToEditItem(itemId, attrId, value) {
 }
 
 export function editItemWorth(itemId, attrId, worth) {
+    return function (dispatch) {
+        return fetch('/editItemWorth', {
+            method: 'POST',
+            body: JSON.stringify({
+                itemId : itemId,
+                attrId : attrId,
+                worth : worth
+            })
+        })
+        .then(response => response.json())
+        .then(json => dispatch(routeToEditItemWorth(json.itemId, json.attrId, json.worth)))
+    }
+}
+
+export function routeToEditItemWorth(itemId, attrId, worth) {
     return {
         type: 'EDIT_ITEM_WORTH',
         itemId,

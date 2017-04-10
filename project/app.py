@@ -102,6 +102,13 @@ def editComparisonName():
     message['success'] = 'success'
     return jsonify(message)
 
+@app.route('/editItemWorth', methods=["POST"])
+def editItemWorth():
+    message = {}
+    data = json.loads(request.data)
+    set_attribute_value_worth(data['itemId'], data['attrId'], data['worth'])
+    message['success'] = 'success'
+    return jsonify(message)
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():
