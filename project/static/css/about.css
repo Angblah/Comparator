@@ -1,0 +1,28 @@
+/*CSS Specific for About*/
+/*Global Variables*/
+body {
+  padding-top: 2% ! important;
+  font-family: Raleway;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+  background-color: #e9eaeb;
+  padding-bottom: 0%;
+}
+div.banner img {
+  width: 100%;
+}
+div.side-bar {
+  background-color: #f3f3f4;
+  height: 50%;
+  width: 40%;
+  position: fixed;
+  box-shadow: 10px 10px 3em rgba(4, 4, 4, 0.1);
+  font-size: 50px;
+  padding: 2%;
+}
+div.content {
+  padding-left: 45%;
+  padding-top: 2%;
+  padding-right: 2%;
+}
