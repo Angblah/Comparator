@@ -24,13 +24,14 @@
             <form id="avatarForm" action="/uploadAvatar" enctype="multipart/form-data" method="POST">
                 <input id="avatarUpload" name="avatar" type="file" accept="image/*" style="display: none;" required checked/>
             </form>
-            <h1 align="center">{{ current_user.username }}'s Profile</h1>
+            <h1 align="center"><strong>{{ current_user.username }}</strong>'s Profile</h1>
         </div>
     </div>
     <div class="profile-data">
         <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal"
                 data-target="#change-info-modal">
             <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
             <div class="prof-cont">
                 <h1>USERNAME</h1>
                 <h2>{{ current_user.username }}</h2>
@@ -46,59 +47,7 @@
                 <h1>PASSWORD</h1>
                 <h2>********</h2>
             </div>
-        </button>
     </div>
-
-    <!--                 <br>
-                    <div class="col-md-3" id="changeUserData">
-                        <form id="changeInfoForm">
-
-                            <div class="alert alert-success" role="alert" id="successDiv" style="display:none">
-                                <strong>Success!</strong>
-                                <span>You have successfully changed your information!</span>
-                            </div>
-                            <div class="alert alert-danger" role="alert" id="overallErrorDiv" style="display:none">
-                                <strong>Uh oh!</strong>
-                                <span>At least one field must be filled out</span>
-                            </div>
-
-                            <div class="alert alert-danger" role="alert" id="usernameErrorDiv" style="display:none">
-                                <strong>Uh oh!</strong>
-                                <span id="usernameError"></span>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="newUsername" class="form-control" id="newUsername"
-                                       placeholder="Enter New Username">
-                            </div>
-
-                            <div class="alert alert-danger" role="alert" id="emailErrorDiv" style="display:none">
-                                <strong>Uh oh!</strong>
-                                <span id="emailError"></span>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="newEmail" class="form-control" id="newEmail"
-                                       placeholder="Enter New Email">
-                            </div>
-
-                            <div class="alert alert-danger" role="alert" id="passwordErrorDiv" style="display:none">
-                                <strong>Uh oh!</strong>
-                                <span id="passwordError"></span>
-                            </div>
-                            <div class="form-group">
-                                <input type="password" name="newPassword" class="form-control" id="newPassword"
-                                       placeholder="Enter New Password">
-                            </div>
-                            <div class="form-group">
-                                <input type="password" name="confirmPassword" class="form-control" id="confirmPassword"
-                                       placeholder="Confirm New Password">
-                            </div> -->
-    <!--TODO: change to use ajax + regular button (assuming modal used)-->
-    <!--                  <div class="text-center">
-                         <button type="submit" id="submitButton" class="btn btn-template-main">Submit</button>
-                     </div>
-                 </form>
-             </div> -->
-
 
     <!-- *** Change User Info Modal *** -->
     <div class="modal fade" id="change-info-modal" tabindex="-1" role="dialog" aria-labelledby="Change User Info"
@@ -126,16 +75,18 @@
                             <span id="usernameError"></span>
                         </div>
                         <div class="form-group">
+                            Change Username
                             <input type="text" name="newUsername" class="form-control" id="newUsername"
-                                   placeholder="Enter New Username">
+                                   placeholder="{{ current_user.username }}">
                         </div>
                         <div class="alert alert-danger" role="alert" id="emailErrorDiv" style="display:none">
                             <strong>Uh oh!</strong>
                             <span id="emailError"></span>
                         </div>
                         <div class="form-group">
+                            Change Email
                             <input type="text" name="newEmail" class="form-control" id="newEmail"
-                                   placeholder="Enter New Email">
+                                   placeholder="{{ current_user.email }}">
                         </div>
 
                         <div class="alert alert-danger" role="alert" id="passwordErrorDiv" style="display:none">
@@ -143,6 +94,7 @@
                             <span id="passwordError"></span>
                         </div>
                         <div class="form-group">
+                            Change Password
                             <input type="password" name="newPassword" class="form-control" id="newPassword"
                                    placeholder="Enter New Password">
                         </div>

@@ -5,13 +5,16 @@ body {
   font-family: Raleway;
   font-style: normal;
   font-variant: normal;
-  font-weight: bold;
-  background-color: #e9eaeb;
+  /*background-color: rgb(233, 234, 235);*/
+  background-color: #f3f3f4 ! important;
   padding-bottom: 0%;
 }
 div.banner img {
   width: 100%;
 }
+/*div.banner {
+  position: fixed;
+}*/
 div.side-bar {
   background-color: #f3f3f4;
   height: 50%;
@@ -21,8 +24,10 @@ div.side-bar {
   font-size: 50px;
   padding: 2%;
 }
-div.content {
+div.about-cont {
   padding-left: 45%;
-  padding-top: 2%;
+  /*padding-top: 2%;*/
   padding-right: 2%;
+  height: 40vh;
+  overflow-y: scroll;
 }
