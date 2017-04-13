@@ -11,7 +11,7 @@ class Navbar extends React.Component {
 
         this.state = {editingName: null, isGuestView: true};
 
-        if (this.props.userId == this.props.info.account_id) {
+        if (this.props.userId == this.props.info.account_id || this.props.userId == 0) {
             this.state.isGuestView = false;
         }
 

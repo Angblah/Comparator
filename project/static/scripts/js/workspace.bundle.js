@@ -36335,7 +36335,7 @@ var Navbar = function (_React$Component) {
 
         _this.state = { editingName: null, isGuestView: true };
 
-        if (_this.props.userId == _this.props.info.account_id) {
+        if (_this.props.userId == _this.props.info.account_id || _this.props.userId == 0) {
             _this.state.isGuestView = false;
         }
 
@@ -36882,7 +36882,7 @@ var ViewContainer = function (_React$Component) {
         key: 'render',
         value: function render() {
             //TODO: Create ViewContainer toggle based on view of state.
-            if (this.props.view === 'CHART' && this.props.userId == this.props.info.account_id) {
+            if (this.props.view === 'CHART' && this.props.userId == this.props.info.account_id || this.props.userId == 0) {
                 return _react2.default.createElement(
                     'div',
                     { className: 'container-fluid' },
@@ -89929,7 +89929,7 @@ var Workspace = function (_React$Component) {
     (0, _createClass3.default)(Workspace, [{
         key: 'render',
         value: function render() {
-            if (initialState.info.account_id == userId) {
+            if (initialState.info.account_id == userId || userId == 0) {
                 return _react2.default.createElement(
                     'div',
                     { id: 'wrapper' },

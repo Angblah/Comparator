@@ -66,7 +66,7 @@ const store = createStore(workspaceState, initialState,
 
 class Workspace extends React.Component {
     render() {
-        if (initialState.info.account_id == userId) {
+        if (initialState.info.account_id == userId || userId == 0) {
             return (
                 <div id="wrapper">
                     <Navbar userId={this.props.userId}/>
