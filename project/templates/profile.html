@@ -22,7 +22,7 @@
                 <i class="fa fa-pencil" aria-hidden="true"></i>
             </a>
             <form id="avatarForm" action="/uploadAvatar" enctype="multipart/form-data" method="POST">
-                <input id="avatarUpload" name="avatar" type="file" onchange="form.submit()" accept="image/*" style="display: none;" required checked/>
+                <input id="avatarUpload" name="avatar" type="file" accept="image/*" style="display: none;" required checked/>
             </form>
             <h1 align="center">{{ current_user.username }}'s Profile</h1>
         </div>
@@ -180,6 +180,7 @@
     $.cloudinary.config({ cloud_name: "comparator"});
     $.getJSON('/getUserAvatarName', {}, function(data) {
         var img_url;
+        // default avatar if no avatar stored for user
         if (data == null) {
             img_url = $.cloudinary.url("defaultAvatar.png", {width: 100, height:100, crop:'fill'});
         } else {
@@ -191,6 +192,22 @@
     // clicking on pencil icon on avatar prompts user to upload image file
     $("#editAvatar").click(function() {
          $('#avatarUpload').click();
+    });
+
+    $("#avatarUpload").change(function() {
+
+        $.ajax({
+            url: "/uploadAvatar",
+            type: "POST",
+            data: this.files[0],
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                var img_url = $.cloudinary.url(data, {width: 100, height:100, crop:'fill'});
+                $('#avatar').attr("src", img_url);
+            }
+        });
     });
 
 

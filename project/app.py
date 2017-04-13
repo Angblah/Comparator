@@ -37,18 +37,18 @@ def load_user(user_id):
     return Account.query.filter_by(id=user_id).one()
 
 @login_required
-@app.route('/uploadAvatar', methods=["GET", "POST"])
+@app.route('/uploadAvatar', methods=["POST"])
 def uploadAvatar():
 
     from cloudinary.uploader import upload, destroy
 
     if request.method == 'POST':
-        file_to_upload = request.files['avatar']
+        # TODO: consider testing if file is image (though cloudinary technically does this anyway)
+        file_to_upload = request.data
         if file_to_upload:
             upload_result = upload(file_to_upload)
             image_id = upload_result['public_id']
 
-            # TODO: conversion to ajax
             # TODO: keep track of user total image file size, limit upload accordingly
 
             query = text("""
@@ -66,7 +66,7 @@ def uploadAvatar():
             update account set avatar = :image_id where id = :account_id;
             """)
             db.engine.execute(query.execution_options(autocommit=True), image_id=image_id, account_id=current_user.id)
-            return redirect(url_for('profile'))
+            return image_id
 
 @login_required
 @app.route('/getUserAvatarName', methods=["GET", "POST"])
