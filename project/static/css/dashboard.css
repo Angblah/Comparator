@@ -8,40 +8,6 @@ body {
   font-weight: bold;
   background-color: #e9eaeb;
 }
-/*#dash-username {
-    background-image: url('../img/default-user-back.jpg');
-    filter: blur(5px);
-    -webkit-filter: blur(5px);
-    -moz-filter: blur(5px);
-    -o-filter: blur(5px);
-    -ms-filter: blur(5px);
-    height: 20em;
-}
-#dash-username-content {
-    filter: blur(0px);
-    -webkit-filter: blur(0px);
-    -moz-filter: blur(0px);
-    -o-filter: blur(0px);
-    -ms-filter: blur(0px);
-}
-#dash-username-content img {
-    margin-top: 4em;
-    max-width: 10%;
-    max-height: 10%;
-    border-radius: 50%;
-    border: 2px solid @secondary-col;
-}
-#dash-username span {
-    background-color: rgba(6, 6, 6, 0.1);
-    filter: blur(0px);
-    -webkit-filter: blur(0px);
-    -moz-filter: blur(0px);
-    -o-filter: blur(0px);
-    -ms-filter: blur(0px);
-}
-#dash-username > h1 {
-    color: @primary-text;
-}*/
 /*SIDE NAVBAR*/
 div.nav-side {
   background-color: #f3f3f4;
@@ -86,68 +52,18 @@ div.nav-side hr {
 div.nav-side i {
   font-size: 200%;
 }
-/*div.nav-side div a {
-    color: @primary-text;
-}
-div.nav-side div a:hover {
-    color: @secondary-text;
-}
-div.nav-side div a:focus, .active {
-    color: @secondary-text;
-}*/
 #dashboard-content div {
   min-height: 90vh;
   width: 55vw;
   padding-top: 50px;
   margin-top: -50px;
 }
-/*COMPARISON-TEMPLATE TABS*/
-/*ul.tab {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}*/
-/* Float the list items side by side */
-/*ul.tab li {
-    float: left;
-}*/
-/* Style the links inside the list items */
-/*ul.tab li a {
-    display: inline-block;
-    color: @secondary-text;
-    padding: 1em 1em;
-    text-decoration: none;
-    transition: 0.3s;
-    font-size: 17px;
-}*/
-/* Change background color of links on hover */
-/*ul.tab li a:hover {
-    background-color: @secondary-col;
-}*/
-/* Create an active/current tablink class */
-/*ul.tab li a:focus, .active {
-    background-color: @primary-col;
-    color: @secondary-text;
-}*/
-/* Style the tab content */
-/*.tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border-top: none;
-}*/
-/*END TABS*/
-/*RECENT COMPARISONS*/
-/*#recent-comp {
-    transition: 1s transform;
-}*/
 .tile {
   width: 17em;
   height: 10em;
   border: 1px solid #ff9900;
   color: #ff9900;
   background-color: #fff;
-  /*padding-top: 2px;*/
   box-sizing: border-box;
   transition: 1s transform;
   transform-origin: top left;
@@ -156,45 +72,19 @@ div.nav-side div a:focus, .active {
   margin: 1.5em;
   box-shadow: 10px 10px 3em rgba(4, 4, 4, 0.1);
 }
-/*#recentComp:hover {
-    transform: translate3d(-2em, 0, 0);
-}*/
 .tile:hover {
-  /*transform: scale(2);*/
-  /*border: 2px solid @primary-col;*/
   background-color: #5fa4eb;
   color: #fff;
-  /*margin-bottom: 3em;*/
 }
-/*
-.tile:hover ~ .tile {
-    transform: translate3d(4.5em, 0, 0);
-}*/
-/*END RECENT COMPARISONS*/
-/*COMPARISONS*/
-/*#div.comparisons {
-
+input.invisible {
+  border: none;
+  background-color: Transparent;
 }
-
-div.col-sm-11 {
-  padding-left: 5.5em
+input.search {
+  width: 40%;
+  border-radius: 25px;
+  border-color: #ff9900;
+  color: #5fa4eb;
+  background-color: Transparent;
+  padding-left: 2%;
 }
-
-.fixed-tile {
-    width: 8em;
-    height: 8em;
-    background-color: @primary-col;
-    padding-top: 8em;
-    box-sizing: border-box;
-    border: 2px solid @secondary-col;
-    transition: 1s transform;
-    transform-origin: top left;
-    float: left;
-    margin-right: 2em;
-    margin-bottom: 3em;
-}
-
-.fixed-tile:hover {
-    background-color: @secondary-col;
-}*/
-/*END COMPARISONS*/

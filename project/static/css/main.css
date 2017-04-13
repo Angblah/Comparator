@@ -1,5 +1,8 @@
 /*Main Styling for The Comparator */
 /*Global Variables*/
+*:focus {
+  outline: none;
+}
 header {
   box-shadow: 10px 10px 3em rgba(4, 4, 4, 0.1);
   position: fixed;

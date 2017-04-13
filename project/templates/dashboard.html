@@ -14,7 +14,6 @@
 
         <div class="nav-side">
             <div>
-                <!-- <a href="#recent-comps">RECENT COMPARISONS</a> -->
                 <button type="submit" onclick="location.href='#recent-comps'">
                     <i class="fa fa-clock-o" aria-hidden="true"></i>
                     RECENT COMPARISONS
@@ -22,7 +21,6 @@
             </div>
             <hr>
             <div class="nav-side-cont">
-                <!-- <a href="#my-comps">MY COMPARISONS</a> -->
                 <button type="submit" onclick="location.href='#my-comps'">
                     <i class="fa fa-compress" aria-hidden="true"></i>
                     MY COMPARISONS
@@ -30,7 +28,6 @@
             </div>
             <hr>
             <div class="nav-side-cont">
-                <!-- <a href="#my-temps">MY TEMPLATES</a> -->
                 <button type="submit" onclick="location.href='#my-temps'">
                     <i class="fa fa-list-alt" aria-hidden="true"></i>
                     TEMPLATES
@@ -50,8 +47,8 @@
             <div id="recent-comps">
                 <h1>Recent Comparisons</h1>
                 <form id="recentCompSearch">
-                    <input type="search" name="search" >
-                    <input type="submit">
+                    <input class="search" type="search" name="search" placeholder="Search Recent Comparisons">
+                    <input class="invisible" type="submit">
                 </form>
 
                 {% for row in recent_comp %}
@@ -64,8 +61,8 @@
             <div id="my-comps" style="clear: left;">
                 <h1>My Comparisons</h1>
                 <form id="compSearch">
-                    <input type="search" name="search">
-                    <input type="submit">
+                    <input class="search" type="search" name="search" placeholder="Search Comparisons">
+                    <input class="invisible" type="submit">
                 </form>
                 {% for row in all_comp %}
                     <button type="button" id="{{'comp' ~ row['id']}}" class="tile" onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
@@ -75,11 +72,11 @@
             </div>
             <hr style="clear: left;">
             <div id="my-temps" style="clear: left;">
-                <form id="tempSearch">
-                    <input type="search" name="search">
-                    <input type="submit">
-                </form>
                 <h1>My Templates</h1>
+                <form id="tempSearch">
+                    <input class="search" type="search" name="search" placeholder="Search Templates">
+                    <input class="invisible" type="submit">
+                </form>
                 {% for row in all_temp %}
                     <button type="button" id="{{'temp' ~ row['id']}}" class="tile" onclick="location.href='{{row['id'] | share_template(current_user.id)}}'">
                         {{row['name']}}
