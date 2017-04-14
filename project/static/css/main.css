@@ -88,10 +88,7 @@ button:hover {
   text-shadow: #ffdd44;
 }
 /*Div.Container*/
-div.col-sm-5,
-div.col-sm-6,
-div.col-sm-7,
-div.col-sm-11 {
+#home-data-cont {
   border-right: 2px outset #ff9900;
   border-bottom: 2px outset #ff9900;
   box-shadow: 10px 10px 3em rgba(4, 4, 4, 0.1);
