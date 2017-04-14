@@ -229,16 +229,6 @@ def deleteComparison(comp_id):
 def newComparison():
     return render_template('newComparison.html')
 
-
-@app.route('/workspace')
-def workspace():
-    # TODO: get template of current user, current function displays a template of admin (change when user can choose template on screen)
-    template = get_template(4)
-    comparison = get_comparison(12)
-
-    return render_template('workspace.html', template=template, comparison=comparison)
-
-
 # FOR TESTING PURPOSES ONLY; DELETE ONCE LINKED TO PROPERLY
 @app.route('/new_empty_comparison')
 def new_empty_comparison():
@@ -284,6 +274,11 @@ def dashboard():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
 
 
 @app.route('/profile_form', methods=["GET", "POST"])

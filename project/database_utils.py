@@ -538,9 +538,9 @@ def initialize_db_structure():
             perform set_comparison_attribute_value(item_2, (select id from sheet_attribute where name = 'number' and sheet_id = _comparison_id), '-8.221');
 
 
-            perform save_comparison_as_template(_comparison_id, 'balls template 1');
-            perform save_comparison_as_template(_comparison_id, 'balls template 2');
-            perform save_comparison_as_template(_comparison_id, 'balls template 3');
+            --perform save_comparison_as_template(_comparison_id, 'balls template 1');
+            --perform save_comparison_as_template(_comparison_id, 'balls template 2');
+            --perform save_comparison_as_template(_comparison_id, 'balls template 3');
 
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 2') into comp_1;
             select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 3') into comp_2;
@@ -551,13 +551,6 @@ def initialize_db_structure():
             perform add_comparison_item_back(comp_2, 4);
             perform add_comparison_item_back(comp_3, 5);
 
-            select make_template(1, 'Top Load Washers', Array[1, 1, 0, 4, 1, 1, 0]::smallint[],
-                                  Array['price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']) into temp_1;
-            select make_template(1, 'Laptops', Array[1, 0, 1, 1, 1, 1, 0, 4]::smallint[],
-                                  Array['Price', 'Operating System', 'Memory', 'Hard Drive', 'Graphics Card', 'Weight', 'Size', 'Battery Life']) into temp_2;
-            perform make_template(1, 'Cameras', Array[1, 1, 1, 4, 4, 1, 0, 1, 4]::smallint[],
-                                  Array['Price', 'Megapixels', 'Image Quality','Shutter Lag', 'Startup Time', 'Weight', 'Size', 'Storage Space', 'Battery Life']);
-
             select create_comparison_from_user_template(_account_id, temp_1, 'Top Load Washers', 3) into washer_comparison;
             update comparison_item set name = 'washer 1' where position = 0 and comparison_id = washer_comparison;
             update comparison_item set name = 'washer 2' where position = 1 and comparison_id = washer_comparison;
@@ -566,7 +559,15 @@ def initialize_db_structure():
             perform create_comparison_from_user_template(_account_id, temp_2, 'Laptops', 3);
 
             perform create_empty_comparison('empty comparison 1', _account_id);
-            perform create_empty_template('Empty template', _account_id);
+            perform create_empty_template('Empty Template', _account_id);
+
+            select make_template(1, 'Top Load Washers', Array[1, 1, 0, 4, 1, 1, 0]::smallint[],
+                                  Array['price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']) into temp_1;
+            select make_template(1, 'Laptops', Array[1, 0, 1, 1, 1, 1, 0, 4]::smallint[],
+                                  Array['Price', 'Operating System', 'Memory', 'Hard Drive', 'Graphics Card', 'Weight', 'Size', 'Battery Life']) into temp_2;
+            perform make_template(1, 'Cameras', Array[1, 1, 1, 4, 4, 1, 0, 1, 4]::smallint[],
+                                  Array['Price', 'Megapixels', 'Image Quality','Shutter Lag', 'Startup Time', 'Weight', 'Size', 'Storage Space', 'Battery Life']);
+
             -- TODO: create and move default templates/comparisons to populate_database()
         end;
     $$ language plpgsql;
