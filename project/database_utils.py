@@ -326,11 +326,11 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function get_template (_template_id int) returns table(id int, type_id smallint, name varchar, "position" int)
+    create or replace function get_template (_template_id int) returns table(id int, name varchar, weight int, "position" int, type_id smallint)
         as $$
         begin
             return query
-                select sheet_attribute.id, sheet_attribute.type_id, sheet_attribute.name, sheet_attribute.position from user_template
+                select sheet_attribute.id, sheet_attribute.name, sheet_attribute.weight, sheet_attribute.position, sheet_attribute.type_id from user_template
                     inner join sheet_attribute
                     on user_template.id = sheet_attribute.sheet_id
                     where user_template.id = _template_id
@@ -1024,32 +1024,11 @@ def get_template(id, get_json=True):
     select * from get_template(:id);
     """)
     result = db.engine.execute(query, id=id)
-
-    query = text("""
-    select * from user_template inner join sheet using(id) where user_template.id = :id;
-    """)
-    #data = jsonify_table(db.engine.execute(query, id=id), get_json=False)[0]
-
-    # info put as separate part of json to allow easier React use (as fields other than 'id' used rarely)
-    data = {}
-    row = db.engine.execute(query, id=id).fetchone()
-    data['id'] = row['id']
-    temp = {}
-    for key, value in row.items():
-        if key != 'id':
-            temp[key] = value
-    data['info'] = temp
-
     if get_json:
-        attributes = []
-        for row in result:
-            attribute = {}
-            attribute['name'] = row[2]
-            attribute['type_id'] = row[1]
-            attribute['id'] = row[0]
-            attributes.append(attribute)
-        data["attributes"] = attributes
-        return json.dumps(data)
+        data = jsonify_table(result, get_json=True)
+    else:
+        data = jsonify_table(result, get_json=False)
+
     return data
 
 # copies template into specified account, returns new template id
