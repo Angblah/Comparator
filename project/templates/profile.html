@@ -130,7 +130,7 @@
 
 <script>
     $.cloudinary.config({ cloud_name: "comparator"});
-    $.getJSON('/getUserAvatarName', {}, function(data) {
+    $.getJSON('/getUserAvatarID', {}, function(data) {
         var img_url;
         // default avatar if no avatar stored for user
         if (data == null) {

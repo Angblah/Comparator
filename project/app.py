@@ -41,12 +41,15 @@ def load_user(user_id):
 def uploadAvatar():
 
     from cloudinary.uploader import upload, destroy
+    from secrets import randbits
 
     if request.method == 'POST':
         # TODO: consider testing if file is image (though cloudinary technically does this anyway)
         file_to_upload = request.data
         if file_to_upload:
-            upload_result = upload(file_to_upload)
+            # NOTE: public_id not replaced as cached images take a while to clear from CDN, new avatar may not appear
+            filepath = 'users/' + str(current_user.id) + '/avatar/' + str(randbits(32))
+            upload_result = upload(file_to_upload, public_id=filepath)
             image_id = upload_result['public_id']
 
             # TODO: keep track of user total image file size, limit upload accordingly
@@ -57,9 +60,6 @@ def uploadAvatar():
 
             old_avatar_id = db.engine.execute(query, account_id=current_user.id).scalar()
             if old_avatar_id:
-                # TODO: tag images with user id for easier bulk delete
-                # NOTE: image not replaced with same id as cached images may taken a while to clear from CDN
-                # consider changing if speed becomes a concern
                 destroy(old_avatar_id, invalidate=True)
 
             query = text("""
@@ -69,8 +69,8 @@ def uploadAvatar():
             return image_id
 
 @login_required
-@app.route('/getUserAvatarName', methods=["GET", "POST"])
-def getUserAvatarName():
+@app.route('/getUserAvatarID', methods=["GET", "POST"])
+def getUserAvatarID():
     query = text("""
     select avatar from Account where id = :id;
     """)
@@ -444,29 +444,6 @@ def login_helper(loginUsername, loginPassword):
 def logout():
     logout_user()
     return redirect(url_for('index'))
-
-
-# TODO: integrate into workspace once that's set up
-# Taken from https://github.com/cloudinary/pycloudinary/tree/master/samples/basic_flask (remove/adapt later for workspace)
-@app.route('/image_upload_example', methods=['GET', 'POST'])
-def upload_file():
-    from cloudinary.uploader import upload
-    from cloudinary.utils import cloudinary_url
-
-    upload_result = None
-    thumbnail_url1 = None
-    thumbnail_url2 = None
-    if request.method == 'POST':
-        file_to_upload = request.files['file']
-        if file_to_upload:
-            upload_result = upload(file_to_upload)
-            thumbnail_url1, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=100,
-                                                     height=100)
-            thumbnail_url2, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=200,
-                                                     height=100, radius=20, effect="sepia")
-    return render_template('upload_form.html', upload_result=upload_result, thumbnail_url1=thumbnail_url1,
-                           thumbnail_url2=thumbnail_url2)
-
 
 # returns url encoding specified comparison id
 @app.template_filter('share_comparison')

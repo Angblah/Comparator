@@ -613,6 +613,18 @@ def set_password(user_id, password):
 def validate_login(username, password):
     query = text("""select validate_login(:username, :password)""")
     return db.engine.execute(query, username=username, password=password).scalar()
+
+def delete_account(id):
+    from cloudinary.api import delete_resources_by_prefix
+
+    query = text("""
+    delete from account where id = :id;
+    """)
+    db.engine.execute(query.execution_options(autocommit=True), id=id)
+
+    # delete all images related to user
+    delete_resources_by_prefix('users/' + str(id))
+
 ############################################################################################
 
 ############################################################################################
