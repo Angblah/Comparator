@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Include the head tags -->
+{% include "partials/header.html" %}
+<!-- Include the nav bar for a user who isn't logged in -->
+{% include "partials/userNavBar.html" %}
+
+<link href="../static/css/dashboard.css" rel="stylesheet">
+
+    <body>
+        <!-- Template Link -->
+        <div id="template" data-template="{{template}}"></div>
+        <div id="templateFields">
+
+            {% for attr in template %}
+                <input type="text" value={{attr['name']}} />
+                <br>
+            {% endfor %}
+        </div>
+
+    </body>
+
+    <script>
+        var workspaceElem = document.getElementById("template");
+        var data = workspaceElem.dataset.template;
+    </script>
+
+<!-- Include the footer for things like copyright info and JS scripts -->
+{% include "partials/footer.html" %}
+</html>
