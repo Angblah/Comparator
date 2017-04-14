@@ -4,7 +4,11 @@
 {% include "partials/header.html" %}
 <!--TODO: different headers for user or not user-->
 <!-- Include the nav bar for a user -->
-{% include "partials/userNavBar.html" %}
+{% if current_user.is_anonymous %}
+    {% include "partials/guestNavBar.html" %}
+{% else %}
+    {% include "partials/userNavBar.html" %}
+{% endif %}
 <title>FAQ</title>
 
 <body>
