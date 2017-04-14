@@ -1,5 +1,3 @@
-
-
 // returns true if password
 function validatePassword(password, confirm) {
 

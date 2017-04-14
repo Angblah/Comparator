@@ -4,13 +4,6 @@
 <!-- Include the head tags -->
 {% include "partials/header.html" %}
 
-<!-- Include the nav bar -->
-{% if current_user.is_anonymous %}
-    {% include "partials/guestNavBar.html" %}
-{% else %}
-    {% include "partials/userNavBar.html" %}
-{% endif %}
-
 <link href="../static/css/about.css" rel="stylesheet">
 
 <body>
@@ -79,47 +72,14 @@
         </div>
     </div>
 
-
-    <!-- <div class="side-bar">
-        <p align="right">Compare Absolutely <strong>Anything</strong></p>
-        Let us help you make the best decision
-    </div>
-    <div style="padding-top: 0.8%">
-        <div class="about-cont">
-            <p>With so many products that do similar things in the marketplace,
-                it can be hard being a consumer in today's world.</p>
-            <p><strong>Comparator</strong> helps you decide which product
-                is right for you. Compare any item according to its many
-                attributes to determine which product is the best fit for you.</p>
-
-            <p>With so many products that do similar things in the marketplace,
-                it can be hard being a consumer in today's world.</p>
-            <p><strong>Comparator</strong> helps you decide which product
-                is right for you. Compare any item according to its many
-                attributes to determine which product is the best fit for you.</p>
-            <p>With so many products that do similar things in the marketplace,
-                it can be hard being a consumer in today's world.</p>
-            <p><strong>Comparator</strong> helps you decide which product
-                is right for you. Compare any item according to its many
-                attributes to determine which product is the best fit for you.</p>
-            <p>With so many products that do similar things in the marketplace,
-                it can be hard being a consumer in today's world.</p>
-            <p><strong>Comparator</strong> helps you decide which product
-                is right for you. Compare any item according to its many
-                attributes to determine which product is the best fit for you.</p>
-            <p>With so many products that do similar things in the marketplace,
-                it can be hard being a consumer in today's world.</p>
-            <p><strong>Comparator</strong> helps you decide which product
-                is right for you. Compare any item according to its many
-                attributes to determine which product is the best fit for you.</p>
-            <p>With so many products that do similar things in the marketplace,
-                it can be hard being a consumer in today's world.</p>
-            <p><strong>Comparator</strong> helps you decide which product
-                is right for you. Compare any item according to its many
-                attributes to determine which product is the best fit for you.</p>
-        </div>
-    </div> -->
 </div>
+
+<!-- Include the nav bar -->
+{% if current_user.is_anonymous %}
+    {% include "partials/guestNavBar.html" %}
+{% else %}
+    {% include "partials/userNavBar.html" %}
+{% endif %}
 
 <!-- Include the footer for things like copyright info and JS scripts -->
 {% include "partials/footer.html" %}
