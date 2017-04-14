@@ -41,14 +41,14 @@ def load_user(user_id):
 def uploadAvatar():
 
     from cloudinary.uploader import upload, destroy
-    from random import randint
+    from secrets import randbits
 
     if request.method == 'POST':
         # TODO: consider testing if file is image (though cloudinary technically does this anyway)
         file_to_upload = request.data
         if file_to_upload:
             # NOTE: public_id not replaced as cached images take a while to clear from CDN, new avatar may not appear
-            filepath = 'users/' + str(current_user.id) + '/avatar/' + str(randint(0, 1000000000))
+            filepath = 'users/' + str(current_user.id) + '/avatar/' + str(randbits(32))
             upload_result = upload(file=file_to_upload, public_id=filepath)
             image_id = upload_result['public_id']
 
