@@ -60,7 +60,6 @@ def uploadAvatar():
             file_size = getsizeof(file_to_upload)
             user_storage_use = get_user_image_storage_size(current_user.id)
             if file_size + user_storage_use > MAX_USER_IMAGE_STORAGE:
-                # TODO: show error message if user ran out of space
                 # image upload cancelled as exceeds max user image storage size
                 message = 'Upload exceeds your max image storage size, {} bytes. {} bytes currently used. (Uploaded image is {} bytes.)'.format(
                     MAX_USER_IMAGE_STORAGE, user_storage_use, file_size)
@@ -70,8 +69,6 @@ def uploadAvatar():
                 filepath = 'users/' + str(current_user.id) + '/avatar/' + str(randbits(32))
                 upload_result = upload(file=file_to_upload, public_id=filepath)
                 image_id = upload_result['public_id']
-
-                # TODO: keep track of user total image file size, limit upload accordingly
 
                 query = text("""
                 select avatar from account where id = :account_id;
@@ -507,12 +504,11 @@ def share_template(id, user_id):
 def view_comparison(token):
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
 
-    # TODO: see why is_anonymous sometimes boolean, sometimes bound method
     if not current_user.is_anonymous and user_id == current_user.id:
         return render_template('workspace.html', comparison=get_comparison(comparison_id), userId=current_user.id)
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
-        currUserId = 0;
+        currUserId = 0
         if not current_user.is_anonymous:
             currUserId = current_user.id
 

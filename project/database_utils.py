@@ -2,7 +2,6 @@ from app import db, app as _app
 from sqlalchemy import text, select
 from flask import json
 import sqlalchemy
-# TODO: look into sessions and rollback
 # initializes db stored functions and adds some values
 def initialize_db_structure():
     db.session.rollback()
@@ -584,7 +583,6 @@ def initialize_db_structure():
     db.engine.execute(query.execution_options(autocommit=True))
 
 # TODO: change default comparisons + templates for admin to be actual defaults instead of balls
-# TODO: consider function to import csv (both for allowing imports of exported tables/csv tables in general, and to ease example making)
 
 ############################################################################################
 # Account related functions
@@ -642,7 +640,6 @@ def set_sheet_name(sheet_id, name):
     """)
     db.engine.execute(query.execution_options(autocommit=True), sheet_id=sheet_id, name=name)
 
-# TODO: update when images implemented to delete images from cloudinary/whatever host is used
 def delete_sheet(sheet_id):
     query = text("""
     delete from sheet where id = :sheet_id;
@@ -1106,13 +1103,10 @@ if __name__ == '__main__':
 
 # TODO: consider adding import for xlsx/csv (see flask-excel)
 # TODO: consider renaming ...sheet_attribute... functions to just ...attribute...
-# TODO: implement search for comparisons/templates by name, as well as sort by various attributes (probably in frontend)
 # TODO: after implementation more complete, change admin/guest login info and set outside of pushed code
 # TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
 # TODO: consider changing date_modified to update from database trigger (many functions now forget to update date_modified)
     # downsides: may be inefficient for multirow deletes/update relating to the same Sheet
 # TODO: check if copy_comparison/create_comparison_from_template call from ui preserves privacy (can users modify call to use random id to see random users' comparisons/templates?)
-# TODO: dynamic template select based on admin templates
-# TODO: consider adding list of attributes when selecting new comparisons
 # TODO: see if need to check in app.py if current_user matches that of edited information to prevent code injection
 # TODO: delete avatars + comparison images on database wipes/updates/deletions/etc.
