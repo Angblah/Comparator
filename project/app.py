@@ -49,7 +49,7 @@ def uploadAvatar():
         if file_to_upload:
             # NOTE: public_id not replaced as cached images take a while to clear from CDN, new avatar may not appear
             filepath = 'users/' + str(current_user.id) + '/avatar/' + str(randint(0, 1000000000))
-            upload_result = upload(file_to_upload, public_id=filepath)
+            upload_result = upload(file=file_to_upload, public_id=filepath)
             image_id = upload_result['public_id']
 
             # TODO: keep track of user total image file size, limit upload accordingly
