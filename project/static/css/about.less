@@ -11,36 +11,40 @@
 @shadow: rgba(4, 4, 4, 0.1);
 
 body {
-    padding-top: 2% ! important;
+    /*padding-top: 2% ! important;*/
     font-family: Raleway;
     font-style: normal;
     font-variant: normal;
-    /*background-color: rgb(233, 234, 235);*/
-    background-color: rgb(243, 243, 244) ! important;
-    padding-bottom: 0%;
+    background-color: rgb(233, 234, 235);
 }
 
 div.banner img{
-	width: 100%;
+	  width: 100%;
+    padding-bottom: 3%;
 }
-/*div.banner {
-  position: fixed;
-}*/
 
-div.side-bar {
-	  background-color: rgb(243, 243, 244);
-  	height: 50%; 
-  	width: 40%;
-  	position: fixed;
-  	box-shadow: 10px 10px 3em @shadow;
+div.row {
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+div.row img {
+    width: 25%;
+    border: 2px solid @primary-col;
+    border-radius: 100%;
+}
+
+#main-text {
   	font-size: 50px;
-  	padding: 2%
+  	border-right: 1px solid gray;
 }
 
-div.about-cont {
-	padding-left: 45%;
-	/*padding-top: 2%;*/
-	padding-right: 2%;
-  height: 40vh;
-  overflow-y: scroll;
+div.col-sm-4 {
+    text-align: right;
+    padding: 1%;
 }
+
+div.col-sm-7 {
+    padding: 1%;
+}
+
