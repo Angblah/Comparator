@@ -19,6 +19,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
+# max user cloudinary image storage in bytes
+# currently 10 mebibytes
+MAX_USER_IMAGE_STORAGE = 10 * 1024 ** 2
+
 from models import *
 from database_utils import *
 
@@ -31,42 +35,73 @@ def index():
     else:
         return redirect(url_for('dashboard'))
 
+
 @login_manager.user_loader
 def load_user(user_id):
     # Given user_id, return the associated User object
     return Account.query.filter_by(id=user_id).one()
 
+
 @login_required
 @app.route('/uploadAvatar', methods=["POST"])
 def uploadAvatar():
-
     from cloudinary.uploader import upload, destroy
     from secrets import randbits
+    from sys import getsizeof
+    from flask import jsonify
+
+    data = {}
 
     if request.method == 'POST':
         # TODO: consider testing if file is image (though cloudinary technically does this anyway)
         file_to_upload = request.data
+
         if file_to_upload:
-            # NOTE: public_id not replaced as cached images take a while to clear from CDN, new avatar may not appear
-            filepath = 'users/' + str(current_user.id) + '/avatar/' + str(randbits(32))
-            upload_result = upload(file=file_to_upload, public_id=filepath)
-            image_id = upload_result['public_id']
+            file_size = getsizeof(file_to_upload)
+            user_storage_use = get_user_image_storage_size(current_user.id)
+            if file_size + user_storage_use > MAX_USER_IMAGE_STORAGE:
+                # TODO: show error message if user ran out of space
+                # image upload cancelled as exceeds max user image storage size
+                message = 'Upload exceeds your max image storage size, {} bytes. {} bytes currently used. (Uploaded image is {} bytes.)'.format(
+                    MAX_USER_IMAGE_STORAGE, user_storage_use, file_size)
+                data['failure'] = message
+            else:
+                # NOTE: public_id not replaced as cached images take a while to clear from CDN, new avatar may not appear
+                filepath = 'users/' + str(current_user.id) + '/avatar/' + str(randbits(32))
+                upload_result = upload(file=file_to_upload, public_id=filepath)
+                image_id = upload_result['public_id']
 
-            # TODO: keep track of user total image file size, limit upload accordingly
+                # TODO: keep track of user total image file size, limit upload accordingly
 
-            query = text("""
-            select avatar from account where id = :account_id;
-            """)
+                query = text("""
+                select avatar from account where id = :account_id;
+                """)
 
-            old_avatar_id = db.engine.execute(query, account_id=current_user.id).scalar()
-            if old_avatar_id:
-                destroy(old_avatar_id, invalidate=True)
+                old_avatar_id = db.engine.execute(query, account_id=current_user.id).scalar()
+                if old_avatar_id:
+                    destroy(old_avatar_id, invalidate=True)
 
-            query = text("""
-            update account set avatar = :image_id where id = :account_id;
-            """)
-            db.engine.execute(query.execution_options(autocommit=True), image_id=image_id, account_id=current_user.id)
-            return image_id
+                query = text("""
+                update account set avatar = :image_id where id = :account_id;
+                """)
+                db.engine.execute(query.execution_options(autocommit=True), image_id=image_id,
+                                  account_id=current_user.id)
+                data['success'] = image_id
+        return jsonify(data)
+
+
+# returns total image size in bytes of all of the specified user's cloudinary images
+def get_user_image_storage_size(id):
+    return get_cloudinary_folder_size('users/' + str(id))
+
+
+def get_cloudinary_folder_size(path):
+    from cloudinary.api import resources
+    size = 0
+    for resource in resources(type="upload", prefix=path)['resources']:
+        size += resource['bytes']
+    return size
+
 
 @login_required
 @app.route('/getUserAvatarID', methods=["GET", "POST"])
@@ -75,6 +110,7 @@ def getUserAvatarID():
     select avatar from Account where id = :id;
     """)
     return json.dumps(db.engine.execute(query, id=current_user.id).scalar())
+
 
 @app.route('/ComparisonFromTemplate', methods=["POST"])
 def comparisonFromTemplate():
@@ -94,6 +130,7 @@ def getComparisonData():
     data = get_comparison(12)
     return data
 
+
 @app.route('/editComparisonName', methods=["POST"])
 def editComparisonName():
     message = {}
@@ -102,6 +139,7 @@ def editComparisonName():
     message['success'] = 'success'
     return jsonify(message)
 
+
 @app.route('/editItemWorth', methods=["POST"])
 def editItemWorth():
     message = {}
@@ -109,6 +147,7 @@ def editItemWorth():
     set_attribute_value_worth(data['itemId'], data['attrId'], data['worth'])
     message['success'] = 'success'
     return jsonify(message)
+
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():
@@ -182,10 +221,12 @@ def saveComparisonAsTemplate():
     tempId['tempId'] = (save_comparison_as_template(data['compId'], data['name']))
     return jsonify(tempId)
 
+
 @app.route('/deleteComparison/<int:comp_id>')
 def deleteComparison(comp_id):
     delete_sheet(comp_id)
     return redirect(url_for('dashboard'))
+
 
 @app.route('/newComparison')
 def newComparison():
@@ -239,12 +280,14 @@ def dashboard():
 
     # TODO: consider only loading sample_temp and temp_attributes on relevant modal links
     sample_temp = get_sample_templates()
-    return render_template('dashboard.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp, sample_temp=sample_temp)
+    return render_template('dashboard.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp,
+                           sample_temp=sample_temp)
 
 
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 @app.route('/profile_form', methods=["GET", "POST"])
 @login_required
@@ -445,6 +488,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 # returns url encoding specified comparison id
 @app.template_filter('share_comparison')
 def share_comparison(id, user_id):
@@ -490,11 +534,13 @@ def csv(token):
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
     return get_comparison_csv(comparison_id)
 
+
 @app.teardown_request
 def teardown_request(exception):
     if exception:
         db.session.rollback()
     db.session.remove()
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
