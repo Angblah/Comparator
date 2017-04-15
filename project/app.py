@@ -267,8 +267,9 @@ def dashboard():
 
     # TODO: consider only loading sample_temp and temp_attributes on relevant modal links
     sample_temp = get_sample_templates()
+    user_temp = get_user_templates_detailed(current_user.id)
     return render_template('dashboard.html', recent_comp=recent_comp, all_comp=all_comp, all_temp=all_temp,
-                           sample_temp=sample_temp)
+                           sample_temp=sample_temp, user_temp=user_temp)
 
 
 @app.route('/about')

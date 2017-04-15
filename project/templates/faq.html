@@ -2,13 +2,7 @@
 <html lang="en">
 <!-- Include the head tags -->
 {% include "partials/header.html" %}
-<!--TODO: different headers for user or not user-->
-<!-- Include the nav bar for a user -->
-{% if current_user.is_anonymous %}
-    {% include "partials/guestNavBar.html" %}
-{% else %}
-    {% include "partials/userNavBar.html" %}
-{% endif %}
+
 <title>FAQ</title>
 
 <body>
@@ -71,6 +65,13 @@
         images uploaded by any guest user. Comparison/template storage space is not currently restricted.
     </div>
 </div>
+
+<!-- Include the nav bar for a user -->
+{% if current_user.is_anonymous %}
+    {% include "partials/guestNavBar.html" %}
+{% else %}
+    {% include "partials/userNavBar.html" %}
+{% endif %}
 </body>
 
 {% include "partials/footer.html" %}
