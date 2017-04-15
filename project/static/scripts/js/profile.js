@@ -1,7 +1,3 @@
-$( "#btnchange" ).click(function() {
-    $( "div.second" ).replaceWith( "<h2>New heading</h2>" );
-})
-
 // returns true if password
 function validatePassword(password, confirm) {
 
