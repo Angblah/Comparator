@@ -527,8 +527,7 @@ def view_template(token):
 @app.route('/updateTemplate')
 def updateTemplate():
     data = request
-    print data
-
+    
 
 @app.route('/csv/<token>')
 def csv(token):
