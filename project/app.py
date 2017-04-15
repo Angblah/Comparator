@@ -514,11 +514,19 @@ def view_comparison(token):
 def view_template(token):
     template_id, user_id = ts.loads(token, salt='template-data')
     if not current_user.is_anonymous and user_id == current_user.id:
-        a = get_template(template_id, get_json=False)
-        return render_template('template.html', template=get_template(template_id, get_json=False))
+        query = text("""
+        select * from user_template natural join sheet where id = :id;
+        """)
+        templateName = db.engine.execute(query, id=template_id).fetchone()
+        return render_template('template.html', template=get_template(template_id, get_json=False), templateName=templateName)
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
         abort(404)
+
+@app.route('/updateTemplate')
+def updateTemplate():
+    data = request
+    print data
 
 
 @app.route('/csv/<token>')

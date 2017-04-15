@@ -6,25 +6,32 @@
 <!-- Include the nav bar for a user who isn't logged in -->
 {% include "partials/userNavBar.html" %}
 
-<link href="../static/css/dashboard.css" rel="stylesheet">
+<link href="../static/css/profile.css" rel="stylesheet">
 
     <body>
         <!-- Template Link -->
-        <div id="template" data-template="{{template}}"></div>
-        <div id="templateFields">
+        <div id="template" data-template="{{template}}" data-templateName="{{templateName}}"></div>
 
-            {% for attr in template %}
-                <input type="text" value={{attr['name']}} />
-                <br>
-            {% endfor %}
+        <div class="nav-side">
+            <div>
+                <center>
+                    <h1 align="center"><strong>{{ templateName['name'] }}</strong></h1>
+                </center>
+            </div>
         </div>
 
-    </body>
+        <div class="profile-data">
+            <form action="/updateTemplate">
 
-    <script>
-        var workspaceElem = document.getElementById("template");
-        var data = workspaceElem.dataset.template;
-    </script>
+                {% for attr in template %}
+                    <input type="text" value={{attr['name']}} />
+                    <br>
+                {% endfor %}
+
+                <button type="submit" name="editTemplate">Update</button>
+            </form>
+        </div>
+    </body>
 
 <!-- Include the footer for things like copyright info and JS scripts -->
 {% include "partials/footer.html" %}
