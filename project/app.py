@@ -524,10 +524,6 @@ def view_template(token):
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
         abort(404)
 
-@app.route('/updateTemplate')
-def updateTemplate():
-    data = request
-    
 
 @app.route('/csv/<token>')
 def csv(token):
