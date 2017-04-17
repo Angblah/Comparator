@@ -17,7 +17,6 @@ header img {
 }
 /*Background*/
 body {
-  /*background-color: @back-col;*/
   padding-top: 30px;
   padding-bottom: 90px;
 }
@@ -99,16 +98,17 @@ button:hover {
   overflow: hidden !important;
   padding-bottom: 2em;
 }
-#carousel {
-  padding-top: 2em;
-  padding-bottom: 2em;
-}
 #home-data-cont {
   position: fixed;
   top: 20%;
   left: 55%;
   width: 33%;
   background-color: #ffffff;
+}
+div.col-sm-4,
+div.col-sm-7 {
+  padding-left: 4vw;
+  padding-right: 4vw;
 }
 /*navbar
 
