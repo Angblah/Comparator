@@ -5,73 +5,79 @@
 
 <title>FAQ</title>
 
+<link href="../static/css/about.css" rel="stylesheet">
+<link href="../static/css/faq.css" rel="stylesheet">
+
 <body>
 <!--<div class="row">-->
     <!--<div class="col-sm-4">How can we help you?</div>-->
     <!--<div class="col-sm-7">Testing</div>-->
 <!--</div>-->
-<div class="row">
-    <div class="col-sm-4">What is a comparison?</div>
-    <div class="col-sm-7">A comparison is a table where you can compare products. Each comparison has a set of
-        attributes going down the rows and a number of items going across the columns. Table contents can be edited by
-        clicking within a cell and typing.
+    <div class="banner">
+        <img src="/static/img/faqBanner.png" align="center" style="width: 100%">
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-4">What is a template?</div>
-    <div class="col-sm-7">A template is a collection of attributes relevant to a product category. For example, a laptop
-        template may have the attributes RAM, Price, Weight, Battery Life, etc. Templates can be used to quickly create
-        a comparison comparing items in a specific category. To use a template, first select the "New Comparison" button
-        on the bottom-right side of the dashboard. If you are not logged in, templates can be accessed in the "Start
-        Comparing" button on the homepage. Click on each template name to see which attributes they have. To create a
-        comparison using a template, simply click the "Start Comparing" button on a template dropdown. If you do not
-        find a template that meets your needs, select "Empty Template" to start comparing with a blank comparison with
-        no attributes.
+    <div class="row">
+        <div class="col-sm-4">What is a comparison?</div>
+        <div class="col-sm-7">A comparison is a table where you can compare products. Each comparison has a set of
+            attributes going down the rows and a number of items going across the columns. Table contents can be edited by
+            clicking within a cell and typing.
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-4">How do I create a comparison?</div>
-    <div class="col-sm-7">
-        Comparisons can be created by clicking the "New Comparison" button on the dashboard for logged in users, or the
-        "Start Comparing" button on the homepage. A modal/popup should appear with a list of templates to use to create
-        a comparison.
-        If you do not find a template related to the product you wish to compare, select "Empty Template" to create a
-        new empty comparison.
+    <div class="row">
+        <div class="col-sm-4">What is a template?</div>
+        <div class="col-sm-7">A template is a collection of attributes relevant to a product category. For example, a laptop
+            template may have the attributes RAM, Price, Weight, Battery Life, etc. Templates can be used to quickly create
+            a comparison comparing items in a specific category. To use a template, first select the "New Comparison" button
+            on the bottom-right side of the dashboard. If you are not logged in, templates can be accessed in the "Start
+            Comparing" button on the homepage. Click on each template name to see which attributes they have. To create a
+            comparison using a template, simply click the "Start Comparing" button on a template dropdown. If you do not
+            find a template that meets your needs, select "Empty Template" to start comparing with a blank comparison with
+            no attributes.
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-4">How do I create a template?</div>
-    <div class="col-sm-7">
-        Templates can be created by clicking the save button on a comparison and selecting "template". This will create
-        a new template with the comparison's attributes.
-        <!--TODO: how to create template -->
+    <div class="row">
+        <div class="col-sm-4">How do I create a comparison?</div>
+        <div class="col-sm-7">
+            Comparisons can be created by clicking the "New Comparison" button on the dashboard for logged in users, or the
+            "Start Comparing" button on the homepage. A modal/popup should appear with a list of templates to use to create
+            a comparison.
+            If you do not find a template related to the product you wish to compare, select "Empty Template" to create a
+            new empty comparison.
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-4">What features are limited for guests/why should I sign up?</div>
+    <div class="row">
+        <div class="col-sm-4">How do I create a template?</div>
+        <div class="col-sm-7">
+            Templates can be created by clicking the save button on a comparison and selecting "template". This will create
+            a new template with the comparison's attributes.
+            <!--TODO: how to create template -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">What features are limited for guests/why should I sign up?</div>
 
-    <!--TODO: see if limit on how long comparison lasts, if guests can create templates-->
-    <div class="col-sm-7">
-        While guests have access to most of the features of Comparator, certain web app functions are restricted to
-        registered users due to implementation constraints. Guests can create and edit comparisons. However, they will
-        need to manually save/remember the links to their comparisons to access them again, whereas registered users
-        can access their comparisons on their dashboard.
+        <!--TODO: see if limit on how long comparison lasts, if guests can create templates-->
+        <div class="col-sm-7">
+            While guests have access to most of the features of Comparator, certain web app functions are restricted to
+            registered users due to implementation constraints. Guests can create and edit comparisons. However, they will
+            need to manually save/remember the links to their comparisons to access them again, whereas registered users
+            can access their comparisons on their dashboard.
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-4">How much storage space do I have?</div>
-    <div class="col-sm-7">
-        Currently, image upload storage space is limited to 10 MB per account. For guests, this 10 MB limit includes all
-        images uploaded by any guest user. Comparison/template storage space is not currently restricted.
+    <div class="row">
+        <div class="col-sm-4">How much storage space do I have?</div>
+        <div class="col-sm-7">
+            Currently, image upload storage space is limited to 10 MB per account. For guests, this 10 MB limit includes all
+            images uploaded by any guest user. Comparison/template storage space is not currently restricted.
+        </div>
     </div>
-</div>
 
-<!-- Include the nav bar for a user -->
-{% if current_user.is_anonymous %}
-    {% include "partials/guestNavBar.html" %}
-{% else %}
-    {% include "partials/userNavBar.html" %}
-{% endif %}
+    <!-- Include the nav bar for a user -->
+    {% if current_user.is_anonymous %}
+        {% include "partials/guestNavBar.html" %}
+    {% else %}
+        {% include "partials/userNavBar.html" %}
+    {% endif %}
 </body>
 
 {% include "partials/footer.html" %}
