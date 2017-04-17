@@ -6,6 +6,8 @@ import sqlalchemy
 
 # initializes db stored functions and adds some values
 def initialize_db_structure():
+    from cloudinary.api import delete_resources_by_prefix
+    delete_resources_by_prefix('users/')
     db.session.rollback()
     db.session.close_all()
     db.drop_all()
@@ -606,12 +608,12 @@ def validate_registration(email, username):
 
 def register_user(email, username, password):
     query = text("""select register_user(:email, :username, :password)""")
-    db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password)
+    db.engine.execute(query.execution_options(autocommit=True), email=email, username=username, password=password).close()
 
 
 def set_password(user_id, password):
     query = text("""select set_password(:user_id, :password)""")
-    db.engine.execute(query.execution_options(autocommit=True), user_id=user_id, password=password)
+    db.engine.execute(query.execution_options(autocommit=True), user_id=user_id, password=password).close()
 
 
 # returns true if login credentials valid, false otherwise
@@ -667,7 +669,7 @@ def delete_sheet_attribute(attribute_id):
     query = text("""
     select delete_sheet_attribute(:attribute_id);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id)
+    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id).close()
 
 
 def add_sheet_attribute(sheet_id, attribute_name, type_id, weight=1):
@@ -708,14 +710,14 @@ def swap_attribute(id1, id2):
     query = text("""
     select swap_attribute(:id1, :id2);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2)
+    db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2).close()
 
 
 def move_attribute(attribute_id, position):
     query = text("""
     select move_attribute(:attribute_id, :position);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id, position=position)
+    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id, position=position).close()
 
 
 def set_comparison_attribute_value(item_id, attribute_id, new_value):
@@ -723,9 +725,9 @@ def set_comparison_attribute_value(item_id, attribute_id, new_value):
     select set_comparison_attribute_value(:item_id, :attribute_id, :new_value);
     """)
     db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, attribute_id=attribute_id,
-                      new_value=new_value)
+                      new_value=new_value).close()
 
-
+# TODO: update date modified of associated table
 # WARNING: will fail if attribute value does not have a value assigned
 def set_attribute_value_worth(item_id, attribute_id, worth):
     query = text("""
@@ -733,14 +735,13 @@ def set_attribute_value_worth(item_id, attribute_id, worth):
     """)
     db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, attribute_id=attribute_id, worth=worth)
 
-    # sorts comparison by specified attribute (ascending)
 
-
+# sorts comparison by specified attribute (ascending)
 def sort_by_attribute(attribute_id):
     query = text("""
     select sort_by_attribute(:attribute_id);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id)
+    db.engine.execute(query.execution_options(autocommit=True), attribute_id=attribute_id).close()
 
 
 # sorts sheet (comparison or template) attributes by ordering (list of attribute id's)
@@ -748,7 +749,7 @@ def sort_by_attribute_ordering(ordering):
     query = text("""
     select sort_by_attribute_ordering(:ordering);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
+    db.engine.execute(query.execution_options(autocommit=True), ordering=ordering).close()
 
 
 # valid fields are name, type_id, weight (id and comparison_id should probably not be changed)
@@ -819,7 +820,6 @@ def get_comparison(comparison_id, get_json=True):
         query = text("""
         select * from comparison inner join sheet using(id) where comparison.id = :comparison_id;
         """)
-        # data = jsonify_table(db.engine.execute(query, comparison_id=comparison_id), get_json=False)[0]
 
         # info put as separate part of json to allow easier React use (as fields other than 'id' used rarely)
         data = {}
@@ -872,7 +872,7 @@ def delete_comparison_item(item_id):
     query = text("""
     select delete_comparison_item(:item_id);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id).close()
 
 
 # saves specified comparison as template with given name, returns new template id
@@ -921,21 +921,21 @@ def swap_comparison_item(id1, id2):
     query = text("""
     select swap_comparison_item (:id1, :id2);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2)
+    db.engine.execute(query.execution_options(autocommit=True), id1=id1, id2=id2).close()
 
 
 def move_comparison_item(item_id, position):
     query = text("""
     select move_comparison_item(:item_id, :position);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, position=position)
+    db.engine.execute(query.execution_options(autocommit=True), item_id=item_id, position=position).close()
 
 
 def delete_comparison_item_by_position(comparison_id, position):
     query = text("""
     select delete_comparison_item(:comparison_id, :position);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position)
+    db.engine.execute(query.execution_options(autocommit=True), comparison_id=comparison_id, position=position).close()
 
 
 # sorts comparison items by ordering determined by inputted list of ordered comparison_item id's
@@ -943,7 +943,7 @@ def sort_by_item_ordering(ordering):
     query = text("""
     select sort_by_item_ordering(:ordering);
     """)
-    db.engine.execute(query.execution_options(autocommit=True), ordering=ordering)
+    db.engine.execute(query.execution_options(autocommit=True), ordering=ordering).close()
 
 
 def set_item_name(item_id, name):
@@ -1019,6 +1019,7 @@ def get_comparison_csv(comparison_id):
 def get_sample_templates():
     return get_user_templates_detailed(1)
 
+
 def get_user_templates_detailed(id):
     query = text("""
         select sheet.id, sheet.name, sheet_attribute.name as attribute_name from user_template
@@ -1040,6 +1041,7 @@ def get_user_templates_detailed(id):
         if row['attribute_name']:
             data[(id, name)].append(row['attribute_name'])
     return data
+
 
 # returns array of template ids for specified user
 def get_user_template_ids(user_id, get_json=True):
@@ -1115,7 +1117,7 @@ def initialize_db_values():
     query = text("""
         select initialize_db_values()
     """)
-    db.engine.execute(query.execution_options(autocommit=True))
+    db.engine.execute(query.execution_options(autocommit=True)).close()
 
 
 # takes in ResultProxy from executed query, returns json array of rows mapping column names to values
@@ -1152,6 +1154,8 @@ if __name__ == '__main__':
     # TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
     # TODO: consider changing date_modified to update from database trigger (many functions now forget to update date_modified)
     # downsides: may be inefficient for multirow deletes/update relating to the same Sheet
-    # TODO: check if copy_comparison/create_comparison_from_template call from ui preserves privacy (can users modify call to use random id to see random users' comparisons/templates?)
     # TODO: see if need to check in app.py if current_user matches that of edited information to prevent code injection
-    # TODO: delete avatars + comparison images on database wipes/updates/deletions/etc.
+    # TODO: retrieve non-pivot table and pivot in server so that null/duplicate (like empty string) item columns doesn't error csv download
+
+
+
