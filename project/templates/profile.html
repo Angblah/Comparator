@@ -4,7 +4,6 @@
 <!-- Include the head tags -->
 {% include "partials/header.html" %}
 <!-- Include the nav bar for a user who isn't logged in -->
-{% include "partials/userNavBar.html" %}
 
 <link href="../static/css/profile.css" rel="stylesheet">
 
@@ -12,8 +11,9 @@
 
 <div id="all">
 
-    <div class="nav-side">
-        <div>
+    <!-- <div class="nav-side"> -->
+    <div class="row">
+        <div class="col-sm-4" id="nav-side">
             <center>
                 <img id="avatar" src="../static/img/user.png" class="img-responsive hidden-xs"
                      style="background-color: white; border-radius: 100%; height: 30%; width: 30%">
@@ -31,26 +31,26 @@
                 </div>
             </center>
         </div>
-    </div>
-    <div class="profile-data">
-        <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal"
-                data-target="#change-info-modal">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-        </button>
-        <div class="prof-cont">
-            <h1>USERNAME</h1>
-            <h2>{{ current_user.username }}</h2>
-        </div>
+        <div class="col-sm-7" id="profile-data">
+            <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal"
+                    data-target="#change-info-modal">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+            <div class="prof-cont">
+                <h1>USERNAME</h1>
+                <h2>{{ current_user.username }}</h2>
+            </div>
 
-        <hr>
-        <div class="prof-cont">
-            <h1>EMAIL</h1>
-            <h2>{{ current_user.email }}</h2>
-        </div>
-        <hr>
-        <div class="prof-cont">
-            <h1>PASSWORD</h1>
-            <h2>********</h2>
+            <hr>
+            <div class="prof-cont">
+                <h1>EMAIL</h1>
+                <h2>{{ current_user.email }}</h2>
+            </div>
+            <hr>
+            <div class="prof-cont">
+                <h1>PASSWORD</h1>
+                <h2>********</h2>
+            </div>
         </div>
     </div>
 
@@ -117,6 +117,7 @@
     </div>
 
     <!-- Include the footer for things like copyright info and JS scripts -->
+    {% include "partials/userNavBar.html" %}
     {% include "partials/footer.html" %}
 
 </div>
