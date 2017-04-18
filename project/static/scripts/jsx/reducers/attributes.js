@@ -3,7 +3,8 @@ import {
     EDIT_ATTR,
     DELETE_ATTR,
     LOAD_ATTR,
-    EDIT_ITEM_NAME
+    EDIT_ITEM_NAME,
+    ATTR_ID
 } from '../actions/actions'
 
 const attributes = (state = [], action) => {
@@ -16,6 +17,7 @@ const attributes = (state = [], action) => {
                 id: action.attrId,
                 type_id: 0}
             ];
+
         // Edit a single attribute
         case EDIT_ATTR:
             var newState = [...state];
@@ -29,12 +31,29 @@ const attributes = (state = [], action) => {
                     name: action.name
                 }
             });
+
         // Delete an attribute
         case DELETE_ATTR:
             return state.filter(attribute => action.attrId != attribute.id);
+
+        // Update the id of the attribute
+        case ATTR_ID:
+            var newState = [...state];
+            return newState.map((attr) => {
+                if (attr.id !== action.oldId) {
+                    return attr;
+                }
+
+                return {
+                    ...attr,
+                    id: action.newId
+                }
+            });
+
         // Load the attributes
         case LOAD_ATTR:
             return action.json;
+
         default:
             return state;
     }

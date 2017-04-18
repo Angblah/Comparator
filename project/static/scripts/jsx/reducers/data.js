@@ -9,6 +9,19 @@ const data = undoable(combineReducers({
         attributes: attributes,
         items: items
     }), 
-    {filter: distinctState()});
+    {filter: function filterActions(action, currentState, previousState) {
+        return currentState != previousState; // only add to history if action is SOME_ACTION
+    }});
+
+// function filterActions(action, currentState, previousHistory) {
+//     return action.type === SOME_ACTION; // only add to history if action is SOME_ACTION
+//   }
+
+// // distinctState helper
+// function distinctState() {
+//   return function (action, currentState, previousState) {
+//     return currentState !== previousState;
+//   };
+// }
 
 export default data;

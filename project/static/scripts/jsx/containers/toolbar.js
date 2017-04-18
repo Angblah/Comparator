@@ -1,7 +1,16 @@
 import React from 'react';
-import {connect} from 'react-redux'
-import {addAttr, addItem, changeView, exportCSV, saveTemplate, deleteItem, deleteAttr} from '../actions/actions'
-import { ActionCreators as UndoActionCreators } from 'redux-undo'
+import {connect} from 'react-redux';
+import { ActionCreators as UndoActionCreators } from 'redux-undo';
+import {addAttr, 
+        addItem, 
+        changeView, 
+        exportCSV, 
+        saveTemplate, 
+        deleteItem, 
+        deleteAttr, 
+        undoCall,
+        makeCalls,
+        redoCall} from '../actions/actions';
 
 class Toolbar extends React.Component {
     constructor(props) {
@@ -28,10 +37,10 @@ class Toolbar extends React.Component {
                         </div>
 
                         <div className="btn-group mr-2" role="group" aria-label="Second group">
-                            <button className="btn btn-secondary" onClick={this.props.onUndo} disabled={!(this.props.canUndo)}>
+                            <button className="btn btn-secondary" onClick={() => {this.props.onUndo(); this.props.undoCall()}} disabled={!(this.props.canUndo)}>
                               <i className="fa fa-undo" aria-hidden="true"></i>
                             </button>
-                            <button className="btn btn-secondary" onClick={this.props.onRedo} disabled={!(this.props.canRedo)}>
+                            <button className="btn btn-secondary" onClick={() => {this.props.onRedo(); this.props.redoCall()}} disabled={!(this.props.canRedo)}>
                               <i className="fa fa-repeat" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -59,6 +68,10 @@ class Toolbar extends React.Component {
                                 </div>
                             </div>
                         </div>
+
+                        <button className="btn btn-secondary" onClick={this.props.makeCalls}> Make Calls
+                            <i className="fa fa-repeat" aria-hidden="true"></i>
+                        </button>
 
                         <div className="btn-group ml-auto" role="group" aria-label="Extra">
                             <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.exportCSV()}><i className="fa fa-file-excel-o" aria-hidden="true"></i> Export as CSV</button>
@@ -132,8 +145,24 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         deleteAttr: (attrId) => {
             dispatch(deleteAttr(attrId))
         },
-        onUndo: () => dispatch(UndoActionCreators.undo()),
-        onRedo: () => dispatch(UndoActionCreators.redo())
+        onUndo: () => {
+            dispatch(UndoActionCreators.undo())
+        },
+        onRedo: () => {
+            dispatch(UndoActionCreators.redo())
+        },
+        clearHistory: () => {
+            dispatch(UndoActionCreators.clearHistory())
+        },
+        undoCall: () => {
+            dispatch(undoCall())
+        },
+        redoCall: () => {
+            dispatch(redoCall())
+        },
+        makeCalls: () => {
+            dispatch(makeCalls())
+        }
     }
 }
 
