@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import undoable, {distinctState} from 'redux-undo';
+import {isEqual} from 'lodash';
 import attributes from './attributes';
 import items from './items';
 import view from './view';
@@ -10,7 +11,7 @@ const data = undoable(combineReducers({
         items: items
     }), 
     {filter: function filterActions(action, currentState, previousState) {
-        return currentState != previousState; // only add to history if action is SOME_ACTION
+        return !_.isEqual(currentState,previousState); // only add history if states aren't equal
     }});
 
 // function filterActions(action, currentState, previousHistory) {

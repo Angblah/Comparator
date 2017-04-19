@@ -225,8 +225,7 @@ export const routeToEditName = (name) => {
 // TIMER ACTIONS
 // ================================
 export function handleTick(time) {
-    console.log(time)
-    if (time < 10) {
+    if (time < 120) {
         return function (dispatch) {
             dispatch(increment());
         }
@@ -239,7 +238,6 @@ export function handleTick(time) {
 }
 
 export const increment = () => {
-    console.log("TICK");
     return {
         type: 'INCREMENT'
     };

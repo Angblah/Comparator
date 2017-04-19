@@ -1,16 +1,17 @@
 import React from 'react';
-import { ActionCreators as UndoActionCreators } from 'redux-undo'
-import {connect} from 'react-redux'
+import { ActionCreators as UndoActionCreators } from 'redux-undo';
+import {connect} from 'react-redux';
+import {isEqual} from 'lodash';
 import Slider from 'rc-slider';
-import {addItem, addAttr, editAttr, editItem, editItemWorth, editItemName, changeView, deleteAttr, deleteItem, makeCalls, handleTick} from '../actions/actions'
+import {addItem, addAttr, editAttr, editItem, editItemWorth, editItemName, changeView, deleteAttr, deleteItem, makeCalls, handleTick} from '../actions/actions';
 import {START_TIMER} from 'redux-timer-middleware';
-import ChartView from '../components/chartView'
-import ZoomDragCircle from '../components/spiderView'
-import ProgressChart from '../components/testView'
+import ChartView from '../components/chartView';
+import ZoomDragCircle from '../components/spiderView';
+import ProgressChart from '../components/testView';
 
 class ViewContainer extends React.Component {
     componentDidMount() {
-        //setInterval(() => this.props.handleTick(this.props.timer), 1000);
+        setInterval(() => this.props.handleTick(this.props.timer), 1000);
     }
 
     componentWillUnmount() {
@@ -18,8 +19,16 @@ class ViewContainer extends React.Component {
         this.props.makeCalls();
     }
 
-    shouldComponentUpdate() {
-        return true;
+    shouldComponentUpdate(nextProp) {
+        var isEqual = false;
+
+        if (_.isEqual(this.props.attributes, nextProp.attributes) &&
+            _.isEqual(this.props.items, nextProp.items) &&
+            _.isEqual(this.props.view, nextProp.view)) {
+            isEqual = true;
+        }
+
+        return !isEqual;
     }
 
     render() {
