@@ -16,3 +16,12 @@ BUG FIXES<br>
 
 KNOWN BUGS<br>
   When downloading as xlsx, empty items will show up as " " instead of ""<br>
+
+Install Guide version 1.0<br>
+
+PRE-REQUISITES<br>
+  You must use a web browser that has JavaScript enabled.<br>
+  You must have an Internet connection.<br>
+  
+RUNNING APPLICATION<br>
+  Visit https://thecomparator.herokuapp.com
