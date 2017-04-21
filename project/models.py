@@ -64,12 +64,12 @@ class SheetAttribute(db.Model):
     __tablename__ = 'sheet_attribute'
 
     id = db.Column(Integer, primary_key=True)
-    name = db.Column(String(255), nullable=True)
+    name = db.Column(String(255), nullable=False, server_default="""\'\'""")
     weight = db.Column(Integer, nullable=False, server_default=text("1"))
     position = db.Column(Integer, nullable=False)
     sheet_id = db.Column(ForeignKey('sheet.id', ondelete='CASCADE'), nullable=False)
     type_id = db.Column(ForeignKey('data_type.id'), nullable=False, server_default=text("0"))
-    UniqueConstraint(sheet_id, name)
+    # UniqueConstraint(sheet_id, name)
     UniqueConstraint(sheet_id, position, deferrable=True)
 
     sheet = relationship('Sheet')
@@ -94,7 +94,7 @@ class ComparisonItem(db.Model):
     __tablename__ = 'comparison_item'
 
     id = db.Column(Integer, primary_key=True)
-    name = db.Column(String(255), nullable=True)
+    name = db.Column(String(255), nullable=False, server_default="""\'\'""")
     position = db.Column(Integer, nullable=False)
     comparison_id = db.Column(ForeignKey('comparison.id', ondelete='CASCADE'), nullable=False)
     UniqueConstraint('comparison_id', 'position', deferrable=True)

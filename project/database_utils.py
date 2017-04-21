@@ -228,7 +228,7 @@ def initialize_db_structure():
         begin
             update sheet_attribute set position = position + _num_attributes where position >= _position and sheet_id = _sheet_id;
             update sheet set date_modified = current_timestamp where id = _sheet_id;
-            return query insert into sheet_attribute(name, sheet_id, position) select null, _sheet_id, position from
+            return query insert into sheet_attribute(sheet_id, position) select _sheet_id, position from
                 (select generate_series(_position, _position + _num_attributes - 1) as position) as positions returning id;
 
         end;
