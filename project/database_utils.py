@@ -196,7 +196,7 @@ def initialize_db_structure():
     create or replace function comparison_table_stacked (_comparison_id int) returns table(type_id smallint, "id" int, "position" int, attribute_name varchar, val varchar, item_name varchar, item_id int, worth int)
         as $$
         begin
-            return query select sheet_attribute.type_id, sheet_attribute.id, comparison_item.position, sheet_attribute.name, attribute_value.val, comparison_item.name, comparison_item.id, coalesce(attribute_value.worth, 1)
+            return query select sheet_attribute.type_id, sheet_attribute.id, comparison_item.position, sheet_attribute.name, coalesce(attribute_value.val, ''), comparison_item.name, comparison_item.id, coalesce(attribute_value.worth, 1)
             from comparison
                 inner join sheet_attribute on comparison.id = sheet_attribute.sheet_id
                 inner join comparison_item on comparison.id = comparison_item.comparison_id
@@ -205,6 +205,7 @@ def initialize_db_structure():
                 order by comparison_item.position, sheet_attribute.position;
         end;
     $$ language plpgsql;
+
 
     create or replace function add_sheet_attribute (_sheet_id int, attribute_name varchar(255), attribute_type_id smallint, _weight int default 1, out attribute_id int) returns int
         as $$
