@@ -4,40 +4,40 @@ Comparator is a web app that allows users to easily compare products to determin
 
 <b>Release Notes version 1.0</b>
 
-NEW FEATURES
-  Added functionality to create and edit templates
-  Added functionality to create and edit comparisons
-  Added feature to share comparisons
-  Added button to export comparison
-  Added functionality to save as template or comparison
+NEW FEATURES<br>
+  Added functionality to create and edit templates<br>
+  Added functionality to create and edit comparisons<br>
+  Added feature to share comparisons<br>
+  Added button to export comparison<br>
+  Added functionality to save as template or comparison<br>
   
-BUG FIXES
-  Clicking on but not changing values in the comparison no longer triggers Undo/Redo
+BUG FIXES<br>
+  Clicking on but not changing values in the comparison no longer triggers Undo/Redo<br>
 
-KNOWN BUGS
-  When downloading as xlsx, empty items will show up as " " instead of ""
+KNOWN BUGS<br>
+  When downloading as xlsx, empty items will show up as " " instead of ""<br>
 
-<b>Install Guide version 1.0</b>
+<b>Install Guide version 1.0</b><br>
 
-PRE-REQUISITES
-  Install Python 3
-  Install Node Package Manager
+PRE-REQUISITES<br>
+  Install Python 3<br>
+  Install Node Package Manager<br>
 
-DEPENDENCIES
-run "pip install -r requirements.txt"
-run "npm install"
-run "npm i webpack -g"
-run "npm install -g less"
+DEPENDENCIES<br>
+run "pip install -r requirements.txt"<br>
+run "npm install"<br>
+run "npm i webpack -g"<br>
+run "npm install -g less"<br>
 
-DOWNLOAD
-  github.com/Angblah/The-Comparator
+DOWNLOAD<br>
+  github.com/Angblah/The-Comparator<br>
 
-BUILD
-  To compile the .jsx into the bundles, run "webpack" from the root directory
-  To compile the .less into .css files, run "lessc [filename].less [filename].css" from css folder  
+BUILD<br>
+  To compile the .jsx into the bundles, run "webpack" from the root directory<br>
+  To compile the .less into .css files, run "lessc [filename].less [filename].css" from css folder<br>
   
-INSTALLATION
-  Contact Team 171 Byte Me for information on sensitive environment variables.
+INSTALLATION<br>
+  Contact Team 171 Byte Me for information on sensitive environment variables.<br>
   
-RUNNING APPLICATION
-  Run "python app.py" in a terminal to run locally
+RUNNING APPLICATION<br>
+  Run "python app.py" in a terminal to run locally<br>
