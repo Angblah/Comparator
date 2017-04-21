@@ -16,6 +16,7 @@ BUG FIXES<br>
 
 KNOWN BUGS<br>
   * When downloading as xlsx, empty items will show up as " " instead of ""<br>
+  * Changes that are being made during the database call completion may get lost in front-end rerender
 
 <b>Install Guide version 1.0</b><br>
 
