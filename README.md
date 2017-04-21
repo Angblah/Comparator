@@ -1,6 +1,20 @@
-# The-Comparator
+# Comparator
 
-The Comparator is a web app that allows users to easily compare products to determine the one to best fit their needs.
+Comparator is a web app that allows users to easily compare products to determine the one to best fit their needs.
+
+Release Notes version 1.0
+NEW FEATURES
+  Added functionality to create and edit templates
+  Added functionality to create and edit comparisons
+  Added feature to share comparisons
+  Added button to export comparison
+  Added functionality to save as template or comparison
+  
+BUG FIXES
+  Clicking on an empty cell in the comparison no longer triggers Undo/Redo
+
+KNOWN BUGS
+  When downloading as xlsx, empty items will show up as " " instead of ""
 
 To install packages:
   1. Install Git
