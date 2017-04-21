@@ -4,7 +4,10 @@ import {
     LOAD_ITEMS,
     EDIT_ITEM_WORTH,
     EDIT_ITEM_NAME,
-    DELETE_ITEM
+    DELETE_ITEM,
+    ATTR_ID,
+    ITEM_ID,
+    ADD_ATTR
 } from '../actions/actions'
 
 const items = (state = [], action) => {
@@ -74,6 +77,43 @@ const items = (state = [], action) => {
                 }
             });
 
+        // Add attribute name to the items
+        case ADD_ATTR:
+            var newState = [...state]
+            return newState.map((item) => {
+                console.log(item)
+                return {
+                    ...item,
+                    [action.attrId]: {val: "", worth: 1}
+                }
+            });
+
+        // Update the id of the items that are spoofed
+        case ITEM_ID:
+            var newState = [...state];
+            return newState.map((item) => {
+                if (item.id !== action.oldId) {
+                    return item;
+                }
+
+                return {
+                    ...item,
+                    id: action.newId
+                }
+            });
+    
+        // In case of attribute id being updated, update the items 
+        case ATTR_ID:
+            var newState = [...state];
+            return newState.map((item) => {
+                var val = item[action.oldId];
+                delete item[action.oldId];
+                return {
+                    ...item,
+                    [action.newId]: val
+                }
+            });
+
         // Delete an Item
         case DELETE_ITEM:
             return state.filter(item => action.itemId != item.id);
@@ -81,6 +121,7 @@ const items = (state = [], action) => {
         // Load the comparison items to store
         case LOAD_ITEMS:
             return action.json;
+
         default:
             return state;
     }

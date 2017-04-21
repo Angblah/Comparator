@@ -1,13 +1,36 @@
 import React from 'react';
-import { ActionCreators as UndoActionCreators } from 'redux-undo'
-import {connect} from 'react-redux'
+import { ActionCreators as UndoActionCreators } from 'redux-undo';
+import {connect} from 'react-redux';
+import {isEqual} from 'lodash';
 import Slider from 'rc-slider';
-import {addItem, addAttr, editAttr, editItem, editItemWorth, editItemName, changeView, deleteAttr, deleteItem} from '../actions/actions'
-import ChartView from '../components/chartView'
-import ZoomDragCircle from '../components/spiderView'
-import ProgressChart from '../components/testView'
+import {addItem, addAttr, editAttr, editItem, editItemWorth, editItemName, changeView, deleteAttr, deleteItem, makeCalls, handleTick} from '../actions/actions';
+import {START_TIMER} from 'redux-timer-middleware';
+import ChartView from '../components/chartView';
+import ZoomDragCircle from '../components/spiderView';
+import ProgressChart from '../components/testView';
 
 class ViewContainer extends React.Component {
+    componentDidMount() {
+        setInterval(() => this.props.handleTick(this.props.timer), 1000);
+    }
+
+    componentWillUnmount() {
+        console.log("Component Unmounting");
+        this.props.makeCalls();
+    }
+
+    shouldComponentUpdate(nextProp) {
+        var isEqual = false;
+
+        if (_.isEqual(this.props.attributes, nextProp.attributes) &&
+            _.isEqual(this.props.items, nextProp.items) &&
+            _.isEqual(this.props.view, nextProp.view)) {
+            isEqual = true;
+        }
+
+        return !isEqual;
+    }
+
     render() {
         //TODO: Create ViewContainer toggle based on view of state.
         if (this.props.view === 'CHART' &&  this.props.userId == this.props.info.account_id || this.props.userId == 0) {
@@ -20,16 +43,22 @@ class ViewContainer extends React.Component {
                                     if (item[attr.id].val) {
                                         return(
                                         <div className="nav-item">
-                                            <a className="nav-link" href="#">{item[attr.id].val}</a>
-                                            <Slider min={0} max={10} step={1} dots defaultValue={item[attr.id].worth} onAfterChange={(value) => this.props.editItemWorth(item.id, attr.id, value)}/>
+                                            <div className="container">
+                                                <a className="nav-link" href="#">{item[attr.id].val}</a>
+                                                <Slider min={0} max={10} step={1} dots defaultValue={item[attr.id].worth} onAfterChange={(value) => this.props.editItemWorth(item.id, attr.id, value)}/>
+                                            </div>
                                         </div>
                                         );
                                     }
                                 }, this);
                                 return(
                                     <ul className="nav nav-pills flex-column">
-                                        <h3>{item.name}</h3>
-                                        {itemAttr}
+                                        <h3 className="mb-0">
+                                            <a className="nav-link collapsed" href={"#submenu" + item.id}  data-toggle="collapse" data-target={"#submenu" + item.id}>{item.name}  <i className="fa fa-sort-desc" aria-hidden="true"></i></a>
+                                        </h3>
+                                        <div className="collapse" id={"submenu" + item.id} aria-expanded="false">
+                                            {itemAttr}
+                                        </div>
                                     </ul>
                                 ); 
                             }, this)}
@@ -101,6 +130,7 @@ const mapStateToProps = (state) => {
         attributes: state.data.present.attributes,
         items: state.data.present.items,
         view: state.data.present.view,
+        timer: state.timer,
         canUndo: state.data.past.length > 0,
         canRedo: state.data.future.length > 0
     };
@@ -135,8 +165,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         deleteAttr: (attrId) => {
             dispatch(deleteAttr(attrId))
         },
-        onUndo: () => dispatch(UndoActionCreators.undo()),
-        onRedo: () => dispatch(UndoActionCreators.redo())
+        onUndo: () => {
+            dispatch(UndoActionCreators.undo())
+        },
+        onRedo: () => {
+            dispatch(UndoActionCreators.redo())
+        },
+        makeCalls: () => {
+            dispatch(makeCalls())
+        },
+        handleTick: (time) => {
+            dispatch(handleTick(time))
+        }
     }
 }
 

@@ -55,7 +55,9 @@ var initialState = {
 console.log(initialState);
 
 // Set up logger
-const loggerMiddleware = createLogger();
+const loggerMiddleware = createLogger({
+  predicate: (getState, action) => action.type !== "INCREMENT"
+});;
 
 // Make store and reducers along with Middleware setup
 const store = createStore(workspaceState, initialState,

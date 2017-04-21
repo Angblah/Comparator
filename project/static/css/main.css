@@ -106,9 +106,10 @@ button:hover {
   background-color: #ffffff;
 }
 div.col-sm-4,
+div.col-sm-5,
 div.col-sm-7 {
-  padding-left: 4vw;
-  padding-right: 4vw;
+  padding-left: 3vw;
+  padding-right: 3vw;
 }
 /*navbar
 
