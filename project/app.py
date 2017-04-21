@@ -115,10 +115,10 @@ def comparisonFromTemplate():
 
     # If it is a comparison from guest user, assign it to guest's account
     if current_user.is_anonymous:
-        comparison_id = create_comparison_from_user_template(2, template_id)
+        comparison_id = create_comparison_from_template(2, template_id)
         return redirect(share_comparison(comparison_id, 2))
     else:
-        comparison_id = create_comparison_from_user_template(current_user.id, template_id)
+        comparison_id = create_comparison_from_template(current_user.id, template_id)
         return redirect(share_comparison(comparison_id, current_user.id))
 
 
@@ -527,9 +527,10 @@ def view_template(token):
 
 @app.route('/csv/<token>')
 def csv(token):
-    comparison_id, user_id = ts.loads(token, salt='comparison-data')
-    return get_comparison_csv(comparison_id)
 
+    comparison_id, user_id = ts.loads(token, salt='comparison-data')
+
+    return get_comparison_csv(comparison_id)
 
 @app.teardown_request
 def teardown_request(exception):

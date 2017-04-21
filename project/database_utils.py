@@ -287,7 +287,7 @@ def initialize_db_structure():
         end;
     $$ language plpgsql;
 
-    create or replace function create_comparison_from_user_template (_account_id int, _template_id int, _comparison_name varchar default null, _num_items int default 2) returns int
+    create or replace function create_comparison_from_template (_account_id int, _template_id int, _comparison_name varchar default null, _num_items int default 2) returns int
         as $$
             declare _comparison_id int;
         begin
@@ -488,17 +488,12 @@ def initialize_db_structure():
     create or replace function populate_database_test_values() returns void
         as $$
         declare _account_id int;
-        declare _comparison_id int;
-        declare item_0 int;
-        declare item_1 int;
-        declare item_2 int;
 
-        declare comp_1 int;
-        declare comp_2 int;
-        declare comp_3 int;
 
-        declare temp_1 int;
-        declare temp_2 int;
+        declare washer_template int;
+        declare laptop_template int;
+        declare camera_template int;
+
         declare washer_comparison int;
         declare laptop_comparison int;
 
@@ -507,71 +502,25 @@ def initialize_db_structure():
             select register_user('a@a.com', 'admin', 'password') into _account_id;
             perform register_user('b@b.com', 'guest', 'guest_password');
             perform register_user('test@comparator_test.com', 'a', 'a');
-            insert into sheet (name, account_id) select 'balls', id from account where username = 'admin' returning id into _comparison_id;
-            insert into comparison(id) values (_comparison_id);
 
-            perform add_comparison_item_back(_comparison_id);
-            perform add_comparison_item_back(_comparison_id);
-            perform add_comparison_item(_comparison_id, 0, 'test item 1');
-            perform add_comparison_item(_comparison_id, 1, 'test item 2');
-            perform add_comparison_items(_comparison_id, 2, 2);
-            perform delete_comparison_item(_comparison_id, 2);
+            select make_template(1, 'Top Load Washers', Array[1, 1, 0, 4, 1, 1, 0]::smallint[],
+                                  Array['price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']) into washer_template;
+            select make_template(1, 'Laptops', Array[1, 0, 1, 1, 1, 1, 0, 4]::smallint[],
+                                  Array['Price', 'Operating System', 'Memory', 'Hard Drive', 'Graphics Card', 'Weight', 'Size', 'Battery Life']) into laptop_template;
+            select make_template(1, 'Cameras', Array[1, 1, 1, 4, 4, 1, 0, 1, 4]::smallint[],
+                                  Array['Price', 'Megapixels', 'Image Quality','Shutter Lag', 'Startup Time', 'Weight', 'Size', 'Storage Space', 'Battery Life']) into camera_template;
 
-            perform add_sheet_attribute(_comparison_id, 'size', 0::smallint);
-            perform add_sheet_attribute(_comparison_id, 'color', 0::smallint);
-            perform add_sheet_attribute(_comparison_id, 'number', 1::smallint);
-
-            select id from comparison_item where position = 0 into item_0;
-            select id from comparison_item where position = 1 into item_1;
-            select id from comparison_item where position = 2 into item_2;
-
-            update comparison_item set name = 'balls 1' where position = 0 and comparison_id = _comparison_id;
-            update comparison_item set name = 'balls 2' where position = 1 and comparison_id = _comparison_id;
-            update comparison_item set name = 'balls 3' where position = 2 and comparison_id = _comparison_id;
-
-
-            perform set_comparison_attribute_value(item_0, (select id from sheet_attribute where name = 'size' and sheet_id = _comparison_id), 'large');
-            perform set_comparison_attribute_value(item_0, (select id from sheet_attribute where name = 'color' and sheet_id = _comparison_id), 'red');
-            perform set_comparison_attribute_value(item_0, (select id from sheet_attribute where name = 'number' and sheet_id = _comparison_id), '-1.32');
-
-            perform set_comparison_attribute_value(item_1, (select id from sheet_attribute where name = 'size' and sheet_id = _comparison_id), 'small');
-            perform set_comparison_attribute_value(item_1, (select id from sheet_attribute where name = 'color' and sheet_id = _comparison_id), 'blue');
-            perform set_comparison_attribute_value(item_1, (select id from sheet_attribute where name = 'number' and sheet_id = _comparison_id), '3');
-
-            perform set_comparison_attribute_value(item_2, (select id from sheet_attribute where name = 'size' and sheet_id = _comparison_id), 'medium');
-            perform set_comparison_attribute_value(item_2, (select id from sheet_attribute where name = 'color' and sheet_id = _comparison_id), 'green');
-            perform set_comparison_attribute_value(item_2, (select id from sheet_attribute where name = 'number' and sheet_id = _comparison_id), '-8.221');
-
-
-            --perform save_comparison_as_template(_comparison_id, 'balls template 1');
-            --perform save_comparison_as_template(_comparison_id, 'balls template 2');
-            --perform save_comparison_as_template(_comparison_id, 'balls template 3');
-
-            select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 2') into comp_1;
-            select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 3') into comp_2;
-            select create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 4') into comp_3;
-            perform create_comparison_from_user_template(_account_id, (select id from user_template limit 1), 'balls 4', 2);
-
-            perform add_comparison_item_back(comp_1, 3);
-            perform add_comparison_item_back(comp_2, 4);
-            perform add_comparison_item_back(comp_3, 5);
-
-            select create_comparison_from_user_template(_account_id, temp_1, 'Top Load Washers', 3) into washer_comparison;
+            select create_comparison_from_template(_account_id, washer_template, 'Top Load Washers', 3) into washer_comparison;
             update comparison_item set name = 'washer 1' where position = 0 and comparison_id = washer_comparison;
             update comparison_item set name = 'washer 2' where position = 1 and comparison_id = washer_comparison;
             update comparison_item set name = 'washer 3' where position = 2 and comparison_id = washer_comparison;
 
-            perform create_comparison_from_user_template(_account_id, temp_2, 'Laptops', 3);
+            perform create_comparison_from_template(_account_id, laptop_template, 'Laptops', 3);
+            perform create_comparison_from_template(_account_id, camera_template, 'Cameras', 3);
 
             perform create_empty_comparison('empty comparison 1', _account_id);
             perform create_empty_template('Empty Template', _account_id);
 
-            select make_template(1, 'Top Load Washers', Array[1, 1, 0, 4, 1, 1, 0]::smallint[],
-                                  Array['price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']) into temp_1;
-            select make_template(1, 'Laptops', Array[1, 0, 1, 1, 1, 1, 0, 4]::smallint[],
-                                  Array['Price', 'Operating System', 'Memory', 'Hard Drive', 'Graphics Card', 'Weight', 'Size', 'Battery Life']) into temp_2;
-            perform make_template(1, 'Cameras', Array[1, 1, 1, 4, 4, 1, 0, 1, 4]::smallint[],
-                                  Array['Price', 'Megapixels', 'Image Quality','Shutter Lag', 'Startup Time', 'Weight', 'Size', 'Storage Space', 'Battery Life']);
 
             -- TODO: create and move default templates/comparisons to populate_database()
         end;
@@ -866,7 +815,7 @@ def get_comparison(comparison_id, get_json=True):
         data['items'] = items
 
         return json.dumps(data)
-    return data
+    return result
 
 
 def delete_comparison_item(item_id):
@@ -959,9 +908,9 @@ def set_item_name(item_id, name):
 # template_id = template to create comparison from
 # comparison_name = name of new comparison (defaults to template name if left as None)
 # num_items = number of items to initialize comparison with
-def create_comparison_from_user_template(account_id, template_id, comparison_name=None, num_items=2):
+def create_comparison_from_template(account_id, template_id, comparison_name=None, num_items=2):
     query = text("""
-    select create_comparison_from_user_template(:account_id, :template_id, :comparison_name, :num_items);
+    select create_comparison_from_template(:account_id, :template_id, :comparison_name, :num_items);
     """)
     return db.engine.execute(query.execution_options(autocommit=True), account_id=account_id, template_id=template_id,
                              comparison_name=comparison_name, num_items=num_items).scalar()
@@ -986,30 +935,41 @@ def create_empty_comparison(account_id, name='New Comparison', num_items=2, num_
 
 # returns csv of specified comparison (image values are keys for corresponding cloudinary images)
 def get_comparison_csv(comparison_id):
-    from flask import send_file
-    from io import BytesIO
-
-    query = text("""
-    select comparison_table_horizontal_query(:comparison_id)
-    """)
-
-    query = db.engine.execute(query, comparison_id=comparison_id).scalar()
-    query = "COPY ({}) TO STDOUT WITH CSV HEADER".format(query)
+    import flask_excel as excel
+    from sqlalchemy import text
 
     filename = db.engine.execute(text('select name from sheet where id = :comparison_id'),
                                  comparison_id=comparison_id).scalar()
-    filename += '.csv'
 
-    conn = db.engine.raw_connection()
-    try:
-        cur = conn.cursor()
-        f = BytesIO()
-        cur.copy_expert(query, f)
-        cur.close()
-        f.seek(0)
-        return send_file(f, as_attachment=True, attachment_filename=filename, mimetype="text/csv")
-    finally:
-        conn.close()
+    query = text("""
+        select comparison_item.position, sheet_attribute.name as "attribute_name", coalesce(attribute_value.val, '') as "val", comparison_item.name as "item_name"
+                from comparison
+                    inner join sheet_attribute on comparison.id = sheet_attribute.sheet_id
+                    inner join comparison_item on comparison.id = comparison_item.comparison_id
+                    left join attribute_value on comparison_item.id = attribute_value.item_id and sheet_attribute.id = attribute_value.attribute_id
+                    where comparison.id = :comparison_id
+                    order by comparison_item.position, sheet_attribute.position;
+        """)
+
+    comparison = db.engine.execute(query, comparison_id=comparison_id)
+
+    row = 0
+    output = [['']]
+    col = -1
+    for row_proxy in comparison:
+        if row_proxy['position'] != col:
+            # new item started processing
+            col = row_proxy['position']
+            row = 0
+            output[0].append(row_proxy['item_name'])
+        if col == 0:
+            # add attribute rows only while processing first item (as already added for next items)
+            output.append([row_proxy['attribute_name']])
+        # first row reserved for item names
+        output[row + 1].append(row_proxy['val'])
+        row += 1
+
+    return excel.make_response_from_array(output, file_type='csv', file_name=filename)
 
 
 ############################################################################################
@@ -1157,6 +1117,5 @@ if __name__ == '__main__':
     # downsides: may be inefficient for multirow deletes/update relating to the same Sheet
     # TODO: see if need to check in app.py if current_user matches that of edited information to prevent code injection
     # TODO: retrieve non-pivot table and pivot in server so that null/duplicate (like empty string) item columns doesn't error csv download
-
 
 
