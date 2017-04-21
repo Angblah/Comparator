@@ -2,7 +2,7 @@
 
 Comparator is a web app that allows users to easily compare products to determine the one to best fit their needs.
 
-Release Notes version 1.0<br>
+<b>Release Notes version 1.0</b><br>
 
 NEW FEATURES<br>
   Added functionality to create and edit templates<br>
@@ -17,7 +17,7 @@ BUG FIXES<br>
 KNOWN BUGS<br>
   When downloading as xlsx, empty items will show up as " " instead of ""<br>
 
-Install Guide version 1.0<br>
+<b>Install Guide version 1.0</b><br>
 
 PRE-REQUISITES<br>
   You must use a web browser that has JavaScript enabled.<br>
