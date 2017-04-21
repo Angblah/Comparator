@@ -530,7 +530,7 @@ def csv(token):
 
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
 
-    return get_comparison_csv(comparison_id)
+    return export_comparison(comparison_id)
 
 @app.teardown_request
 def teardown_request(exception):

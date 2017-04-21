@@ -934,7 +934,7 @@ def create_empty_comparison(account_id, name='New Comparison', num_items=2, num_
 
 
 # returns csv of specified comparison (image values are keys for corresponding cloudinary images)
-def get_comparison_csv(comparison_id):
+def export_comparison(comparison_id, file_type='csv'):
     import flask_excel as excel
     from sqlalchemy import text
 
@@ -961,7 +961,14 @@ def get_comparison_csv(comparison_id):
             # new item started processing
             col = row_proxy['position']
             row = 0
-            output[0].append(row_proxy['item_name'])
+            # TODO: find out why empty trailing strings are removed in make_response_from_array, remove workaround
+            # NOTE: current workaround uses single space instead of empty string
+            # output[0].append(row_proxy['item_name'])
+            name = row_proxy['item_name']
+            if name == '':
+                name = ' '
+            output[0].append(name)
+
         if col == 0:
             # add attribute rows only while processing first item (as already added for next items)
             output.append([row_proxy['attribute_name']])
@@ -969,7 +976,7 @@ def get_comparison_csv(comparison_id):
         output[row + 1].append(row_proxy['val'])
         row += 1
 
-    return excel.make_response_from_array(output, file_type='csv', file_name=filename)
+    return excel.make_response_from_array(output, file_type=file_type, file_name=filename)
 
 
 ############################################################################################
