@@ -12,7 +12,7 @@ NEW FEATURES<br>
   Added functionality to save as template or comparison<br>
   
 BUG FIXES<br>
-  Clicking on an empty cell in the comparison no longer triggers Undo/Redo<br>
+  Clicking on but not changing values in the comparison no longer triggers Undo/Redo<br>
 
 KNOWN BUGS<br>
   When downloading as xlsx, empty items will show up as " " instead of ""<br>
