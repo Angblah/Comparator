@@ -1,0 +1,36 @@
+/*Global Variables*/
+body {
+  font-family: Raleway;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+  background-color: #e9eaeb;
+  overflow-x: hidden;
+  padding-bottom: 300px;
+}
+/*SIDE NAVBAR*/
+#nav-side {
+  background-color: #e9eaeb;
+  height: 100%;
+  position: fixed;
+  box-shadow: 10px 10px 3em rgba(4, 4, 4, 0.1);
+  font-size: 20px;
+  padding-top: 18%;
+}
+#attributes {
+  height: 70vh;
+  padding-left: 36.5%;
+  padding-top: 3%;
+}
+input[type="text"] {
+  border: none;
+  background-color: #e9eaeb ! important;
+  font-size: 20px;
+}
+input[type="text"]:focus {
+  border: 1px solid #5fa4eb;
+  background-color: white ! important;
+}
+hr {
+  border-top: 1px solid #939598;
+}

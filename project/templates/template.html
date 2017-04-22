@@ -3,35 +3,66 @@
 
 <!-- Include the head tags -->
 {% include "partials/header.html" %}
-<!-- Include the nav bar for a user who isn't logged in -->
-{% include "partials/userNavBar.html" %}
 
-<link href="../static/css/profile.css" rel="stylesheet">
 
-    <body>
-        <!-- Template Link -->
-        <div id="template" data-template="{{template}}" data-templateName="{{templateName}}"></div>
+<link href="../static/css/template.css" rel="stylesheet">
 
-        <div class="nav-side">
-            <div>
-                <center>
-                    <h1 align="center"><strong>{{ templateName['name'] }}</strong></h1>
-                </center>
-            </div>
+<body>
+<div id="all">
+    <!-- Template Link -->
+    <div id="template" data-template="{{template}}" data-templateName="{{templateName}}"></div>
+
+    <div class="row">
+        <div class="col-sm-4" id="nav-side">
+            <center>
+                <input type="text" value={{ templateName['name'] }} />
+            </center>
         </div>
-
-        <div class="profile-data">
+        <div class="col-sm-10" id="attributes">
             <form action="/updateTemplate">
+                <div class="row">
+                    <div class="col-sm-6"><h1>Edit Attributes</h1></div>
+                    <div class="col-sm-6"><button type="submit" name="editTemplate">Update</button></div>
+                    
+                </div>
+                <hr>
 
                 {% for attr in template %}
-                    <input type="text" value={{attr['name']}} />
-                    <br>
+                <div class="col-sm-6">
+                    <input class="attribute" type="text" value={{attr['name']}} />
+                    <hr>
+                </div>
                 {% endfor %}
-
-                <button type="submit" name="editTemplate">Update</button>
+                
             </form>
         </div>
-    </body>
+        
+    </div>
+</div>
+
+<!--     <div class="nav-side">
+        <div>
+            <center>
+                <h1 align="center"><strong>{{ templateName['name'] }}</strong></h1>
+            </center>
+        </div>
+    </div>
+
+    <div class="profile-data">
+        <form action="/updateTemplate">
+
+            {% for attr in template %}
+                <input type="text" value={{attr['name']}} />
+                <br>
+            {% endfor %}
+
+            <button type="submit" name="editTemplate">Update</button>
+        </form>
+    </div> -->
+</body>
+
+<!-- Include the nav bar for a user who isn't logged in -->
+{% include "partials/userNavBar.html" %}
 
 <!-- Include the footer for things like copyright info and JS scripts -->
 {% include "partials/footer.html" %}
