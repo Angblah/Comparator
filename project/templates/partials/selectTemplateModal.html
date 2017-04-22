@@ -85,16 +85,39 @@
                             </div>
                         </div>
                         {% else %}
-                            You have no templates!
-                            <!--TODO: create new template option-->
+                        You have no templates!
+                        <!--TODO: create new template option-->
                         {% endfor %}
                         {% endif %}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
+
+                <form id="importForm" action="/importComparisonFile" enctype="multipart/form-data" method="POST">
+                    <input id="fileImport" name="fileImport" type="file"
+                           accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                           style="display: none;" required
+                           checked/>
+                </form>
+
+                <button type="button" id="importButton" class="btn btn-template-main">
+                    Import csv/xls/xlsx file
+                </button>
+
                 <button type="button" class="btn btn-template-main" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $("#importButton").click(function() {
+        console.log("import clicked");
+        $('#fileImport').click();
+    });
+
+    $("#fileImport").change(function() {
+        $("#importForm").submit();
+    });
+</script>

@@ -1142,5 +1142,6 @@ if __name__ == '__main__':
     # TODO: see if need to check in app.py if current_user matches that of edited information to prevent code injection
     # TODO: retrieve non-pivot table and pivot in server so that null/duplicate (like empty string) item columns doesn't error csv download
     # TODO: check that sqlalchemy connection pool is limited to 20 connections (free heroku db limit)
+    # TODO: make guest/admin ids constants instead of hard coded
 
 

@@ -7,6 +7,7 @@ import os
 import sendgrid
 from sendgrid.helpers.mail import *
 from itsdangerous import URLSafeTimedSerializer
+import flask_excel
 
 app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
@@ -41,6 +42,69 @@ def load_user(user_id):
     # Given user_id, return the associated User object
     return Account.query.filter_by(id=user_id).one()
 
+# creates comparison from uploaded csv/xls/xlsx file
+# format: columns from left to right excluding first are item names in first row
+#         rows from top to bottom excluding first are attribute names in first column
+#         inner cells correspond to the attribute name to the left and the item name to the top
+@app.route('/importComparisonFile', methods=["POST"])
+def importComparisonFile():
+    from sqlalchemy import text
+    from os.path import splitext
+
+
+    if current_user.is_anonymous:
+        # guest user id
+        user_id = 2
+    else:
+        user_id = current_user.id
+
+    if request.method == 'POST':
+        filename, extension = splitext(request.files['fileImport'].filename)
+        file = request.get_array(field_name='fileImport')
+        item_names = file[0][1:]
+        comparison_id = None
+        with db.engine.begin() as conn:
+            query = text('insert into sheet (name, account_id) values (:name, :account_id) returning id')
+            comparison_id = conn.execute(query, name=filename, account_id=user_id).scalar()
+            query = text('insert into comparison (id) values (:comparison_id)')
+            conn.execute(query, comparison_id=comparison_id)
+            query = text("""
+                insert into comparison_item (name, position, comparison_id)
+                select item_name, row_number() over () - 1, :comparison_id
+                from unnest(:item_names) as item_name returning id;
+            """)
+            result = conn.execute(query, comparison_id=comparison_id, item_names=item_names)
+            item_ids = [row['id'] for row in result]
+
+
+            # TODO: consider building string to do all attribute_value inserts in same statement and/or making stored function to reduce server/database back-and-forth
+            attribute_names = []
+            for i in range(1, len(file)):
+                attribute_names.append(file[i][0])
+
+            query = text("""
+                insert into sheet_attribute (name, position, sheet_id)
+                select attribute_name, row_number() over () - 1, :comparison_id
+                from unnest(:attribute_names) as "attribute_name" returning id;
+            """)
+            result = conn.execute(query, comparison_id=comparison_id, attribute_names=attribute_names)
+            attribute_ids = [row['id'] for row in result]
+
+            for i in range(1, len(file)):
+                row = file[i]
+                attribute_id = attribute_ids[i - 1]
+                vals = row[1:]
+                query = text("""
+                    insert into attribute_value (item_id, attribute_id, val)
+                    select item_id, :attribute_id, val
+                    from unnest(:item_ids, :vals) as t("item_id", "val");
+                """)
+
+                conn.execute(query, attribute_id=attribute_id, item_ids=item_ids, vals=vals)
+
+        # redirect to created comparison
+        if comparison_id:
+            return redirect(share_comparison(comparison_id, user_id))
 
 @login_required
 @app.route('/uploadAvatar', methods=["POST"])
