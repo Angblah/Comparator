@@ -42,7 +42,7 @@ BUILD<br>
   
 INSTALLATION<br>
   Contact Team 171 Byte Me for information on sensitive environment variables.
-  These variables control access to various data storage locations and are as follows:
+  Most of these variables control access to various data storage locations and are as follows:
    * CLOUDINARY_API_KEY
    * CLOUDINARY_API_SECRET
    * CLOUDINARY_CLOUD_NAME
@@ -50,7 +50,7 @@ INSTALLATION<br>
    * SECRET_KEY
    * SENDGRID_API_KEY
   
-  Alternatively, create your own Cloudinary account/Postgresql database/Sendgrid account and set these environmental variables accordingly.<br>
+  Alternatively, create your own Cloudinary account/Postgresql database/Sendgrid account and set these environmental variables accordingly. The SECRET_KEY may be any sufficiently long random string, so long as it remains constant. It is used for various encryption tasks. <br>
   
 RUNNING APPLICATION<br>
   Run "python app.py" in a terminal to run locally<br>
