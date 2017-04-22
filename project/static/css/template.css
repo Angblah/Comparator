@@ -16,6 +16,19 @@ body {
   box-shadow: 10px 10px 3em rgba(4, 4, 4, 0.1);
   font-size: 20px;
   padding-top: 18%;
+  padding-left: 4%;
+}
+#template-name {
+  background-color: #5fa4eb;
+  width: 100%;
+  padding-left: 15%;
+  border: 1px solid #ff9900;
+}
+#template-name input[type="text"] {
+  margin-top: 5%;
+  margin-bottom: 15%;
+  padding-left: 0px;
+  text-align: center;
 }
 #attributes {
   height: 70vh;
@@ -23,13 +36,25 @@ body {
   padding-top: 3%;
 }
 input[type="text"] {
-  border: none;
+  border: 1px solid #e9eaeb;
   background-color: #e9eaeb ! important;
   font-size: 20px;
+  padding-left: 50px;
+  width: 80%;
 }
 input[type="text"]:focus {
   border: 1px solid #5fa4eb;
   background-color: white ! important;
+}
+#add-attribute {
+  font-size: 20px;
+  color: #5fa4eb;
+}
+#add-attribute:hover {
+  color: #ff9900;
+}
+#add-attribute b {
+  padding-left: 15px;
 }
 hr {
   border-top: 1px solid #939598;

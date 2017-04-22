@@ -13,52 +13,40 @@
     <div id="template" data-template="{{template}}" data-templateName="{{templateName}}"></div>
 
     <div class="row">
-        <div class="col-sm-4" id="nav-side">
-            <center>
-                <input type="text" value={{ templateName['name'] }} />
-            </center>
-        </div>
         <div class="col-sm-10" id="attributes">
             <form action="/updateTemplate">
                 <div class="row">
-                    <div class="col-sm-6"><h1>Edit Attributes</h1></div>
+                    <div class="col-sm-6"><h1>EDIT ATTRIBUTES</h1></div>
                     <div class="col-sm-6"><button type="submit" name="editTemplate">Update</button></div>
-                    
                 </div>
                 <hr>
 
                 {% for attr in template %}
-                <div class="col-sm-6">
-                    <input class="attribute" type="text" value={{attr['name']}} />
+                <div class="col-sm-6" id="attribute">
+                    <input style="padding-left: 10%" type="text" value={{attr['name']}} />
+                    <i class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px"> delete</i>
                     <hr>
                 </div>
                 {% endfor %}
+
+                <div class="col-sm-6" id="add-attribute">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    <b>ADD ATTRIBUTE</b>
+                </div>
                 
             </form>
+        </div>
+
+        <div class="col-sm-4" id="nav-side">
+            <div id="template-name">
+                <i class="fa fa-trash" aria-hidden="true" style="padding-left: 90%"></i>
+                <br>
+                <input type="text" value={{ templateName['name'] }} />
+            </div>
         </div>
         
     </div>
 </div>
-
-<!--     <div class="nav-side">
-        <div>
-            <center>
-                <h1 align="center"><strong>{{ templateName['name'] }}</strong></h1>
-            </center>
-        </div>
-    </div>
-
-    <div class="profile-data">
-        <form action="/updateTemplate">
-
-            {% for attr in template %}
-                <input type="text" value={{attr['name']}} />
-                <br>
-            {% endfor %}
-
-            <button type="submit" name="editTemplate">Update</button>
-        </form>
-    </div> -->
 </body>
 
 <!-- Include the nav bar for a user who isn't logged in -->
