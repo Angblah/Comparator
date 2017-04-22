@@ -10,11 +10,11 @@ NEW FEATURES<br>
   * Added feature to share comparisons<br>
   * Added button to export comparison<br>
   * Added functionality to save as template or comparison<br>
+  * Added functionality to create comparisons by importing csv/xls/xlsx files<br>
   
 BUG FIXES<br>
   * Clicking on but not changing values in the comparison no longer triggers Undo/Redo<br>
   * Guests can no longer edit any comparison they are given links to
-  * Users can create comparisons by importing csv/xls/xlsx files
 
 KNOWN BUGS<br>
   * When downloading as csv, empty items will show up as " " instead of ""
