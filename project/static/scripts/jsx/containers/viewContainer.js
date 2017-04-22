@@ -33,7 +33,7 @@ class ViewContainer extends React.Component {
 
     render() {
         //TODO: Create ViewContainer toggle based on view of state.
-        if (this.props.view === 'CHART' &&  this.props.userId == this.props.info.account_id || this.props.userId == 0) {
+        if (this.props.view === 'CHART' &&  this.props.userId == this.props.info.account_id) {
             return (
                 <div className="container-fluid">
                     <div className="row">

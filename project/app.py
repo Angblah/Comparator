@@ -53,8 +53,7 @@ def importComparisonFile():
 
 
     if current_user.is_anonymous:
-        # guest user id
-        user_id = 2
+        user_id = GUEST_ID
     else:
         user_id = current_user.id
 
@@ -306,10 +305,8 @@ def new_empty_comparison():
         id = create_empty_comparison(current_user.id)
         return redirect(share_comparison(id, current_user.id))
     else:
-        # consider hard-coding guest_id after more database finalization
-        guest_id = Account.query.filter_by(username='guest').first().id
-        id = create_empty_comparison(guest_id)
-        return redirect(share_comparison(id, guest_id))
+        id = create_empty_comparison(GUEST_ID)
+        return redirect(share_comparison(id, GUEST_ID))
 
 
 @app.route('/testbed')
@@ -567,17 +564,16 @@ def share_template(id, user_id):
 
 @app.route('/comparison/<token>')
 def view_comparison(token):
-    comparison_id, user_id = ts.loads(token, salt='comparison-data')
+    comparison_id, comparison_user_id = ts.loads(token, salt='comparison-data')
 
-    if not current_user.is_anonymous and user_id == current_user.id:
-        return render_template('workspace.html', comparison=get_comparison(comparison_id), userId=current_user.id)
+
+    if current_user.is_anonymous:
+        # guest id
+        user_id = GUEST_ID
     else:
-        # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
-        currUserId = 0
-        if not current_user.is_anonymous:
-            currUserId = current_user.id
+        user_id = current_user.id
 
-        return render_template('workspace.html', comparison=get_comparison(comparison_id), userId=currUserId)
+    return render_template('workspace.html', comparison=get_comparison(comparison_id), userId=user_id)
 
 
 @app.route('/template/<token>')
