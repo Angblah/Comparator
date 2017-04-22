@@ -521,7 +521,7 @@ def initialize_db_structure():
                                   Array['Price', 'Speed', 'Dimensions', 'Weight', 'CPU', 'GPU', 'GPS', 'Camera', 'OS']) into phone_template;
             select make_template(1, 'Sink', Array[1, 0, 0, 0, 0, 0, 0, 0]::smallint[],
                                   Array['Price', 'Type', 'Material', 'Durability', 'Ease of Cleaning', 'Depth', 'Stain Resistance', 'Heat Resistance']) into sink_template;
-            select make_template(1, 'Sink', Array[1, 0, 0, 0, 0, 1, 1, 0, 1]::smallint[],
+            select make_template(1, 'Fridge', Array[1, 0, 0, 0, 0, 1, 1, 0, 1]::smallint[],
                                   Array['MSRP', 'Type', 'Installation', 'Color', 'Ice/Water Dispenser', 'Width', 'Height', 'Energy Certifications', 'Capacity']) into fridge_template;
 
             select create_comparison_from_template(test_account, washer_template, 'Top Load Washers', 3) into washer_comparison;
@@ -1133,7 +1133,6 @@ if __name__ == '__main__':
     initialize_db_structure()
     initialize_db_values()
 
-    # TODO: consider adding import for xlsx/csv (see flask-excel)
     # TODO: consider renaming ...sheet_attribute... functions to just ...attribute...
     # TODO: after implementation actally used in real life, change admin/guest login info and set outside of pushed code
     # TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
