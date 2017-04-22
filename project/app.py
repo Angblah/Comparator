@@ -527,7 +527,7 @@ def view_template(token):
 
 @app.route('/csv/<token>')
 def csv(token):
-
+    # TODO: consider supporting xls/xlsx in frontend/ui (pass in argument for export_comparison)
     comparison_id, user_id = ts.loads(token, salt='comparison-data')
 
     return export_comparison(comparison_id)

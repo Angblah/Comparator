@@ -10,104 +10,119 @@
 
 <body>
 
-    <div id="all">
+<div id="all">
 
-        <div class="col-sm-12"  style="padding-left: 37.5%">
-            <hr style="clear: left;">
-            <form id="dashSearch">
-                <input class="search" type="search" name="search" placeholder="Search Comparisons and Templates">
+    <div class="col-sm-12" style="padding-left: 37.5%">
+        <hr style="clear: left;">
+
+        <div class="dashboard-content" id="recent-comps">
+            <h1>Recent Comparisons</h1>
+
+            {% for row in recent_comp %}
+            <div class="col-sm-5">
+                <button type="button" id="{{'recentComp' ~ row['id']}}" class="tile"
+                        onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
+                    {{row['name']}}
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        <hr style="clear: left;">
+
+        <div class="dashboard-content" id="my-comps" style="clear: left;">
+            <h1>My Comparisons</h1>
+            <form id="compSearch">
+                <input class="search" type="search" name="search" placeholder="Search Comparisons">
                 <button class="btn btn-template-main" type="submit">Submit</button>
                 <input class="invisible" type="submit">
             </form>
-            <div class="dashboard-content" id="recent-comps">
-                <h1>Recent Comparisons</h1>
-
-                {% for row in recent_comp %}
-                    <div class="col-sm-5">
-                    <button type="button" id="{{'recentComp' ~ row['id']}}" class="tile" onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
-                        {{row['name']}}
-                    </button>
-                    </div>
-                {% endfor %}
+            {% for row in all_comp %}
+            <div class="col-sm-5">
+                <button type="button" id="{{'comp' ~ row['id']}}" class="tile"
+                        onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
+                    {{row['name']}}
+                </button>
             </div>
-            <hr style="clear: left;">
-            <div class="dashboard-content" id="my-comps" style="clear: left;">
-                <h1>My Comparisons</h1>
-                {% for row in all_comp %}
-                <div class="col-sm-5">
-                    <button type="button" id="{{'comp' ~ row['id']}}" class="tile" onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
-                        {{row['name']}}
-                    </button>
-                </div>
-                {% endfor %}
-            </div>
-            <hr style="clear: left;">
-            <div class="dashboard-content" id="my-temps" style="clear: left;">
-                <h1>My Templates</h1>
-                {% for row in all_temp %}
-                <div class="col-sm-5">
-                    <button type="button" id="{{'temp' ~ row['id']}}" class="tile" onclick="location.href='{{row['id'] | share_template(current_user.id)}}'">
-                        {{row['name']}}
-                    </button>
-                </div>
-                {% endfor %}
-            </div>
+            {% endfor %}
         </div>
+        <hr style="clear: left;">
 
-        <div class="col-sm-4" id="nav-side">
-            <div>
-                <button type="submit" onclick="location.href='#recent-comps'">
-                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    RECENT COMPARISONS
+        <div class="dashboard-content" id="my-temps" style="clear: left;">
+            <h1>My Templates</h1>
+            <form id="tempSearch">
+                <input class="search" type="search" name="search" placeholder="Search Templates">
+                <button class="btn btn-template-main" type="submit">Submit</button>
+                <input class="invisible" type="submit">
+            </form>
+            {% for row in all_temp %}
+            <div class="col-sm-5">
+                <button type="button" id="{{'temp' ~ row['id']}}" class="tile"
+                        onclick="location.href='{{row['id'] | share_template(current_user.id)}}'">
+                    {{row['name']}}
                 </button>
             </div>
-            <hr>
-            <div class="nav-side-cont">
-                <button type="submit" onclick="location.href='#my-comps'">
-                    <i class="fa fa-compress" aria-hidden="true"></i>
-                    MY COMPARISONS
-                </button>
-            </div>
-            <hr>
-            <div class="nav-side-cont">
-                <button type="submit" onclick="location.href='#my-temps'">
-                    <i class="fa fa-list-alt" aria-hidden="true"></i>
-                    TEMPLATES
-                </button>
-            </div>
-            <hr>
-            <div>
-                <button id="new-comp" type="submit" data-toggle="modal" data-target="#selectTemplateModal">
-                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                    NEW COMPARISON
-                </button>
-            </div>
+            {% endfor %}
         </div>
+    </div>
+
+    <div class="col-sm-4" id="nav-side">
+        <div>
+            <button type="submit" onclick="location.href='#recent-comps'">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                RECENT COMPARISONS
+            </button>
+        </div>
+        <hr>
+        <div class="nav-side-cont">
+            <button type="submit" onclick="location.href='#my-comps'">
+                <i class="fa fa-compress" aria-hidden="true"></i>
+                MY COMPARISONS
+            </button>
+        </div>
+        <hr>
+        <div class="nav-side-cont">
+            <button type="submit" onclick="location.href='#my-temps'">
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                TEMPLATES
+            </button>
+        </div>
+        <hr>
+        <div>
+            <button id="new-comp" type="submit" data-toggle="modal" data-target="#selectTemplateModal">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                NEW COMPARISON
+            </button>
+        </div>
+    </div>
 
 
+    <!-- Include the select template modal -->
+    {% include "partials/userNavBar.html" %}
+    {% include "partials/selectTemplateModal.html" %}
 
-        <!-- Include the select template modal -->
-        {% include "partials/userNavBar.html" %}
-        {% include "partials/selectTemplateModal.html" %}
 
-
-<!-- Include the footer for things like copyright info and JS scripts -->
-{% include "partials/footer.html" %}
-<!--<script src="../static/scripts/js/dashboard.bundle.js"></script>-->
+    <!-- Include the footer for things like copyright info and JS scripts -->
+    {% include "partials/footer.html" %}
+    <!--<script src="../static/scripts/js/dashboard.bundle.js"></script>-->
 </body>
 </html>
 
 <script>
-    $("#dashSearch").submit(function(e) {
+    $("#compSearch").submit(function(e) {
         e.preventDefault();
         var input = $(this).find(':input[type=search]').val();
-        filterDisplay($("#recent-comps"), input);
         filterDisplay($("#my-comps"), input);
+    });
+
+    $("#tempSearch").submit(function(e) {
+        e.preventDefault();
+        var input = $(this).find(':input[type=search]').val();
         filterDisplay($("#my-temps"), input);
     });
 
     function filterDisplay(div, str) {
-        var tiles = div.children(".tile");
+        var tiles = div.children(".col-sm-5");
+        console.log(tiles);
         tiles.each(function(index, element) {
             var match = $(element).text().toUpperCase().includes(str.toUpperCase());
             if (match) {
@@ -117,6 +132,8 @@
             }
         });
     };
+
+
 </script>
 <!--TODO: columns for select template-->
 <!--TODO: make searching blank string show all tiles-->

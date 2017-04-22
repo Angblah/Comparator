@@ -488,11 +488,16 @@ def initialize_db_structure():
     create or replace function populate_database_test_values() returns void
         as $$
         declare _account_id int;
+        declare test_account int;
 
 
         declare washer_template int;
         declare laptop_template int;
         declare camera_template int;
+        declare cars_template int;
+        declare phone_template int;
+        declare sink_template int;
+        declare fridge_template int;
 
         declare washer_comparison int;
         declare laptop_comparison int;
@@ -501,25 +506,37 @@ def initialize_db_structure():
 
             select register_user('a@a.com', 'admin', 'password') into _account_id;
             perform register_user('b@b.com', 'guest', 'guest_password');
-            perform register_user('test@comparator_test.com', 'a', 'a');
+            select register_user('test@comparator_test.com', 'Honey', 'Honey') into test_account;
 
+            perform create_empty_template('Empty Template', _account_id);
             select make_template(1, 'Top Load Washers', Array[1, 1, 0, 4, 1, 1, 0]::smallint[],
                                   Array['price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']) into washer_template;
             select make_template(1, 'Laptops', Array[1, 0, 1, 1, 1, 1, 0, 4]::smallint[],
                                   Array['Price', 'Operating System', 'Memory', 'Hard Drive', 'Graphics Card', 'Weight', 'Size', 'Battery Life']) into laptop_template;
             select make_template(1, 'Cameras', Array[1, 1, 1, 4, 4, 1, 0, 1, 4]::smallint[],
                                   Array['Price', 'Megapixels', 'Image Quality','Shutter Lag', 'Startup Time', 'Weight', 'Size', 'Storage Space', 'Battery Life']) into camera_template;
+            select make_template(1, 'Cars', Array[1, 1, 0, 0, 1]::smallint[],
+                                  Array['MSRP', 'MPG', 'Engine', 'Transmission', 'Drivetrain', 'Seats']) into cars_template;
+            select make_template(1, 'Phone', Array[1, 1, 0, 1, 0, 0, 0, 0, 0]::smallint[],
+                                  Array['Price', 'Speed', 'Dimensions', 'Weight', 'CPU', 'GPU', 'GPS', 'Camera', 'OS']) into phone_template;
+            select make_template(1, 'Sink', Array[1, 0, 0, 0, 0, 0, 0, 0]::smallint[],
+                                  Array['Price', 'Type', 'Material', 'Durability', 'Ease of Cleaning', 'Depth', 'Stain Resistance', 'Heat Resistance']) into sink_template;
+            select make_template(1, 'Sink', Array[1, 0, 0, 0, 0, 1, 1, 0, 1]::smallint[],
+                                  Array['MSRP', 'Type', 'Installation', 'Color', 'Ice/Water Dispenser', 'Width', 'Height', 'Energy Certifications', 'Capacity']) into fridge_template;
 
-            select create_comparison_from_template(_account_id, washer_template, 'Top Load Washers', 3) into washer_comparison;
+            select create_comparison_from_template(test_account, washer_template, 'Top Load Washers', 3) into washer_comparison;
             update comparison_item set name = 'washer 1' where position = 0 and comparison_id = washer_comparison;
             update comparison_item set name = 'washer 2' where position = 1 and comparison_id = washer_comparison;
             update comparison_item set name = 'washer 3' where position = 2 and comparison_id = washer_comparison;
 
-            perform create_comparison_from_template(_account_id, laptop_template, 'Laptops', 3);
-            perform create_comparison_from_template(_account_id, camera_template, 'Cameras', 3);
+            perform create_comparison_from_template(test_account, laptop_template, 'Laptops', 3);
+            perform create_comparison_from_template(test_account, camera_template, 'Cameras', 3);
+            perform create_comparison_from_template(test_account, cars_template, 'Cars', 3);
+            perform create_comparison_from_template(test_account, phone_template, 'Phones', 3);
+            perform create_comparison_from_template(test_account, sink_template, 'Sink', 3);
+            perform create_comparison_from_template(test_account, fridge_template, 'Refrigerator', 3);
 
-            perform create_empty_comparison('empty comparison 1', _account_id);
-            perform create_empty_template('Empty Template', _account_id);
+            perform create_empty_comparison('Empty comparison', _account_id);
 
 
             -- TODO: create and move default templates/comparisons to populate_database()
@@ -1118,11 +1135,12 @@ if __name__ == '__main__':
 
     # TODO: consider adding import for xlsx/csv (see flask-excel)
     # TODO: consider renaming ...sheet_attribute... functions to just ...attribute...
-    # TODO: after implementation more complete, change admin/guest login info and set outside of pushed code
+    # TODO: after implementation actally used in real life, change admin/guest login info and set outside of pushed code
     # TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
     # TODO: consider changing date_modified to update from database trigger (many functions now forget to update date_modified)
     # downsides: may be inefficient for multirow deletes/update relating to the same Sheet
     # TODO: see if need to check in app.py if current_user matches that of edited information to prevent code injection
     # TODO: retrieve non-pivot table and pivot in server so that null/duplicate (like empty string) item columns doesn't error csv download
+    # TODO: check that sqlalchemy connection pool is limited to 20 connections (free heroku db limit)
 
 
