@@ -2,7 +2,8 @@ from app import db, app as _app
 from sqlalchemy import text, select
 from flask import json
 import sqlalchemy
-
+ADMIN_ID = 1
+GUEST_ID = 2
 
 # initializes db stored functions and adds some values
 def initialize_db_structure():
@@ -1138,8 +1139,7 @@ if __name__ == '__main__':
     # TODO: let users "claim" comparisons they can view (copy all data into their comparisons)
     # TODO: consider changing date_modified to update from database trigger (many functions now forget to update date_modified)
     # downsides: may be inefficient for multirow deletes/update relating to the same Sheet
-    # TODO: see if need to check in app.py if current_user matches that of edited information to prevent code injection
-    # TODO: retrieve non-pivot table and pivot in server so that null/duplicate (like empty string) item columns doesn't error csv download
+    # TODO: check in app.py if current_user matches that of edited information to prevent code injection
     # TODO: check that sqlalchemy connection pool is limited to 20 connections (free heroku db limit)
     # TODO: make guest/admin ids constants instead of hard coded
 
