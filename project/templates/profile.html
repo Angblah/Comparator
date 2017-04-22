@@ -13,26 +13,10 @@
 
     <!-- <div class="nav-side"> -->
     <div class="row">
-        <div class="col-sm-4" id="nav-side">
-            <center>
-                <img id="avatar" src="../static/img/user.png" class="img-responsive hidden-xs"
-                     style="background-color: white; border-radius: 100%; height: 30%; width: 30%">
-                <a id='editAvatar'>
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                </a>
-                <form id="avatarForm" action="/uploadAvatar" enctype="multipart/form-data" method="POST">
-                    <input id="avatarUpload" name="avatar" type="file" accept="image/*" style="display: none;" required
-                           checked/>
-                </form>
-                <h1 align="center"><strong>{{ current_user.username }}</strong>'s Profile</h1>
-                <div class="alert alert-danger" role="alert" id="avatarErrorDiv" style="display:none">
-                    <strong>Uh oh!</strong>
-                    <span id="avatarError"></span>
-                </div>
-            </center>
-        </div>
+
+
         <div class="col-sm-7" id="profile-data">
-            <button type="submit" class="btn btn-template-main btn-lg" href="#" data-toggle="modal"
+            <button type="submit" class="btn btn-template-main btn-lg" data-toggle="modal"
                     data-target="#change-info-modal">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
@@ -51,6 +35,25 @@
                 <h1>PASSWORD</h1>
                 <h2>********</h2>
             </div>
+        </div>
+
+        <div class="col-sm-4" id="nav-side">
+            <center>
+                <img id="avatar" src="../static/img/user.png" class="img-responsive hidden-xs"
+                     style="background-color: white; border-radius: 100%; height: 30%; width: 30%">
+                <a id='editAvatar'>
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                <form id="avatarForm" action="/uploadAvatar" enctype="multipart/form-data" method="POST">
+                    <input id="avatarUpload" name="avatar" type="file" accept="image/*" style="display: none;" required
+                           checked/>
+                </form>
+                <h1 align="center"><strong>{{ current_user.username }}</strong>'s Profile</h1>
+                <div class="alert alert-danger" role="alert" id="avatarErrorDiv" style="display:none">
+                    <strong>Uh oh!</strong>
+                    <span id="avatarError"></span>
+                </div>
+            </center>
         </div>
     </div>
 
@@ -149,7 +152,8 @@
 
     // clicking on pencil icon on avatar prompts user to upload image file
     $("#editAvatar").click(function() {
-         $('#avatarUpload').click();
+        console.log("edit avatar clicked");
+        $('#avatarUpload').click();
     });
 
     $("#avatarUpload").change(function() {
@@ -174,6 +178,7 @@
             }
         });
     });
+
 
 
 
