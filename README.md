@@ -1,6 +1,6 @@
 # Comparator
 
-Comparator is a web app that allows users to easily compare products to determine the one to best fit their needs.
+Comparator is a web app that allows users to easily compare products to determine the one to best fit their needs. It is currently hosted on Heroku at http://thecomparator.herokuapp.com/.
 
 <b>Release Notes version 1.0</b>
 
@@ -41,8 +41,9 @@ BUILD<br>
  2. To compile the .less into .css files, run "lessc [filename].less [filename].css" from css folder<br>
   
 INSTALLATION<br>
-  Contact Team 171 Byte Me for information on sensitive environment variables.
+  Contact Team 171 Byte Me for information on sensitive environment variables which must be set to use the application.
   Most of these variables control access to various data storage locations and are as follows:
+  
    * CLOUDINARY_API_KEY
    * CLOUDINARY_API_SECRET
    * CLOUDINARY_CLOUD_NAME
@@ -50,7 +51,7 @@ INSTALLATION<br>
    * SECRET_KEY
    * SENDGRID_API_KEY
   
-  Alternatively, create your own Cloudinary account/Postgresql database/Sendgrid account and set these environmental variables accordingly. The SECRET_KEY may be any sufficiently long random string, so long as it remains constant. It is used for various encryption tasks. <br>
+  These keys are not exposed here for security reasons. Additionally, SendGrid, our email service, periodically scans github for exposed keys and will disable accounts if they are found. If you do not wish to contac us, you can create your own Cloudinary account/Postgresql database/SendGrid account and set these environmental variables accordingly. The SECRET_KEY may be any sufficiently long random string, so long as it remains constant. It is used for various encryption tasks. <br>
   
 RUNNING APPLICATION<br>
   Run "python app.py" in a terminal to run locally<br>
