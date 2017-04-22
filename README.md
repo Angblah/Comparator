@@ -13,10 +13,13 @@ NEW FEATURES<br>
   
 BUG FIXES<br>
   * Clicking on but not changing values in the comparison no longer triggers Undo/Redo<br>
+  * Guests can no longer edit any comparison they are given links to
+  * Users can create comparisons by importing csv/xls/xlsx files
 
 KNOWN BUGS<br>
-  * When downloading as xlsx, empty items will show up as " " instead of ""<br>
+  * When downloading as csv, empty items will show up as " " instead of ""
   * Changes that are being made during the database call completion may get lost in front-end rerender
+  * All database calls may be vulnerable to javascript injection (while queries are parameterized, there is no server-side check for whether a user is allowed to call a function, which could allow malicious users to affect other users' data). CSRF tokens are also not yet used.
 
 <b>Install Guide version 1.0</b><br>
 
@@ -38,7 +41,16 @@ BUILD<br>
  2. To compile the .less into .css files, run "lessc [filename].less [filename].css" from css folder<br>
   
 INSTALLATION<br>
-  Contact Team 171 Byte Me for information on sensitive environment variables.<br>
+  Contact Team 171 Byte Me for information on sensitive environment variables.
+  These variables control access to various data storage locations and are as follows:
+   * CLOUDINARY_API_KEY
+   * CLOUDINARY_API_SECRET
+   * CLOUDINARY_CLOUD_NAME
+   * DATABASE_URL
+   * SECRET_KEY
+   * SENDGRID_API_KEY
+  
+  Alternatively, create your own Cloudinary account/Postgresql database/Sendgrid account and set these environmental variables accordingly.<br>
   
 RUNNING APPLICATION<br>
   Run "python app.py" in a terminal to run locally<br>
