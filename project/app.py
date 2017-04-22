@@ -288,6 +288,11 @@ def deleteComparison(comp_id):
     delete_sheet(comp_id)
     return redirect(url_for('dashboard'))
 
+@app.route('/copyComparison', methods=['POST'])
+def copyComparison(compId, accountId):
+    newCompID = copy_comparison(compId, accountId)
+    return jsonify(newCompID)
+
 
 @app.route('/newComparison')
 def newComparison():
