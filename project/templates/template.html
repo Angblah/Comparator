@@ -17,14 +17,17 @@
             <form action="/updateTemplate">
                 <div class="row">
                     <div class="col-sm-6"><h1>EDIT ATTRIBUTES</h1></div>
-                    <div class="col-sm-6" id="update"><button type="submit" name="editTemplate">Update</button></div>
+                    <div class="col-sm-6" id="update">
+                        <button type="submit" name="editTemplate">Update</button>
+                    </div>
                 </div>
                 <hr>
 
                 {% for attr in template %}
                 <div class="col-sm-6" id="attribute">
-                    <input style="padding-left: 10%" type="text" value={{attr['name']}} />
-                    <i class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px"> delete</i>
+                    <input style="padding-left: 10%" type="text" value={{attr['name']}}/>
+                    <a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px" data-id = {{attr['id']}}>
+                        delete</a>
                     <hr>
                 </div>
                 {% endfor %}
@@ -33,7 +36,7 @@
                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
                     <b>ADD ATTRIBUTE</b>
                 </div>
-                
+
             </form>
         </div>
 
@@ -41,10 +44,10 @@
             <div id="template-name">
                 <i class="fa fa-trash" aria-hidden="true" style="padding-left: 90%"></i>
                 <br>
-                <input type="text" value={{ templateName['name'] }} />
+                <input type="text" value={{templateName['name']}}/>
             </div>
         </div>
-        
+
     </div>
 </div>
 </body>
@@ -55,3 +58,22 @@
 <!-- Include the footer for things like copyright info and JS scripts -->
 {% include "partials/footer.html" %}
 </html>
+
+<script>
+    $(".fa.fa-times").click(function() {
+        var id = $(this).data("id");
+        var parent = $(this).parent();
+        $.ajax({
+            url: "/deleteSheetAttr",
+            type: "POST",
+            data: id,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                parent.remove();
+            }
+        });
+    });
+
+</script>

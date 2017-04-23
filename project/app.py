@@ -248,6 +248,13 @@ def addComparisonItem():
     itemId['itemId'] = (add_comparison_item_back(data['compId']))
     return jsonify(itemId)
 
+# TODO: consolidate deleteComparisonAttr and deleteSheetAttr and change to use string instead of dict/json object
+
+@app.route('/deleteSheetAttr', methods=["POST"])
+def deleteSheetAttr():
+    data = json.loads(request.data)
+    delete_sheet_attribute(data)
+    return json.dumps(True)
 
 @app.route('/deleteComparisonAttr', methods=["POST"])
 def deleteComparisonAttr():
@@ -280,10 +287,11 @@ def deleteComparison(comp_id):
     delete_sheet(comp_id)
     return redirect(url_for('dashboard'))
 
-@app.route('/copyComparison', methods=['POST'])
+@app.route('/copyComparison', methods=['GET', 'POST'])
 def copyComparison():
     data = json.loads(request.data)
     newCompId = copy_comparison(data['compId'], data['accountId'])
+    print(data['accountId'])
     return redirect(share_comparison(newCompId, data['accountId']))
 
 
