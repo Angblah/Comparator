@@ -10,12 +10,12 @@ import {addAttr,
         deleteAttr, 
         undoCall,
         makeCalls,
-        redoCall} from '../actions/actions';
+        redoCall,
+        copyComparison} from '../actions/actions';
 
 class Toolbar extends React.Component {
     constructor(props) {
         super(props);
-
         this.copyText = this.copyText.bind(this);
     }
 
@@ -76,6 +76,7 @@ class Toolbar extends React.Component {
                         <div className="btn-group ml-auto" role="group" aria-label="Extra">
                             <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.exportCSV()}><i className="fa fa-file-excel-o" aria-hidden="true"></i> Export as CSV</button>
                             <button type="button blank-bg" className="btn btn-secondary" data-toggle="modal" data-target="#shareModal"><i className="fa fa-share" aria-hidden="true"></i> Share</button>
+                            <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.copyComparison(this.props.id, this.props.userId)}>Copy to My Account</button>
 
                             <div className="modal fade" id="shareModal" tabIndex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
                                 <div className="modal-dialog modal-lg" role="document">
@@ -136,6 +137,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(changeView(view))
         },
         exportCSV: () => dispatch(exportCSV()),
+        copyComparison: (compId, accountId) => {
+            dispatch(copyComparison(compId, accountId))
+        },
         saveTemplate: (compId, name) => {
             dispatch(saveTemplate(compId, name))
         },

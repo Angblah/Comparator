@@ -72,7 +72,7 @@ class Workspace extends React.Component {
             return (
                 <div id="wrapper">
                     <Navbar userId={this.props.userId}/>
-                    <Toolbar/>
+                    <Toolbar userId={this.props.userId}/>
                     <ViewContainer userId={this.props.userId}/>
                 </div>
             );
@@ -80,6 +80,7 @@ class Workspace extends React.Component {
             return (
                 <div id="wrapper">
                     <Navbar userId={this.props.userId}/>
+                    <Toolbar userId={this.props.userId}/>
                     <ViewContainer userId={this.props.userId}/>
                 </div>
             );

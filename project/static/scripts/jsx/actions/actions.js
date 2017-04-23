@@ -26,6 +26,8 @@ export const CLEAR_CALLS = 'CLEAR_CALLS'
 export const CALL_MADE = 'CALL_MADE'
 export const CHANGE_ID = 'CHANGE_ID'
 
+export const COPY_COMP = 'COPY_COMP'
+
 var fauxId = -1;
 
 // ATTRIBUTE ACTIONS
@@ -481,5 +483,20 @@ export function dbEditAttr(call) {
         .then(response => response.json())
         .then(response => dispatch(callMade()))
         .then(response => dispatch(makeCalls()))
+    }
+}
+
+export function copyComparison(compId, accountId) {
+    console.log(compId);
+    console.log(accountId);
+    return function (dispatch) {
+        return fetch('/copyComparison', {
+            method: 'POST',
+            body: JSON.stringify({
+                compId : compId,
+                accountId : accountId
+            })
+        })
+        .then(response => response.json())
     }
 }

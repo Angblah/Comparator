@@ -16,7 +16,6 @@ body {
     background-color: rgb(233, 234, 235);
     overflow-x: hidden;
     padding-bottom: 300px;
-
 }
 
 /*SIDE NAVBAR*/
@@ -42,12 +41,30 @@ body {
     margin-bottom: 15%;
     padding-left: 0px;
     text-align: center;
+    background-color: @primary-col ! important;
+    border: none ! important;
+    color: @secondary-text;
+}
+
+#template-name input[type="text"]:focus {
+    background-color: @back-col ! important;
+    color: @primary-col;
 }
 
 #attributes {
     height: 70vh;
     padding-left: 36.5%;  
     padding-top: 3%;
+}
+
+#attributes button {
+    height: 35px;
+    font-size: 17px;
+    border: none;
+}
+
+#update {
+    padding-top: 3.5%;
 }
 
 input[type="text"] {

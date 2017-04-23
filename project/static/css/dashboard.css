@@ -76,15 +76,13 @@ div.dashboard-content {
   background-color: #5fa4eb;
   color: #fff;
 }
-input.invisible {
-  border: none;
-  background-color: Transparent;
+div.searching {
+  padding-left: 1.6%;
 }
 input.search {
-  width: 40%;
-  border-radius: 25px;
-  border-color: #ff9900;
+  width: 38%;
+  border: 1px solid #ff9900;
   color: #5fa4eb;
-  background-color: Transparent;
   padding-left: 2%;
+  margin: 4%;
 }

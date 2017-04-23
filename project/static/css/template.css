@@ -29,11 +29,26 @@ body {
   margin-bottom: 15%;
   padding-left: 0px;
   text-align: center;
+  background-color: #5fa4eb ! important;
+  border: none ! important;
+  color: #fff;
+}
+#template-name input[type="text"]:focus {
+  background-color: #e9eaeb ! important;
+  color: #5fa4eb;
 }
 #attributes {
   height: 70vh;
   padding-left: 36.5%;
   padding-top: 3%;
+}
+#attributes button {
+  height: 35px;
+  font-size: 17px;
+  border: none;
+}
+#update {
+  padding-top: 3.5%;
 }
 input[type="text"] {
   border: 1px solid #e9eaeb;
