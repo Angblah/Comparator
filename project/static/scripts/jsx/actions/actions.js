@@ -495,6 +495,5 @@ export function copyComparison(compId, accountId) {
                 accountId : accountId
             })
         })
-        .then(response => response.json())
     }
 }

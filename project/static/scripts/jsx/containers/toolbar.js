@@ -92,6 +92,10 @@ class Toolbar extends React.Component {
                             <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.copyComparison(this.props.id, this.props.userId)}>Copy to My Account</button>
                             }
 
+                            {!showCopyButton &&
+                            <button type="button blank-bg" className="btn btn-secondary" onClick={() => this.props.copyComparison(this.props.id, this.props.userId)}>Duplicate Comparison</button>
+                            }
+
                             <div className="modal fade" id="shareModal" tabIndex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
                                 <div className="modal-dialog modal-lg" role="document">
                                     <div className="modal-content">
