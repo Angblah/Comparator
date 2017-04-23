@@ -53955,6 +53955,13 @@ var Toolbar = function (_React$Component) {
         var _this = (0, _possibleConstructorReturn3.default)(this, (Toolbar.__proto__ || (0, _getPrototypeOf2.default)(Toolbar)).call(this, props));
 
         _this.copyText = _this.copyText.bind(_this);
+
+        _this.state = { showCopyButton: false };
+
+        if (_this.props.userId != _this.props.info.account_id) {
+            _this.state.showCopyButton = true;
+        }
+
         return _this;
     }
 
@@ -53970,6 +53977,8 @@ var Toolbar = function (_React$Component) {
         key: 'render',
         value: function render() {
             var _this2 = this;
+
+            var showCopyButton = this.state.showCopyButton;
 
             if (this.props.view === 'CHART') {
                 return _react2.default.createElement(
@@ -54094,7 +54103,7 @@ var Toolbar = function (_React$Component) {
                                 _react2.default.createElement('i', { className: 'fa fa-share', 'aria-hidden': 'true' }),
                                 ' Share'
                             ),
-                            _react2.default.createElement(
+                            showCopyButton && _react2.default.createElement(
                                 'button',
                                 { type: 'button blank-bg', className: 'btn btn-secondary', onClick: function onClick() {
                                         return _this2.props.copyComparison(_this2.props.id, _this2.props.userId);
