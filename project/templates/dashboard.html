@@ -31,11 +31,13 @@
 
         <div class="dashboard-content" id="my-comps" style="clear: left;">
             <h1>My Comparisons</h1>
-            <form id="compSearch">
-                <input class="search" type="search" name="search" placeholder="Search Comparisons">
-                <button class="btn btn-template-main" type="submit">Submit</button>
-                <input class="invisible" type="submit">
-            </form>
+            <div class="searching">
+                <form id="compSearch">
+                    <input class="search" type="search" name="search" placeholder="Search Comparisons">
+                    <button class="btn btn-template-main" type="submit"><strong>Submit</strong></button>
+                    <input class="invisible" type="submit">
+                </form>
+            </div>
             {% for row in all_comp %}
             <div class="col-sm-5">
                 <button type="button" id="{{'comp' ~ row['id']}}" class="tile"
@@ -49,11 +51,13 @@
 
         <div class="dashboard-content" id="my-temps" style="clear: left;">
             <h1>My Templates</h1>
-            <form id="tempSearch">
-                <input class="search" type="search" name="search" placeholder="Search Templates">
-                <button class="btn btn-template-main" type="submit">Submit</button>
-                <input class="invisible" type="submit">
-            </form>
+            <div class="searching">
+                <form id="tempSearch">
+                    <input class="search" type="search" name="search" placeholder="Search Templates">
+                    <button class="btn btn-template-main" type="submit"><strong>Submit</strong></button>
+                    <input class="invisible" type="submit">
+                </form>
+            </div>
             {% for row in all_temp %}
             <div class="col-sm-5">
                 <button type="button" id="{{'temp' ~ row['id']}}" class="tile"
