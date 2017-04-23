@@ -201,11 +201,17 @@ def editItemWorth():
     message['success'] = 'success'
     return jsonify(message)
 
+# TODO: consolidate with comparison name setting
 @app.route('/setSheetName', methods=["POST"])
 def setSheetName():
     form = request.form
     set_sheet_name(int(form['id']), form['name'])
     return json.dumps(True)
+
+# TODO: consolidate with comparison attribute naming
+@app.route('/addAttributeBack', methods=["POST"])
+def addAttributeBack():
+    return add_sheet_attribute_back(request.form['id'])
 
 @app.route('/setAttributeName', methods=["POST"])
 def setAttributeName():
