@@ -201,6 +201,11 @@ def editItemWorth():
     message['success'] = 'success'
     return jsonify(message)
 
+@app.route('/setSheetName', methods=["POST"])
+def setSheetName():
+    form = request.form
+    set_sheet_name(int(form['id']), form['name'])
+    return json.dumps(True)
 
 @app.route('/setAttributeName', methods=["POST"])
 def setAttributeName():
@@ -592,7 +597,7 @@ def view_template(token):
         select * from user_template natural join sheet where id = :id;
         """)
         templateName = db.engine.execute(query, id=template_id).fetchone()
-        return render_template('template.html', template=get_template(template_id, get_json=False), templateName=templateName)
+        return render_template('template.html', template=get_template(template_id, get_json=False), templateName=templateName, template_id=template_id)
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
         abort(404)

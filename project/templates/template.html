@@ -10,40 +10,35 @@
 <body>
 <div id="all">
     <!-- Template Link -->
-    <div id="template" data-template="{{template}}" data-templateName="{{templateName}}"></div>
+    <div id="template"></div>
 
     <div class="row">
         <div class="col-sm-10" id="attributes">
-            <form action="/updateTemplate">
-                <div class="row">
-                    <div class="col-sm-6"><h1>EDIT ATTRIBUTES</h1></div>
-                    <div class="col-sm-6" id="update">
-                        <button type="submit" name="editTemplate">Update</button>
-                    </div>
-                </div>
+            <div class="row">
+                <div class="col-sm-6"><h1>EDIT ATTRIBUTES</h1></div>
+            </div>
+            <hr>
+
+            {% for attr in template %}
+            <div class="col-sm-6" id="attribute" data-id={{attr['id']}}>
+                <input style="padding-left: 10%" type="text" name="attributeName" value={{attr['name']}}>
+                <a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px">delete</a>
                 <hr>
+            </div>
+            {% endfor %}
 
-                {% for attr in template %}
-                <div class="col-sm-6" id="attribute" data-id={{attr['id']}}>
-                    <input style="padding-left: 10%" type="text" name="attributeName" value={{attr['name']}}>
-                    <a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px">delete</a>
-                    <hr>
-                </div>
-                {% endfor %}
+            <div class="col-sm-6" id="add-attribute">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                <b>ADD ATTRIBUTE</b>
+            </div>
 
-                <div class="col-sm-6" id="add-attribute">
-                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                    <b>ADD ATTRIBUTE</b>
-                </div>
-
-            </form>
         </div>
 
         <div class="col-sm-4" id="nav-side">
             <div id="template-name">
                 <i class="fa fa-trash" aria-hidden="true" style="padding-left: 90%"></i>
                 <br>
-                <input type="text" value={{templateName['name']}}/>
+                <input type="text" id="templateName" data-id={{template_id}} value={{templateName['name']}}>
             </div>
         </div>
 
@@ -80,6 +75,13 @@
         var name = $(this).val();
         $.post("/setAttributeName", {name: name, id: id});
     });
+
+    $("#templateName").focusout(function() {
+        var id = $(this).data("id");
+        var name = $(this).val();
+        $.post("/setSheetName", {name: name, id: id});
+    });
+
 
 
 
