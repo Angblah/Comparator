@@ -36,7 +36,7 @@
 
         <div class="col-sm-4" id="nav-side">
             <div id="template-name">
-                <i class="fa fa-trash" aria-hidden="true" style="padding-left: 90%"></i>
+                <a class="fa fa-trash" id="deleteTemplate" aria-hidden="true" style="padding-left: 90%"></a>
                 <br>
                 <input type="text" id="templateName" value={{templateName['name']}}>
             </div>
@@ -55,6 +55,12 @@
 
 <script>
     var template_id = $("#template").data("template_id");
+
+    $("#deleteTemplate").click(function() {
+        $.post("/deleteSheet", {id: template_id}, function(data) {
+            window.location.href = data;
+        });
+    });
 
     $(".fa.fa-times").click(function() {
         var parent = $(this).parent();

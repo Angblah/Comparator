@@ -219,6 +219,8 @@ def setAttributeName():
     set_sheet_attribute_field(int(form['id']), 'name', form['name'])
     return json.dumps(True)
 
+
+
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():
     message = {}
@@ -298,6 +300,11 @@ def saveComparisonAsTemplate():
     tempId['tempId'] = (save_comparison_as_template(data['compId'], data['name']))
     return jsonify(tempId)
 
+# TODO: consolidate with delete comparison
+@app.route('/deleteSheet', methods=["POST"])
+def deleteSheet():
+    delete_sheet(request.form['id'])
+    return url_for('dashboard')
 
 @app.route('/deleteComparison/<int:comp_id>')
 def deleteComparison(comp_id):
