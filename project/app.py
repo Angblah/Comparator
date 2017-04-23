@@ -184,13 +184,6 @@ def comparisonFromTemplate():
         comparison_id = create_comparison_from_template(current_user.id, template_id)
         return redirect(share_comparison(comparison_id, current_user.id))
 
-
-@app.route('/getComparisonData')
-def getComparisonData():
-    data = get_comparison(12)
-    return data
-
-
 @app.route('/editComparisonName', methods=["POST"])
 def editComparisonName():
     message = {}

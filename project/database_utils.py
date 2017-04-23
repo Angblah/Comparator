@@ -348,7 +348,7 @@ def initialize_db_structure():
         as $$
             declare new_comparison_id int;
         begin
-            insert into sheet (name, comment, account_id) select name || ' (copy)', comment, account_id from sheet where id = _comparison_id returning id into new_comparison_id;
+            insert into sheet (name, comment, account_id) select name || ' (copy)', comment, _account_id from sheet where id = _comparison_id returning id into new_comparison_id;
             insert into comparison(id) values (new_comparison_id);
             with attribute_ids as (
             select id as attribute_id, name, type_id, weight, position, row_number() over () from sheet_attribute where sheet_id = _comparison_id
