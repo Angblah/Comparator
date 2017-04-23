@@ -3,7 +3,7 @@ import { ActionCreators as UndoActionCreators } from 'redux-undo';
 import {connect} from 'react-redux';
 import {isEqual} from 'lodash';
 import Slider from 'rc-slider';
-import {addItem, addAttr, editAttr, editItem, editItemWorth, editItemName, changeView, deleteAttr, deleteItem, makeCalls, handleTick} from '../actions/actions';
+import {addItem, addAttr, editAttr, editItem, editItemWorth, editItemName, changeView, deleteAttr, deleteItem, makeCalls, handleTick, copyComparison} from '../actions/actions';
 import {START_TIMER} from 'redux-timer-middleware';
 import ChartView from '../components/chartView';
 import ZoomDragCircle from '../components/spiderView';
@@ -164,6 +164,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         deleteAttr: (attrId) => {
             dispatch(deleteAttr(attrId))
+        },
+        copyComparison: (compId, accountId) => {
+            dispatch(copyComparison(compId, accountId))
         },
         onUndo: () => {
             dispatch(UndoActionCreators.undo())

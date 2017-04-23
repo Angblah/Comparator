@@ -487,6 +487,8 @@ export function dbEditAttr(call) {
 }
 
 export function copyComparison(compId, accountId) {
+    console.log(compId);
+    console.log(accountId);
     return function (dispatch) {
         return fetch('/copyComparison', {
             method: 'POST',
