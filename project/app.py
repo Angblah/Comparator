@@ -202,6 +202,12 @@ def editItemWorth():
     return jsonify(message)
 
 
+@app.route('/setAttributeName', methods=["POST"])
+def setAttributeName():
+    form = request.form
+    set_sheet_attribute_field(int(form['id']), 'name', form['name'])
+    return json.dumps(True)
+
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():
     message = {}

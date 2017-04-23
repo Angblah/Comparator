@@ -24,10 +24,9 @@
                 <hr>
 
                 {% for attr in template %}
-                <div class="col-sm-6" id="attribute">
-                    <input style="padding-left: 10%" type="text" value={{attr['name']}}/>
-                    <a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px" data-id = {{attr['id']}}>
-                        delete</a>
+                <div class="col-sm-6" id="attribute" data-id={{attr['id']}}>
+                    <input style="padding-left: 10%" type="text" name="attributeName" value={{attr['name']}}>
+                    <a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px">delete</a>
                     <hr>
                 </div>
                 {% endfor %}
@@ -61,8 +60,8 @@
 
 <script>
     $(".fa.fa-times").click(function() {
-        var id = $(this).data("id");
         var parent = $(this).parent();
+        var id = parent.data("id");
         $.ajax({
             url: "/deleteSheetAttr",
             type: "POST",
@@ -75,5 +74,14 @@
             }
         });
     });
+
+    $("input[name='attributeName']").focusout(function() {
+        var id = $(this).parent().data("id");
+        var name = $(this).val();
+        $.post("/setAttributeName", {name: name, id: id});
+    });
+
+
+
 
 </script>
