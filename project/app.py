@@ -285,7 +285,6 @@ def copyComparison():
     success = {}
     data = json.loads(request.data)
     success['newCompID'] = copy_comparison(data['compId'], data['accountId'])
-    # print(success['newCompID'])
     return jsonify(success)
 
 
