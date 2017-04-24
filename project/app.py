@@ -331,7 +331,7 @@ def newEmptyComparison():
 @login_required
 @app.route('/newEmptyTemplate', methods=["POST"])
 def newEmptyTemplate():
-    id = create_empty_template(current_user.id, num_attributes=0)
+    id = create_empty_template(current_user.id)
     return share_template(id, current_user.id)
 
 @app.route('/testbed')
