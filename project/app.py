@@ -315,8 +315,7 @@ def deleteComparison(comp_id):
 def copyComparison():
     data = json.loads(request.data)
     newCompId = copy_comparison(data['compId'], data['accountId'])
-    print(data['accountId'])
-    return redirect(share_comparison(newCompId, data['accountId']))
+    return json.dumps(share_comparison(newCompId, data['accountId']))
 
 
 @app.route('/newComparison')
