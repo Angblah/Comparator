@@ -352,7 +352,7 @@ def dashboard():
         return redirect(url_for('index'))
 
     # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
-    recent_comp = get_recent_user_comparisons(current_user.id, 6, get_json=False)
+    recent_comp = get_recent_user_comparisons(current_user.id, 4, get_json=False)
     all_comp = get_user_comparisons(current_user.id, get_json=False)
     all_temp = get_user_templates(current_user.id, get_json=False)
 
