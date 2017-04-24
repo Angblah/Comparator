@@ -17,6 +17,7 @@ NEW FEATURES<br>
 BUG FIXES<br>
   * Clicking on but not changing values in the comparison no longer triggers Undo/Redo<br>
   * Guests can no longer edit any comparison they are given links to
+  * Copying/Duplicating comparisons now correctly redirects you to the new comparison
 
 KNOWN BUGS<br>
   * When downloading as csv, empty items will show up as " " instead of ""
