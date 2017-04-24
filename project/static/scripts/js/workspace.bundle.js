@@ -51830,10 +51830,10 @@ var ViewContainer = function (_React$Component) {
                 if (this.props.view === 'SPIDER') {
                     return _react2.default.createElement(
                         'div',
-                        { className: 'container-fluid' },
+                        { className: 'container-fluid', id: 'viewContainer' },
                         _react2.default.createElement(
                             'div',
-                            { className: 'row' },
+                            { className: 'row', id: 'viewRow' },
                             this.sidebar(),
                             _react2.default.createElement(
                                 'div',
@@ -51846,10 +51846,10 @@ var ViewContainer = function (_React$Component) {
                 } else if (this.props.view === 'AREA') {
                     return _react2.default.createElement(
                         'div',
-                        { className: 'container-fluid' },
+                        { className: 'container-fluid', id: 'viewContainer' },
                         _react2.default.createElement(
                             'div',
-                            { className: 'row' },
+                            { className: 'row', id: 'viewRow' },
                             this.sidebar(),
                             _react2.default.createElement(
                                 'div',
@@ -51862,10 +51862,10 @@ var ViewContainer = function (_React$Component) {
                 } else {
                     return _react2.default.createElement(
                         'div',
-                        { className: 'container-fluid' },
+                        { className: 'container-fluid', id: 'viewContainer' },
                         _react2.default.createElement(
                             'div',
-                            { className: 'row' },
+                            { className: 'row', id: 'viewRow' },
                             this.sidebar(),
                             _react2.default.createElement(
                                 'div',
@@ -51888,21 +51888,21 @@ var ViewContainer = function (_React$Component) {
                 if (this.props.view === 'SPIDER') {
                     return _react2.default.createElement(
                         'div',
-                        null,
+                        { className: 'container-fluid', id: 'viewContainer' },
                         _react2.default.createElement(_spiderView2.default, { items: this.props.items,
                             attributes: this.props.attributes })
                     );
                 } else if (this.props.view === 'AREA') {
                     return _react2.default.createElement(
                         'div',
-                        null,
+                        { className: 'container-fluid', id: 'viewContainer' },
                         _react2.default.createElement(_areaView2.default, { items: this.props.items,
                             attributes: this.props.attributes })
                     );
                 } else {
                     return _react2.default.createElement(
                         'div',
-                        null,
+                        { className: 'container-fluid', id: 'viewContainer' },
                         _react2.default.createElement(_chartView2.default, { items: this.props.items,
                             attributes: this.props.attributes })
                     );
@@ -52661,7 +52661,7 @@ var AreaView = function (_React$Component) {
                 null,
                 _react2.default.createElement(
                     _recharts.AreaChart,
-                    { width: 1200, height: 400, data: rechartData,
+                    { width: 1400, height: 600, data: rechartData,
                         margin: { top: 10, right: 30, left: 3, bottom: 3 } },
                     _react2.default.createElement(
                         'defs',

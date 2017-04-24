@@ -43,7 +43,7 @@ class AreaView extends React.Component {
 
         return (
             <div>
-                <AreaChart width={1200} height={400} data={rechartData}
+                <AreaChart width={1400} height={600} data={rechartData}
                     margin={{ top: 10, right: 30, left: 3, bottom: 3 }}>
                     <defs>
                         {this.props.items.map(function(item, fillIndex) {

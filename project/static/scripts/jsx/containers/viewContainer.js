@@ -89,8 +89,8 @@ class ViewContainer extends React.Component {
         if (this.props.userId == this.props.info.account_id) {  
             if (this.props.view === 'SPIDER') {
                 return (
-                    <div className="container-fluid">
-                        <div className="row">
+                    <div className="container-fluid" id="viewContainer">
+                        <div className="row" id="viewRow">
                             {this.sidebar()}
                             <div className="col-10">
                                 <SpiderChart items={this.props.items}
@@ -101,8 +101,8 @@ class ViewContainer extends React.Component {
                 );
             } else if (this.props.view === 'AREA') {
                 return (
-                    <div className="container-fluid">
-                        <div className="row">
+                    <div className="container-fluid" id="viewContainer">
+                        <div className="row" id="viewRow">
                             {this.sidebar()}
                             <div className="col-10">
                                 <AreaView items={this.props.items}
@@ -113,8 +113,8 @@ class ViewContainer extends React.Component {
                 );
             } else {
                 return (
-                    <div className="container-fluid">
-                        <div className="row">
+                    <div className="container-fluid" id="viewContainer">
+                        <div className="row" id="viewRow">
                             {this.sidebar()}
                             <div className="container col-10 pt-3">
                                 <ChartView items={this.props.items}
@@ -135,21 +135,21 @@ class ViewContainer extends React.Component {
         } else {
             if (this.props.view === 'SPIDER') {
                 return (
-                    <div>
+                    <div className="container-fluid" id="viewContainer">
                         <SpiderChart items={this.props.items}
                         attributes={this.props.attributes}/>
                     </div>
                 );
             } else if (this.props.view === 'AREA') {
                 return (
-                    <div>
+                    <div className="container-fluid" id="viewContainer">
                         <AreaView items={this.props.items}
                         attributes={this.props.attributes}/>
                     </div>
                 );
             } else {
                 return (
-                    <div>
+                    <div className="container-fluid" id="viewContainer">
                         <ChartView items={this.props.items}
                         attributes={this.props.attributes}/>
                     </div>
