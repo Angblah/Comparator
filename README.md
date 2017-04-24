@@ -8,7 +8,7 @@ NEW FEATURES<br>
   * Added functionality to create and edit templates<br>
   * Added functionality to create and edit comparisons<br>
   * Added feature to share comparisons<br>
-  * Added button to export comparison<br>
+  * Added button to export comparison as csv<br>
   * Added functionality to save as template or comparison<br>
   * Added functionality to create comparisons by importing csv/xls/xlsx files<br>
   * Added functionality to create new empty comparisons/templates quickly on dashboard<br>
