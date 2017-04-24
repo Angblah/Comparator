@@ -53080,22 +53080,38 @@ var ViewContainer = function (_React$Component) {
                     return _react2.default.createElement(
                         'div',
                         { className: 'container-fluid', id: 'viewContainer' },
-                        _react2.default.createElement(_spiderView2.default, { items: this.props.items,
-                            attributes: this.props.attributes })
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'row', id: 'viewRow' },
+                            _react2.default.createElement(_spiderView2.default, { items: this.props.items,
+                                attributes: this.props.attributes })
+                        )
                     );
                 } else if (this.props.view === 'AREA') {
                     return _react2.default.createElement(
                         'div',
                         { className: 'container-fluid', id: 'viewContainer' },
-                        _react2.default.createElement(_areaView2.default, { items: this.props.items,
-                            attributes: this.props.attributes })
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'row', id: 'viewRow' },
+                            _react2.default.createElement(_areaView2.default, { items: this.props.items,
+                                attributes: this.props.attributes })
+                        )
                     );
                 } else {
                     return _react2.default.createElement(
                         'div',
                         { className: 'container-fluid', id: 'viewContainer' },
-                        _react2.default.createElement(_chartView2.default, { items: this.props.items,
-                            attributes: this.props.attributes })
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'row', id: 'viewRow' },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'container pt-3' },
+                                _react2.default.createElement(_chartView2.default, { items: this.props.items,
+                                    attributes: this.props.attributes })
+                            )
+                        )
                     );
                 }
             }
