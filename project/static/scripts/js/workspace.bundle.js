@@ -52667,7 +52667,7 @@ var AreaView = function (_React$Component) {
                 null,
                 _react2.default.createElement(
                     _recharts.AreaChart,
-                    { width: 1400, height: 600, data: rechartData,
+                    { width: 1000, height: 600, data: rechartData,
                         margin: { top: 10, right: 30, left: 3, bottom: 3 } },
                     _react2.default.createElement(
                         'defs',
