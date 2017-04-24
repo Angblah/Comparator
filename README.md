@@ -11,6 +11,8 @@ NEW FEATURES<br>
   * Added button to export comparison<br>
   * Added functionality to save as template or comparison<br>
   * Added functionality to create comparisons by importing csv/xls/xlsx files<br>
+  * Added functionality to create new empty comparisons/templates quickly on dashboard<br>
+  * Added functionality to search through comparisons/templates on dashboard<br>
   
 BUG FIXES<br>
   * Clicking on but not changing values in the comparison no longer triggers Undo/Redo<br>
