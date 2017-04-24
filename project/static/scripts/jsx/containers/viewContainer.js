@@ -159,7 +159,7 @@ class ViewContainer extends React.Component {
                 return (
                     <div className="container-fluid" id="viewContainer">
                         <div className="row" id="viewRow">
-                            <div className="container col-10 pt-3">
+                            <div className="container pt-3">
                                 <ChartView items={this.props.items}
                                 attributes={this.props.attributes}/>
                             </div>
