@@ -25,6 +25,7 @@ KNOWN BUGS<br>
   * When downloading as csv, empty items will show up as " " instead of ""
   * Changes that are being made during the database call completion may get lost in front-end rerender
   * All database calls may be vulnerable to javascript injection (while queries are parameterized, there is no server-side check for whether a user is allowed to call a function, which could allow malicious users to affect other users' data). CSRF tokens are also not yet used.
+  * Make Database Calls doesn't clear out Undo/Redo history
 
 <b>Install Guide version 1.0</b><br>
 
