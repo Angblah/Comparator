@@ -201,6 +201,25 @@ def editItemWorth():
     message['success'] = 'success'
     return jsonify(message)
 
+# TODO: consolidate with comparison name setting
+@app.route('/setSheetName', methods=["POST"])
+def setSheetName():
+    form = request.form
+    set_sheet_name(int(form['id']), form['name'])
+    return json.dumps(True)
+
+# TODO: consolidate with comparison attribute naming
+@app.route('/addAttributeBack', methods=["POST"])
+def addAttributeBack():
+    return json.dumps(add_sheet_attribute_back(request.form['id']))
+
+@app.route('/setAttributeName', methods=["POST"])
+def setAttributeName():
+    form = request.form
+    set_sheet_attribute_field(int(form['id']), 'name', form['name'])
+    return json.dumps(True)
+
+
 
 @app.route('/saveComparisonAttributesData', methods=["POST"])
 def saveComparisonAttributesData():
@@ -248,6 +267,13 @@ def addComparisonItem():
     itemId['itemId'] = (add_comparison_item_back(data['compId']))
     return jsonify(itemId)
 
+# TODO: consolidate deleteComparisonAttr and deleteSheetAttr and change to use string instead of dict/json object
+
+@app.route('/deleteSheetAttr', methods=["POST"])
+def deleteSheetAttr():
+    data = json.loads(request.data)
+    delete_sheet_attribute(data)
+    return json.dumps(True)
 
 @app.route('/deleteComparisonAttr', methods=["POST"])
 def deleteComparisonAttr():
@@ -274,35 +300,39 @@ def saveComparisonAsTemplate():
     tempId['tempId'] = (save_comparison_as_template(data['compId'], data['name']))
     return jsonify(tempId)
 
+# TODO: consolidate with delete comparison
+@app.route('/deleteSheet', methods=["POST"])
+def deleteSheet():
+    delete_sheet(request.form['id'])
+    return url_for('dashboard')
 
 @app.route('/deleteComparison/<int:comp_id>')
 def deleteComparison(comp_id):
     delete_sheet(comp_id)
     return redirect(url_for('dashboard'))
 
-@app.route('/copyComparison', methods=['POST'])
+@app.route('/copyComparison', methods=['GET', 'POST'])
 def copyComparison():
-    success = {}
     data = json.loads(request.data)
-    success['newCompID'] = copy_comparison(data['compId'], data['accountId'])
-    return jsonify(success)
+    newCompId = copy_comparison(data['compId'], data['accountId'])
+    return json.dumps(share_comparison(newCompId, data['accountId']))
 
 
 @app.route('/newComparison')
 def newComparison():
     return render_template('newComparison.html')
 
-# FOR TESTING PURPOSES ONLY; DELETE ONCE LINKED TO PROPERLY
-@app.route('/new_empty_comparison')
-def new_empty_comparison():
-    from models import Account
-    if not current_user.is_anonymous:
-        id = create_empty_comparison(current_user.id)
-        return redirect(share_comparison(id, current_user.id))
-    else:
-        id = create_empty_comparison(GUEST_ID)
-        return redirect(share_comparison(id, GUEST_ID))
+@login_required
+@app.route('/newEmptyComparison', methods=["POST"])
+def newEmptyComparison():
+    id = create_empty_comparison(current_user.id)
+    return share_comparison(id, current_user.id)
 
+@login_required
+@app.route('/newEmptyTemplate', methods=["POST"])
+def newEmptyTemplate():
+    id = create_empty_template(current_user.id)
+    return share_template(id, current_user.id)
 
 @app.route('/testbed')
 def testbed():
@@ -322,7 +352,7 @@ def dashboard():
         return redirect(url_for('index'))
 
     # TODO: consider sorting all_comp in python for recent_comp (though sorting likely faster on database side through indices, returning both recent_comp and all_comp is inefficient)
-    recent_comp = get_recent_user_comparisons(current_user.id, 5, get_json=False)
+    recent_comp = get_recent_user_comparisons(current_user.id, 4, get_json=False)
     all_comp = get_user_comparisons(current_user.id, get_json=False)
     all_temp = get_user_templates(current_user.id, get_json=False)
 
@@ -579,7 +609,7 @@ def view_template(token):
         select * from user_template natural join sheet where id = :id;
         """)
         templateName = db.engine.execute(query, id=template_id).fetchone()
-        return render_template('template.html', template=get_template(template_id, get_json=False), templateName=templateName)
+        return render_template('template.html', template=get_template(template_id, get_json=False), templateName=templateName, template_id=template_id)
     else:
         # TODO guest view (consider separate view for logged in users of different account so that they can copy comparisons)
         abort(404)

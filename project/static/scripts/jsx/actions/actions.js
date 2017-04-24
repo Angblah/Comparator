@@ -496,5 +496,9 @@ export function copyComparison(compId, accountId) {
             })
         })
         .then(response => response.json())
+        .then(function(json){
+            console.log("testing");
+            window.location.href = json;
+        })
     }
 }

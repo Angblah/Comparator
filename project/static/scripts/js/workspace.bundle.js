@@ -3434,6 +3434,9 @@ function copyComparison(compId, accountId) {
             })
         }).then(function (response) {
             return response.json();
+        }).then(function (json) {
+            console.log("testing");
+            window.location.href = json;
         });
     };
 }
@@ -51339,6 +51342,13 @@ var Toolbar = function (_React$Component) {
                                         return _this2.props.copyComparison(_this2.props.id, _this2.props.userId);
                                     } },
                                 'Copy to My Account'
+                            ),
+                            !showCopyButton && _react2.default.createElement(
+                                'button',
+                                { type: 'button blank-bg', className: 'btn btn-secondary', onClick: function onClick() {
+                                        return _this2.props.copyComparison(_this2.props.id, _this2.props.userId);
+                                    } },
+                                'Duplicate Comparison'
                             ),
                             _react2.default.createElement(
                                 'div',

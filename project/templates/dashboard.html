@@ -38,14 +38,21 @@
                     <input class="invisible" type="submit">
                 </form>
             </div>
-            {% for row in all_comp %}
-            <div class="col-sm-5">
-                <button type="button" id="{{'comp' ~ row['id']}}" class="tile"
-                        onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
-                    {{row['name']}}
+            <div class="col-sm-5" id="newComparison">
+                <button type="button" class="tile">
+                    <i class="fa fa-plus-circle" aria-hidden="true" style="font-size:100px"></i>
                 </button>
             </div>
-            {% endfor %}
+            <div id="comps">
+                {% for row in all_comp %}
+                <div class="col-sm-5">
+                    <button type="button" id="{{'comp' ~ row['id']}}" class="tile"
+                            onclick="location.href='{{row['id'] | share_comparison(current_user.id)}}'">
+                        {{row['name']}}
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
         </div>
         <hr style="clear: left;">
 
@@ -58,14 +65,21 @@
                     <input class="invisible" type="submit">
                 </form>
             </div>
-            {% for row in all_temp %}
-            <div class="col-sm-5">
-                <button type="button" id="{{'temp' ~ row['id']}}" class="tile"
-                        onclick="location.href='{{row['id'] | share_template(current_user.id)}}'">
-                    {{row['name']}}
+            <div class="col-sm-5" id="newTemplate">
+                <button type="button" class="tile">
+                    <i class="fa fa-plus-circle" aria-hidden="true" style="font-size:100px"></i>
                 </button>
             </div>
-            {% endfor %}
+            <div id="temps">
+                {% for row in all_temp %}
+                <div class="col-sm-5">
+                    <button type="button" id="{{'temp' ~ row['id']}}" class="tile"
+                            onclick="location.href='{{row['id'] | share_template(current_user.id)}}'">
+                        {{row['name']}}
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
@@ -115,13 +129,25 @@
     $("#compSearch").submit(function(e) {
         e.preventDefault();
         var input = $(this).find(':input[type=search]').val();
-        filterDisplay($("#my-comps"), input);
+        filterDisplay($("#comps"), input);
     });
 
     $("#tempSearch").submit(function(e) {
         e.preventDefault();
         var input = $(this).find(':input[type=search]').val();
-        filterDisplay($("#my-temps"), input);
+        filterDisplay($("#temps"), input);
+    });
+
+    $("#newComparison").click(function(e) {
+        $.post("/newEmptyComparison", function(data) {
+            window.location.href = data;
+        });
+    });
+
+    $("#newTemplate").click(function(e) {
+        $.post("/newEmptyTemplate", function(data) {
+            window.location.href = data;
+        });
     });
 
     function filterDisplay(div, str) {
@@ -136,6 +162,9 @@
             }
         });
     };
+
+
+
 
 
 </script>

@@ -10,41 +10,39 @@
 <body>
 <div id="all">
     <!-- Template Link -->
-    <div id="template" data-template="{{template}}" data-templateName="{{templateName}}"></div>
+    <div id="template" data-template_id={{template_id}}></div>
 
     <div class="row">
         <div class="col-sm-10" id="attributes">
-            <form action="/updateTemplate">
-                <div class="row">
-                    <div class="col-sm-6"><h1>EDIT ATTRIBUTES</h1></div>
-                    <div class="col-sm-6" id="update"><button type="submit" name="editTemplate">Update</button></div>
-                </div>
-                <hr>
+            <div class="row">
+                <div class="col-sm-6"><h1>EDIT ATTRIBUTES</h1></div>
+            </div>
+            <hr>
 
+            <div id="attributeList">
                 {% for attr in template %}
-                <div class="col-sm-6" id="attribute">
-                    <input style="padding-left: 10%" type="text" value={{attr['name']}} />
-                    <i class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px"> delete</i>
+                <div class="col-sm-6" data-id="{{attr['id']}}">
+                    <input style="padding-left: 10%" type="text" name="attributeName" value={{attr['name']}}>
+                    <a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px">delete</a>
                     <hr>
                 </div>
                 {% endfor %}
+            </div>
+            <div class="col-sm-6" id="add-attribute">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                <b>ADD ATTRIBUTE</b>
+            </div>
 
-                <div class="col-sm-6" id="add-attribute">
-                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                    <b>ADD ATTRIBUTE</b>
-                </div>
-                
-            </form>
         </div>
 
         <div class="col-sm-4" id="nav-side">
             <div id="template-name">
-                <i class="fa fa-trash" aria-hidden="true" style="padding-left: 90%"></i>
+                <a class="fa fa-trash" id="deleteTemplate" aria-hidden="true" style="padding-left: 90%"></a>
                 <br>
-                <input type="text" value={{ templateName['name'] }} />
+                <input type="text" id="templateName" value="{{templateName['name']}}">
             </div>
         </div>
-        
+
     </div>
 </div>
 </body>
@@ -55,3 +53,61 @@
 <!-- Include the footer for things like copyright info and JS scripts -->
 {% include "partials/footer.html" %}
 </html>
+
+<script>
+    var template_id = $("#template").data("template_id");
+
+    $("#deleteTemplate").click(function() {
+        $.post("/deleteSheet", {id: template_id}, function(data) {
+            window.location.href = data;
+        });
+    });
+
+    $(document).on('click', ".fa.fa-times", function() {
+        var parent = $(this).parent();
+        var id = parent.data("id");
+        $.ajax({
+            url: "/deleteSheetAttr",
+            type: "POST",
+            data: id,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                parent.remove();
+            }
+        });
+    });
+
+    $(document).on('focusout', "input[name='attributeName']", function() {
+        var id = $(this).parent().data("id");
+        var name = $(this).val();
+        $.post("/setAttributeName", {name: name, id: id});
+    });
+
+    $("#templateName").focusout(function() {
+        var name = $(this).val();
+        $.post("/setSheetName", {name: name, id: template_id});
+    });
+
+    $("#add-attribute").click(function() {
+        $.post("/addAttributeBack", {id: template_id}, function(attribute_id) {
+            console.log(attribute_id);
+            var test = $("#attributeList");
+            test.append(
+            '<div class="col-sm-6" data-id=' + attribute_id + '>' +
+                '<input style="padding-left: 10%" type="text" name="attributeName" value=""}>' +
+                '<a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px">delete</a>'+
+                '<hr>'+
+            '</div>');
+        });
+    });
+
+
+
+
+
+
+
+
+</script>

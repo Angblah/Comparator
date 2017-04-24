@@ -1142,5 +1142,7 @@ if __name__ == '__main__':
     # TODO: check in app.py if current_user matches that of edited information to prevent code injection
     # TODO: check that sqlalchemy connection pool is limited to 20 connections (free heroku db limit)
     # TODO: make guest/admin ids constants instead of hard coded
+    # TODO: consider disabling/modify caching on dashboard so it updates when navigated to again using back arrow
+
 
 
