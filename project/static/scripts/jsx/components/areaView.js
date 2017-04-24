@@ -57,7 +57,7 @@ class AreaView extends React.Component {
                         )}
                     </defs>
                     <XAxis dataKey="attribute" />
-                    <YAxis padding={{ bottom: 3 }} tickLine={false}/>
+                    <YAxis padding={{ bottom: 3 }} tickLine={false} domain={[0, 12]}/>
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
                     {this.props.items.map(function(item, fillIndex) {

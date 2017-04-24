@@ -52677,7 +52677,7 @@ var AreaView = function (_React$Component) {
                         })
                     ),
                     _react2.default.createElement(_recharts.XAxis, { dataKey: 'attribute' }),
-                    _react2.default.createElement(_recharts.YAxis, { padding: { bottom: 3 }, tickLine: false }),
+                    _react2.default.createElement(_recharts.YAxis, { padding: { bottom: 3 }, tickLine: false, domain: [0, 12] }),
                     _react2.default.createElement(_recharts.CartesianGrid, { strokeDasharray: '3 3' }),
                     _react2.default.createElement(_recharts.Tooltip, null),
                     this.props.items.map(function (item, fillIndex) {
