@@ -19,14 +19,15 @@
             </div>
             <hr>
 
-            {% for attr in template %}
-            <div class="col-sm-6" id="attribute" data-id={{attr['id']}}>
-                <input style="padding-left: 10%" type="text" name="attributeName" value={{attr['name']}}>
-                <a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px">delete</a>
-                <hr>
+            <div id="attributeList">
+                {% for attr in template %}
+                <div class="col-sm-6" data-id={{attr['id']}}>
+                    <input style="padding-left: 10%" type="text" name="attributeName" value={{attr['name']}}>
+                    <a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px">delete</a>
+                    <hr>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-
             <div class="col-sm-6" id="add-attribute">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 <b>ADD ATTRIBUTE</b>
@@ -62,7 +63,7 @@
         });
     });
 
-    $(".fa.fa-times").click(function() {
+    $(document).on('click', ".fa.fa-times", function() {
         var parent = $(this).parent();
         var id = parent.data("id");
         $.ajax({
@@ -78,7 +79,7 @@
         });
     });
 
-    $("input[name='attributeName']").focusout(function() {
+    $(document).on('focusout', "input[name='attributeName']", function() {
         var id = $(this).parent().data("id");
         var name = $(this).val();
         $.post("/setAttributeName", {name: name, id: id});
@@ -90,8 +91,20 @@
     });
 
     $("#add-attribute").click(function() {
-        $.post("/addAttributeBack", {id: template_id});
+        $.post("/addAttributeBack", {id: template_id}, function(attribute_id) {
+            console.log(attribute_id);
+            var test = $("#attributeList");
+            test.append(
+            '<div class="col-sm-6" data-id=' + attribute_id + '>' +
+                '<input style="padding-left: 10%" type="text" name="attributeName" value=""}>' +
+                '<a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px">delete</a>'+
+                '<hr>'+
+            '</div>');
+        });
     });
+
+
+
 
 
 

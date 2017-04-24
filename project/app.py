@@ -211,7 +211,7 @@ def setSheetName():
 # TODO: consolidate with comparison attribute naming
 @app.route('/addAttributeBack', methods=["POST"])
 def addAttributeBack():
-    return add_sheet_attribute_back(request.form['id'])
+    return json.dumps(add_sheet_attribute_back(request.form['id']))
 
 @app.route('/setAttributeName', methods=["POST"])
 def setAttributeName():
