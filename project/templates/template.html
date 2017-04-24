@@ -21,7 +21,7 @@
 
             <div id="attributeList">
                 {% for attr in template %}
-                <div class="col-sm-6" data-id={{attr['id']}}>
+                <div class="col-sm-6" data-id="{{attr['id']}}">
                     <input style="padding-left: 10%" type="text" name="attributeName" value={{attr['name']}}>
                     <a class="fa fa-times" aria-hidden="true" style="text-align: right; color: red; padding-left: 10px">delete</a>
                     <hr>
