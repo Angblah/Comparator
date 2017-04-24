@@ -323,17 +323,17 @@ def copyComparison():
 def newComparison():
     return render_template('newComparison.html')
 
-# FOR TESTING PURPOSES ONLY; DELETE ONCE LINKED TO PROPERLY
-@app.route('/new_empty_comparison')
-def new_empty_comparison():
-    from models import Account
-    if not current_user.is_anonymous:
-        id = create_empty_comparison(current_user.id)
-        return redirect(share_comparison(id, current_user.id))
-    else:
-        id = create_empty_comparison(GUEST_ID)
-        return redirect(share_comparison(id, GUEST_ID))
+@login_required
+@app.route('/newEmptyComparison', methods=["POST"])
+def newEmptyComparison():
+    id = create_empty_comparison(current_user.id)
+    return share_comparison(id, current_user.id)
 
+@login_required
+@app.route('/newEmptyTemplate', methods=["POST"])
+def newEmptyTemplate():
+    id = create_empty_template(current_user.id, num_attributes=0)
+    return share_template(id, current_user.id)
 
 @app.route('/testbed')
 def testbed():
