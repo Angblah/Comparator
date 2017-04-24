@@ -509,7 +509,7 @@ def initialize_db_structure():
             perform register_user('b@b.com', 'guest', 'guest_password');
             select register_user('test@comparator_test.com', 'Honey', 'Honey') into test_account;
 
-            perform create_empty_template('Empty Template', _account_id, 0);
+            perform create_empty_template('Empty Template', _account_id);
             select make_template(1, 'Top Load Washers', Array[1, 1, 0, 4, 1, 1, 0]::smallint[],
                                   Array['price', 'capacity', 'color', 'wash time', 'water efficiency', 'energy efficiency', 'type']) into washer_template;
             select make_template(1, 'Laptops', Array[1, 0, 1, 1, 1, 1, 0, 4]::smallint[],
