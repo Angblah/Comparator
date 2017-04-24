@@ -17,14 +17,18 @@ class ViewContainer extends React.Component {
     }
 
     componentDidMount() {
-        setInterval(() => this.props.handleTick(this.props.timer), 1000);
-        window.addEventListener('beforeunload', this.props.makeCalls);
+        if (this.props.userId == this.props.info.account_id || this.props.userId == 0) {
+            setInterval(() => this.props.handleTick(this.props.timer), 1000);
+            window.addEventListener('beforeunload', this.props.makeCalls);
+        }
     }
 
     componentWillUnmount() {
-        console.log("Component Unmounting");
-        this.props.makeCalls();
-        window.addEventListener('removeEventListener', this.props.makeCalls);
+        if (this.props.userId == this.props.info.account_id || this.props.userId == 0) {
+            console.log("Component Unmounting");
+            this.props.makeCalls();
+            window.addEventListener('removeEventListener', this.props.makeCalls);
+        }
     }
 
     shouldComponentUpdate(nextProp) {
@@ -136,22 +140,29 @@ class ViewContainer extends React.Component {
             if (this.props.view === 'SPIDER') {
                 return (
                     <div className="container-fluid" id="viewContainer">
-                        <SpiderChart items={this.props.items}
-                        attributes={this.props.attributes}/>
+                        <div className="row" id="viewRow">
+                            <SpiderChart items={this.props.items}
+                            attributes={this.props.attributes}/>
+                        </div>
                     </div>
                 );
             } else if (this.props.view === 'AREA') {
                 return (
                     <div className="container-fluid" id="viewContainer">
-                        <AreaView items={this.props.items}
-                        attributes={this.props.attributes}/>
+                        <div className="row" id="viewRow">
+                            <AreaView items={this.props.items}
+                            attributes={this.props.attributes}/>
+                        </div>
                     </div>
                 );
             } else {
                 return (
                     <div className="container-fluid" id="viewContainer">
-                        <ChartView items={this.props.items}
-                        attributes={this.props.attributes}/>
+                        <div className="row" id="viewRow">
+                            <ChartView items={this.props.items}
+                            attributes={this.props.attributes}/>
+                        </div>
+                        
                     </div>
                 );
             }

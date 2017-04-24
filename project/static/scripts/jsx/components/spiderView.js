@@ -55,7 +55,7 @@ class SpiderChart extends React.Component {
                                 <a className="nav-link active" href="#">Combined Radars</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link btn-outline-success" href="#" onClick={() => this.setCombined(false)}>Separate Raders</a>
+                                <a className="nav-link btn-outline-success" href="#" onClick={() => this.setCombined(false)}>Separate Radars</a>
                             </li>
                         </ul>
                     </nav>
@@ -84,7 +84,7 @@ class SpiderChart extends React.Component {
                                 <a className="nav-link btn-outline-success" href="#" onClick={() => this.setCombined(true)}>Combined Radars</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link active" href="#">Separate Raders</a>
+                                <a className="nav-link active" href="#">Separate Radars</a>
                             </li>
                         </ul>
                     </nav>

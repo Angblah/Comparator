@@ -25,7 +25,6 @@ module.exports = {
     filename: '[name].bundle.js'
   },
   entry: {
-      workspace: './project/static/scripts/jsx/containers/workspace.js',
-      testbed: './project/static/scripts/jsx/containers/workspace.js'
+      workspace: './project/static/scripts/jsx/containers/workspace.js'
   }
 };

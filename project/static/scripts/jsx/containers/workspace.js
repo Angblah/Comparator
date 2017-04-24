@@ -10,6 +10,8 @@ import workspaceState from '../reducers/rootReducer';
 import ViewContainer from './viewContainer';
 import Toolbar from './toolbar';
 import Navbar from './navbar';
+import GuestToolbar from './guestToolbar';
+import GuestNavbar from './guestNavbar';
 import {fetchComparison} from '../actions/actions';
 
 // const initialState = {
@@ -68,7 +70,7 @@ const store = createStore(workspaceState, initialState,
 
 class Workspace extends React.Component {
     render() {
-        if (initialState.info.account_id == userId || userId == 0) {
+        if (initialState.info.account_id == userId) {
             return (
                 <div id="wrapper">
                     <Navbar userId={this.props.userId}/>
@@ -79,8 +81,8 @@ class Workspace extends React.Component {
         } else {
             return (
                 <div id="wrapper">
-                    <Navbar userId={this.props.userId}/>
-                    <Toolbar userId={this.props.userId}/>
+                    <GuestNavbar/>
+                    <GuestToolbar userId={this.props.userId}/>
                     <ViewContainer userId={this.props.userId}/>
                 </div>
             );
