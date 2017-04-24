@@ -1,88 +1,32 @@
 //COMPONENTS
 import React from 'react';
-import {Surface, Group} from '@ecliptic/react-art';
-import Circle from '@ecliptic/react-art/shapes/circle';
 // import Radar from 'react-d3-radar';
-import {Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis} from 'recharts';
+import {Radar, RadarChart, PolarGrid, Legend, Tooltip, PolarAngleAxis, PolarRadiusAxis} from 'recharts';
 
 
-class ZoomDragCircle extends React.Component {
+class SpiderChart extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {x: 0, y:0, 
-            dragging:false, coords: {},
-            scale: 1
-        };
-        this.handleMouseUp = this.handleMouseUp.bind(this);
-        this.handleMouseDown = this.handleMouseDown.bind(this);
-        this.handleMouseMove = this.handleMouseMove.bind(this);
-        this.handleScroll = this.handleScroll.bind(this);
+        this.state = {combined: true};
+        this.returnName = this.returnName.bind(this);
     }
 
-    componentDidMount() {
-        document.addEventListener('mousemove', this.handleMouseMove, false);
+    setCombined(isCombined) {
+        this.setState({combined: isCombined});
     }
 
-    componentWillUnmount() {
-        //Don't forget to unlisten!
-        document.removeEventListener('mousemove', this.handleMouseMove, false);
-    }
-
-    handleMouseDown(e) {
-        this.setState({dragging: true, 
-            coords: {x: e.pageX, y: e.pageY}});
-    }
-
-    handleMouseUp() {
-        this.setState({
-            dragging: false,
-            coords: {}
-        });
-    }
-
-    handleMouseMove(e) {
-        //If we are dragging
-        if (this.state.dragging) {
-            e.preventDefault();
-            //Get mouse change differential
-            var xDiff = this.state.coords.x - e.pageX,
-                yDiff = this.state.coords.y - e.pageY;
-            //Update to our new coordinates
-            this.state.coords.x = e.pageX;
-            this.state.coords.y = e.pageY;
-            //Adjust our x,y based upon the x/y diff from before
-            var x = this.state.x - xDiff,       
-                y = this.state.y - yDiff;
-            //Re-render
-            this.setState({x: x, y: y});  
-        }
-    }
-
-    isNegative(n) {
-        return ((n = +n) || 1 / n) < 0;
-    }
-
-    handleScroll(e) {
-        var ZOOM_STEP = .03;
-            //require the shift key to be pressed to scroll
-            if (!e.altKey) {
-                return;
-            }
-        e.preventDefault();
-        var direction = (this.isNegative(e.deltaX) && this.isNegative(e.deltaY) ) ? 'down' : 'up';
-        var newScale = this.state.scale;
-        if (direction == 'up') {
-            newScale += ZOOM_STEP;
+    returnName(name) {
+        if (name != "") {
+            return name;
         } else {
-            newScale -= ZOOM_STEP;
+            return "Untitled";
         }
-        newScale = newScale < 0 ? 0 : newScale;
-        this.setState({scale: newScale});
     }
 
     render() {
         var rechartData = []
+        // {attribute: attr.name, item.id: worth}
         this.props.attributes.map(function(attr) {
             var attribute = {attribute: attr.name};
             // Generate <td> column elements in each row
@@ -94,35 +38,77 @@ class ZoomDragCircle extends React.Component {
             rechartData.push(attribute);
         }, this);
 
+        var fill = ["#FFEB3B", "#E91E63", "#8D54FF", "#3F51B5", "#00BCD4",
+            "#429645", "#EAB107", "#F44336", "#5C35A5",
+            "#03A9F4", "#B7FF60"]
+        
+        var fillIndex = -1;
+
         console.log(rechartData);
 
-        return (
-            <div 
-                    onMouseDown={this.handleMouseDown}
-                    onMouseUp={this.handleMouseUp}
-                    onWheel={this.handleScroll}
-            >
-                <Surface
-                    width={700}
-                    height={300}
-                >
-                    <Group x={this.state.x} y={this.state.y} 
-                    scaleX={this.state.scale} scaleY={this.state.scale}>
-                        <Circle x={10} y={10} radius={5} fill="#000" />
-                    </Group>
-                </Surface>
+        if (this.state.combined) {
+            return (
+                <div>
+                    <nav className="navbar navbar-toggleable-md navbar-light bg-faded">
+                        <ul className="nav nav-pills nav-fill w-100">
+                            <li className="nav-item">
+                                <a className="nav-link active" href="#">Combined Radars</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link btn-outline-success" href="#" onClick={() => this.setCombined(false)}>Separate Raders</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div className="d-flex justify-content-center">
+                        <RadarChart cx={300} cy={250} outerRadius={200} width={600} height={500} data={rechartData}>
+                            {this.props.items.map(function(item, fillIndex) {
+                                fillIndex++;
+                                return (
+                                    <Radar name={this.returnName(item.name)} dataKey={item.id} stroke={fill[fillIndex]} fill={fill[fillIndex]} fillOpacity={0.6}/>
+                                )}, this
+                            )}
+                            <PolarGrid />
+                            <Legend />
+                            <PolarAngleAxis dataKey="attribute" />
+                            <PolarRadiusAxis domain={[0, 12]} axisLine={false} tick={false}/>
+                        </RadarChart>
+                    </div>
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <nav className="navbar navbar-toggleable-md navbar-light bg-faded">
+                        <ul className="nav nav-pills nav-fill w-100">
+                            <li className="nav-item">
+                                <a className="nav-link btn-outline-success" href="#" onClick={() => this.setCombined(true)}>Combined Radars</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link active" href="#">Separate Raders</a>
+                            </li>
+                        </ul>
+                    </nav>
 
-                <RadarChart cx={300} cy={250} outerRadius={150} width={600} height={500} data={rechartData}>
-                    {this.props.items.map(item =>
-                        <Radar name={item.name} dataKey={item.id} stroke="#8884d8" fill="#8884d8" fillOpacity={0.6}/>
-                    )}
-                    <PolarGrid />
-                    <Legend />
-                    <PolarAngleAxis dataKey="attribute" />
-                </RadarChart>
-            </div>
-        );
+                    <div className="row justify-content-md-center">
+                        {this.props.items.map(function(item, fillIndex) {
+                            fillIndex++;
+                            return (
+                                <div className="col-5">
+                                    <RadarChart cx={300} cy={250} outerRadius={150} width={600} height={450} data={rechartData}>
+                                        <Radar name={this.returnName(item.name)} dataKey={item.id} stroke={fill[fillIndex]} fill={fill[fillIndex]} fillOpacity={0.6}/>
+                                        <PolarGrid />
+                                        <Legend />
+                                        <PolarAngleAxis dataKey="attribute" />
+                                        <PolarRadiusAxis domain={[0, 12]} axisLine={false} tick={false}/>
+                                    </RadarChart>
+                                </div>
+                            )}, this
+                        )}
+                    </div>
+                </div>
+            );
+        }
     }
 }
 
-export default ZoomDragCircle;
+export default SpiderChart;

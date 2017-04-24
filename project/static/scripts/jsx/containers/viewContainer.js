@@ -4,19 +4,27 @@ import {connect} from 'react-redux';
 import {isEqual} from 'lodash';
 import Slider from 'rc-slider';
 import {addItem, addAttr, editAttr, editItem, editItemWorth, editItemName, changeView, deleteAttr, deleteItem, makeCalls, handleTick, copyComparison} from '../actions/actions';
-import {START_TIMER} from 'redux-timer-middleware';
 import ChartView from '../components/chartView';
-import ZoomDragCircle from '../components/spiderView';
-import ProgressChart from '../components/testView';
+import SpiderChart from '../components/spiderView';
+import AreaView from '../components/areaView';
 
 class ViewContainer extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.sidebar = this.sidebar.bind(this);
+        this.returnName = this.returnName.bind(this);
+    }
+
     componentDidMount() {
         setInterval(() => this.props.handleTick(this.props.timer), 1000);
+        window.addEventListener('beforeunload', this.props.makeCalls);
     }
 
     componentWillUnmount() {
         console.log("Component Unmounting");
         this.props.makeCalls();
+        window.addEventListener('removeEventListener', this.props.makeCalls);
     }
 
     shouldComponentUpdate(nextProp) {
@@ -31,94 +39,122 @@ class ViewContainer extends React.Component {
         return !isEqual;
     }
 
+    returnName(name) {
+        if (name != "") {
+            return name;
+        } else {
+            return "Untitled";
+        }
+    }
+
+    sidebar() {
+        const marks = {
+            0: <strong>0</strong>,
+            5: '5',
+            10: <strong>10</strong>
+        };
+
+        return (
+            <nav className="col-2 bg-faded sidebar">
+                {this.props.items.map(function(item) {
+                    var itemAttr = this.props.attributes.map(function(attr) {
+                        if (item[attr.id].val) {
+                            return(
+                            <div className="nav-item">
+                                <div className="container mb-3">
+                                    <span className="nav-link pl-0"><strong>{attr.name + ": "}</strong>{item[attr.id].val}</span>
+                                    <Slider min={0} max={10} step={1} marks={marks} defaultValue={item[attr.id].worth} onAfterChange={(value) => this.props.editItemWorth(item.id, attr.id, value)}/>
+                                </div>
+                            </div>
+                            );
+                        }
+                    }, this);
+                    return(
+                        <ul className="nav nav-pills flex-column">
+                            <h3 className="mb-0">
+                                <span className="nav-link collapsed pb-1" href={"#submenu" + item.id} data-toggle="collapse" data-target={"#submenu" + item.id}>{this.returnName(item.name)}  <i className="fa fa-sort-desc" aria-hidden="true"></i></span>
+                            </h3>
+                            <div className="collapse" id={"submenu" + item.id} aria-expanded="false">
+                                {itemAttr}
+                            </div>
+                        </ul>
+                    ); 
+                }, this)}
+            </nav>
+        );
+    }
+
     render() {
         //TODO: Create ViewContainer toggle based on view of state.
-        if (this.props.view === 'CHART' &&  this.props.userId == this.props.info.account_id) {
-            return (
-                <div className="container-fluid">
-                    <div className="row">
-                        <nav className="col-2 bg-faded sidebar">
-                            {this.props.items.map(function(item) {
-                                var itemAttr = this.props.attributes.map(function(attr) {
-                                    if (item[attr.id].val) {
-                                        return(
-                                        <div className="nav-item">
-                                            <div className="container">
-                                                <a className="nav-link" href="#">{item[attr.id].val}</a>
-                                                <Slider min={0} max={10} step={1} dots defaultValue={item[attr.id].worth} onAfterChange={(value) => this.props.editItemWorth(item.id, attr.id, value)}/>
-                                            </div>
-                                        </div>
-                                        );
-                                    }
-                                }, this);
-                                return(
-                                    <ul className="nav nav-pills flex-column">
-                                        <h3 className="mb-0">
-                                            <a className="nav-link collapsed" href={"#submenu" + item.id}  data-toggle="collapse" data-target={"#submenu" + item.id}>{item.name}  <i className="fa fa-sort-desc" aria-hidden="true"></i></a>
-                                        </h3>
-                                        <div className="collapse" id={"submenu" + item.id} aria-expanded="false">
-                                            {itemAttr}
-                                        </div>
-                                    </ul>
-                                ); 
-                            }, this)}
-                        </nav>
-                        <div className="container col-10 pt-3">
-                            <ChartView items={this.props.items}
-                                attributes={this.props.attributes}
-                                id={this.props.id}
-                                editAttr={this.props.editAttr}
-                                editItem={this.props.editItem}
-                                editItemName={this.props.editItemName}
-                                deleteAttr={this.props.deleteAttr}
-                                deleteItem={this.props.deleteItem}
-                                addAttr={this.props.addAttr}
-                                addItem={this.props.addItem}/>
+        if (this.props.userId == this.props.info.account_id) {  
+            if (this.props.view === 'SPIDER') {
+                return (
+                    <div className="container-fluid">
+                        <div className="row">
+                            {this.sidebar()}
+                            <div className="col-10">
+                                <SpiderChart items={this.props.items}
+                                attributes={this.props.attributes}/>
+                            </div>
                         </div>
                     </div>
-                </div>
-            );
-        } else if (this.props.view === 'CHART' &&  this.props.userId != this.props.info.account_id) {
-            return (
-                <div>
-                    <ChartView items={this.props.items}
-                       attributes={this.props.attributes}/>
-                    <span/>
-                </div>
-            );
+                );
+            } else if (this.props.view === 'AREA') {
+                return (
+                    <div className="container-fluid">
+                        <div className="row">
+                            {this.sidebar()}
+                            <div className="col-10">
+                                <AreaView items={this.props.items}
+                                attributes={this.props.attributes}/>
+                            </div>
+                        </div>
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="container-fluid">
+                        <div className="row">
+                            {this.sidebar()}
+                            <div className="container col-10 pt-3">
+                                <ChartView items={this.props.items}
+                                    attributes={this.props.attributes}
+                                    id={this.props.id}
+                                    editAttr={this.props.editAttr}
+                                    editItem={this.props.editItem}
+                                    editItemName={this.props.editItemName}
+                                    deleteAttr={this.props.deleteAttr}
+                                    deleteItem={this.props.deleteItem}
+                                    addAttr={this.props.addAttr}
+                                    addItem={this.props.addItem}/>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
         } else {
-            return (
-                <div className="container-fluid">
-                    <div className="row">
-                        <nav className="col-2 bg-faded sidebar">
-                            {this.props.items.map(function(item) {
-                                var itemAttr = this.props.attributes.map(function(attr) {
-                                    if (item[attr.id].val) {
-                                        return(
-                                        <div className="nav-item">
-                                            <a className="nav-link" href="#">{item[attr.id].val}</a>
-                                            <Slider min={0} max={10} step={1} dots defaultValue={item[attr.id].worth} onAfterChange={(value) => this.props.editItemWorth(item.id, attr.id, value)}/>
-                                        </div>
-                                        );
-                                    }
-                                }, this);
-                                return(
-                                    <ul className="nav nav-pills flex-column">
-                                        <h3>{item.name}</h3>
-                                        {itemAttr}
-                                    </ul>
-                                ); 
-                            }, this)}
-                        </nav>
-                        <div className="col-10">
-                            <ZoomDragCircle items={this.props.items}
-                            attributes={this.props.attributes}/>
-                            <ProgressChart/>
-                            <span/>
-                        </div>
+            if (this.props.view === 'SPIDER') {
+                return (
+                    <div>
+                        <SpiderChart items={this.props.items}
+                        attributes={this.props.attributes}/>
                     </div>
-                </div>
-            );
+                );
+            } else if (this.props.view === 'AREA') {
+                return (
+                    <div>
+                        <AreaView items={this.props.items}
+                        attributes={this.props.attributes}/>
+                    </div>
+                );
+            } else {
+                return (
+                    <div>
+                        <ChartView items={this.props.items}
+                        attributes={this.props.attributes}/>
+                    </div>
+                );
+            }
         }
     }
 }
