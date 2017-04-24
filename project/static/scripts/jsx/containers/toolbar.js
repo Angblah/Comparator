@@ -66,9 +66,9 @@ class Toolbar extends React.Component {
                             <div className="dropdown">
                                 <button type="button blank-bg" className="btn btn-primary dropdown-toggle" id="viewDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Toggle View</button>
                                 <div className="dropdown-menu" aria-labelledby="viewDropdown">
-                                    <a className="dropdown-item" href="#" onClick={() => this.props.changeView('CHART')}>Chart View</a>
-                                    <a className="dropdown-item" href="#" onClick={() => this.props.changeView('SPIDER')}>Radar Chart</a>
-                                    <a className="dropdown-item" href="#" onClick={() => this.props.changeView('AREA')}>Area Chart</a>
+                                    <a className="dropdown-item" href="#" onClick={() => this.props.changeView('CHART')}><i className="fa fa-table" aria-hidden="true"></i>  Chart View</a>
+                                    <a className="dropdown-item" href="#" onClick={() => this.props.changeView('SPIDER')}><i className="fa fa-bandcamp" aria-hidden="true"></i>  Radar Chart</a>
+                                    <a className="dropdown-item" href="#" onClick={() => this.props.changeView('AREA')}><i className="fa fa-area-chart" aria-hidden="true"></i>  Area Chart</a>
                                 </div>
                             </div>
                         </div>
@@ -151,9 +151,9 @@ class Toolbar extends React.Component {
                         <div className="dropdown">
                             <button type="button blank-bg" className="btn btn-primary dropdown-toggle" id="viewDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Toggle View</button>
                             <div className="dropdown-menu" aria-labelledby="viewDropdown">
-                                <a className="dropdown-item" href="#" onClick={() => this.props.changeView('CHART')}>Chart View</a>
-                                <a className="dropdown-item" href="#" onClick={() => this.props.changeView('SPIDER')}>Radar Chart</a>
-                                <a className="dropdown-item" href="#" onClick={() => this.props.changeView('AREA')}>Area Chart</a>
+                                <a className="dropdown-item" href="#" onClick={() => this.props.changeView('CHART')}><i className="fa fa-table" aria-hidden="true"></i>  Chart View</a>
+                                <a className="dropdown-item" href="#" onClick={() => this.props.changeView('SPIDER')}><i className="fa fa-bandcamp" aria-hidden="true"></i>  Radar Chart</a>
+                                <a className="dropdown-item" href="#" onClick={() => this.props.changeView('AREA')}><i className="fa fa-area-chart" aria-hidden="true"></i>  Area Chart</a>
                             </div>
                         </div>
                     </div>

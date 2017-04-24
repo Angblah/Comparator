@@ -51264,21 +51264,24 @@ var Toolbar = function (_React$Component) {
                                         { className: 'dropdown-item', href: '#', onClick: function onClick() {
                                                 return _this2.props.changeView('CHART');
                                             } },
-                                        'Chart View'
+                                        _react2.default.createElement('i', { className: 'fa fa-table', 'aria-hidden': 'true' }),
+                                        '  Chart View'
                                     ),
                                     _react2.default.createElement(
                                         'a',
                                         { className: 'dropdown-item', href: '#', onClick: function onClick() {
                                                 return _this2.props.changeView('SPIDER');
                                             } },
-                                        'Radar Chart'
+                                        _react2.default.createElement('i', { className: 'fa fa-bandcamp', 'aria-hidden': 'true' }),
+                                        '  Radar Chart'
                                     ),
                                     _react2.default.createElement(
                                         'a',
                                         { className: 'dropdown-item', href: '#', onClick: function onClick() {
                                                 return _this2.props.changeView('AREA');
                                             } },
-                                        'Area Chart'
+                                        _react2.default.createElement('i', { className: 'fa fa-area-chart', 'aria-hidden': 'true' }),
+                                        '  Area Chart'
                                     )
                                 )
                             )
@@ -51476,21 +51479,24 @@ var Toolbar = function (_React$Component) {
                                     { className: 'dropdown-item', href: '#', onClick: function onClick() {
                                             return _this2.props.changeView('CHART');
                                         } },
-                                    'Chart View'
+                                    _react2.default.createElement('i', { className: 'fa fa-table', 'aria-hidden': 'true' }),
+                                    '  Chart View'
                                 ),
                                 _react2.default.createElement(
                                     'a',
                                     { className: 'dropdown-item', href: '#', onClick: function onClick() {
                                             return _this2.props.changeView('SPIDER');
                                         } },
-                                    'Radar Chart'
+                                    _react2.default.createElement('i', { className: 'fa fa-bandcamp', 'aria-hidden': 'true' }),
+                                    '  Radar Chart'
                                 ),
                                 _react2.default.createElement(
                                     'a',
                                     { className: 'dropdown-item', href: '#', onClick: function onClick() {
                                             return _this2.props.changeView('AREA');
                                         } },
-                                    'Area Chart'
+                                    _react2.default.createElement('i', { className: 'fa fa-area-chart', 'aria-hidden': 'true' }),
+                                    '  Area Chart'
                                 )
                             )
                         )
